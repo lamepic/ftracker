@@ -1,0 +1,37 @@
+.tracking__card {
+  background-color: var(--lightest-brown);
+  width: 500px;
+  height: 50px;
+  padding: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.card__info {
+  color: var(--dark-brown);
+  font-weight: 600;
+}
+
+.tracking__button {
+  width: 100px;
+  padding: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tracking__button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tracking__button-container > button:first-child {
+  margin-bottom: 5px;
+}
+
+.card__info p:last-child {
+  font-weight: 700;
+  text-transform: capitalize;
+}

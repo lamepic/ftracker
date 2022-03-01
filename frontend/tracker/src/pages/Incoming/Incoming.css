@@ -1,0 +1,22 @@
+.incoming {
+  margin-left: 15px;
+}
+
+.incoming__header {
+  color: var(--dark-brown);
+  font-size: 1.7rem;
+}
+
+.incoming__content .MuiFab-root:hover {
+  background-color: var(--light-brown);
+}
+
+.incoming__content {
+  height: 29rem;
+  overflow: auto;
+}
+
+.incoming__items {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}

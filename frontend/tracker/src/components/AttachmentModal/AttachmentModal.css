@@ -1,0 +1,58 @@
+.form__attachment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 5px; */
+}
+
+.attachment-form-group label {
+  color: var(--dark-brown);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.attachment-form-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-top: 10px; */
+  position: relative;
+  padding: 10px;
+}
+
+.attachment-form-group input {
+  padding: 5px;
+  border: 0.2px solid var(--light-brown);
+  width: 60%;
+  background-color: var(--lightest-brown);
+  border-radius: 5px;
+}
+
+.attachment-btn {
+  padding: 7px;
+  border-radius: 3px;
+  /* background-color: var(--blue); */
+  width: 5rem;
+  color: var(--white);
+  border: none;
+  display: block;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.cancel {
+  background-color: var(--red);
+}
+
+.attachment-submit {
+  background-color: var(--lightest-brown);
+  /* border: 1px solid #000; */
+  color: var(--darkest-brown);
+}
+
+.attachment-submit:disabled {
+  cursor: not-allowed;
+  background-color: none !important;
+  pointer-events: all !important;
+}
