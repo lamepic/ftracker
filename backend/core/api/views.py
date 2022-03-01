@@ -492,8 +492,8 @@ class ActivateDocument(views.APIView):
             activate_doc = models.ActivateDocument.objects.create(document=document, expire_at=expire_at, document_receiver=receiver,
                                                                   document_sender=sender)
 
-            send_email(receiver=receiver,
-                       sender=sender, document=document, create_code=False)
+            utils.send_email(receiver=receiver,
+                             sender=sender, document=document, create_code=False)
 
             if activate_doc:
                 requested_doc_instance.active = False

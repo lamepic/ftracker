@@ -9,6 +9,14 @@ import { fetchIncoming } from "../../http/document";
 import { Box, Image } from "@chakra-ui/react";
 import addIcon from "../../assets/icons/add-icon.svg";
 import Loading from "../../components/Loading/Loading";
+import { notification } from "antd";
+
+const openNotificationWithIcon = (type, description) => {
+  notification[type]({
+    message: "Error",
+    description,
+  });
+};
 
 function Incoming() {
   const [store] = useStateValue();
@@ -18,9 +26,13 @@ function Incoming() {
   const incomingCount = store.incomingCount;
 
   const _fetchIncoming = async () => {
-    const res = await fetchIncoming(store.token);
-    const data = res.data;
-    setIncoming(data);
+    try {
+      const res = await fetchIncoming(store.token);
+      const data = res.data;
+      setIncoming(data);
+    } catch (e) {
+      openNotificationWithIcon("error", e.response.data.detail);
+    }
   };
 
   useEffect(() => {

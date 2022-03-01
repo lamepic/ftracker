@@ -7,7 +7,11 @@ import { useStateValue } from "../../store/StateProvider";
 import { logout } from "../../http/auth";
 import * as actionTypes from "../../store/actionTypes";
 import { useHistory } from "react-router-dom";
-import { fetchActivateDocument, fetchRequest } from "../../http/document";
+import {
+  fetchActivateDocument,
+  fetchRequest,
+  notificationsCount,
+} from "../../http/document";
 import { Menu, Dropdown } from "antd";
 import CustomBadge from "../Badge/CustomBadge";
 import moment from "moment";
@@ -67,6 +71,7 @@ function NotificationDropDown() {
   const [loading, setLoading] = useState(true);
 
   const handleClick = (event) => {
+    fetchNotifications();
     fetchPendingRequest();
   };
 
@@ -78,6 +83,15 @@ function NotificationDropDown() {
     const activatedDocumentData = activatedDocumentRes.data;
     setActivatedDocuments(activatedDocumentData);
     setLoading(false);
+  };
+
+  const fetchNotifications = async () => {
+    const res = await notificationsCount(store.token);
+    const data = res.data;
+    dispatch({
+      type: actionTypes.SET_NOTIFICATIONS_COUNT,
+      payload: data.count,
+    });
   };
 
   const handleRequest = (details) => {
@@ -122,6 +136,8 @@ function NotificationDropDown() {
                       color="var(--dark-brown)"
                       fontWeight="600"
                       fontSize="15px"
+                      isTruncated
+                      width="150px"
                     >
                       {name}
                     </Text>
@@ -156,6 +172,8 @@ function NotificationDropDown() {
                     color="var(--dark-brown)"
                     fontWeight="600"
                     fontSize="15px"
+                    isTruncated
+                    width="150px"
                   >
                     {name}
                   </Text>
@@ -245,11 +263,6 @@ function Navbar() {
         <Search />
       </Box>
       <Box _hover={{ cursor: "pointer" }}>
-        {/* <CustomBadge
-          count={store.notificationsCount}
-          size="20px"
-          position={{ top: "0", right: "0" }}
-        /> */}
         <NotificationDropDown />
       </Box>
       <Box
