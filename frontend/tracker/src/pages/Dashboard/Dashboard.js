@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { loadUser } from "../../http/user";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
-import Loading from "../../components/Loading/Loading";
-import { Box, Center, Container } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
 import { Route } from "react-router-dom";

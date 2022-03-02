@@ -523,7 +523,7 @@ class CreateFlow(views.APIView):
         data = request.data
 
         name = data.get('flowName')
-        flow = data.get('flow')
+        flow = data.get('users')
 
         try:
             document_type = models.DocumentType.objects.create(

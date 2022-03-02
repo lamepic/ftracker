@@ -1,11 +1,10 @@
-/* @import "~antd/dist/antd.css"; */
-
 .flow {
   margin-left: 10px;
 }
 
 .flow__header {
   color: var(--dark-brown);
+  font-size: 1.7rem;
 }
 
 .flow .divider {
@@ -56,4 +55,12 @@
 .action__header {
   color: var(--dark-brown);
   margin-bottom: 10px;
+}
+
+.ant-tabs-tab-btn {
+  color: var(--dark-brown) !important;
+}
+
+.ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+  background-color: var(--dark-brown) !important;
 }

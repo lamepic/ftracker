@@ -5,8 +5,10 @@ import SidebarOption from "./SidebarOption";
 import tracker from "../../assets/icons/tracker-icon.svg";
 import home from "../../assets/icons/home-icon.svg";
 import { Link } from "react-router-dom";
+import { useStateValue } from "../../store/StateProvider";
 
 function Sidebar() {
+  const [store, dispatch] = useStateValue();
   return (
     <Box w="150px" h="100%" bg="var(--dark-brown)" borderRadius="10px">
       <Box display="flex" flexDirection="column" alignItems="center">
@@ -19,6 +21,11 @@ function Sidebar() {
         <Link to="/dashboard/tracker">
           <SidebarOption icon={tracker} name="tracker" />
         </Link>
+        {store.user?.is_department && (
+          <Link to="/dashboard/create-flow">
+            <SidebarOption icon={tracker} name="create flow" />
+          </Link>
+        )}
       </Box>
     </Box>
   );
