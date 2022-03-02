@@ -1,5 +1,11 @@
+import random
+import json
 from django.db import models
 from django.contrib.auth import get_user_model
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 from users import models as users_model
 
@@ -160,3 +166,15 @@ class ActivateDocument(models.Model):
 
     def __str__(self):
         return f'{self.document.subject} - {self.expire_at}'
+
+
+@receiver(post_save, sender=ActivateDocument)
+def expire_date_handler(sender, instance, created, **kwargs):
+    secret_id = random.randint(1, 9999)
+    if created:
+        schedule, created = CrontabSchedule.objects.get_or_create(
+            minute=0, hour=0,
+            day_of_month=instance.expire_at.day, month_of_year=instance.expire_at.month)
+
+        task = PeriodicTask.objects.create(crontab=schedule, name='document_'+str(
+            secret_id), task='core.tasks.expire_document', args=json.dumps((instance.id,)))
