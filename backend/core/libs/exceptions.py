@@ -78,3 +78,5 @@ class ForwardDocumentError(BadRequest):
 
 class FieldError(APIException):
     status_code = 400
+    default_detail = 'Add Field'
+    default_code = 'forward_document_error'

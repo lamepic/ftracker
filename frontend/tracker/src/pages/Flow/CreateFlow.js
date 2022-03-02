@@ -31,7 +31,11 @@ function Flow() {
   };
 
   const onFinish = async (values) => {
-    console.log(values);
+    console.log(values.users);
+    if (values.users === 0) {
+      return openNotificationWithIcon("error", "Error", "Add flow");
+    }
+
     try {
       const res = await createFlow(store.token, values);
       if (res.status === 200) {
@@ -72,10 +76,18 @@ function Flow() {
                 <Form.List
                   name="users"
                   rules={[
-                    { required: true, message: "This field is required!" },
+                    {
+                      validator: async (_, names) => {
+                        if (!names || names.length < 0) {
+                          return Promise.reject(
+                            new Error("Add at least 2 flows")
+                          );
+                        }
+                      },
+                    },
                   ]}
                 >
-                  {(fields, { add, remove }) => (
+                  {(fields, { add, remove }, { errors }) => (
                     <>
                       {fields.map(({ key, name, ...restField }) => (
                         <Space
@@ -150,6 +162,7 @@ function Flow() {
                         >
                           Add flow
                         </Button>
+                        <Form.ErrorList errors={errors} />
                       </Form.Item>
                     </>
                   )}

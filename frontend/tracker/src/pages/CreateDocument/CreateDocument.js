@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  CircularProgress,
-  Heading,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 import "./CreateDocument.css";
 import {

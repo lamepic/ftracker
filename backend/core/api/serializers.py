@@ -167,14 +167,6 @@ class TrackingSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=50)
 
 
-class DocumentActionSerializer(serializers.ModelSerializer):
-    user = users_serializers.UserSerializer()
-
-    class Meta:
-        model = models.DocumentAction
-        fields = ["user", "action"]
-
-
 class FlowSerializer(serializers.ModelSerializer):
     document_action = serializers.SerializerMethodField()
 

@@ -526,6 +526,9 @@ class CreateFlow(views.APIView):
         name = data.get('flowName')
         flow = data.get('users')
 
+        if len(flow) == 0:
+            raise exceptions.FieldError("Flow cannot be empty")
+
         try:
             document_type = models.DocumentType.objects.create(
                 name=name, department=request.user.department)
