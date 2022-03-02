@@ -172,18 +172,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         # SessionAuthentication may interfere with mobile API requests. If you are experiencing ssues, try commenting out the following line.
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
-    #     'rest_framework.renderers.BrowsableAPIRenderer',
-    # ),
-    # 'DEFAULT_PARSER_CLASSES': (
-    #     'djangorestframework_camel_case.parser.CamelCaseJSONParser',
-    # ),
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'PAGE_SIZE': 25,
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     # 'DEFAULT_FILTER_BACKENDS': (
     #     'django_filters.rest_framework.DjangoFilterBackend',
     #     'rest_framework.filters.OrderingFilter',
@@ -206,6 +197,17 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 
+# CELERY SETTINGS
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+# CELERY BEAT
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 # ==================================================================================================
 # EMAIL SETTINGS
