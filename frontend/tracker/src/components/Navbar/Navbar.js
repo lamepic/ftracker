@@ -201,7 +201,7 @@ function NotificationDropDown() {
       <CustomBadge
         count={store.notificationsCount}
         size="20px"
-        position={{ top: "0", right: "0" }}
+        position={{ top: "-5px", right: "-5px" }}
       />
       <Dropdown
         overlay={menu}

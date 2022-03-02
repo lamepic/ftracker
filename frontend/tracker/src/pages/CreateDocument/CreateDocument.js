@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  CircularProgress,
+  Heading,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 import "./CreateDocument.css";
 import {
@@ -235,7 +241,6 @@ function CreateDocument() {
         if (willSubmit) {
           setSubmitting(true);
           try {
-            console.log(data);
             const res = await createDocument(store.token, data);
             if (res.status === 201) {
               setSubmitting(false);
@@ -245,8 +250,7 @@ function CreateDocument() {
               });
             }
           } catch (error) {
-            console.log(error);
-            // openNotificationWithIcon("Error", err.);
+            openNotificationWithIcon("Error", error.response.data.detail);
           }
         }
       });
@@ -254,8 +258,31 @@ function CreateDocument() {
   };
 
   return (
-    <Box>
-      {!loading || !submitting ? (
+    <Box position="relative">
+      {submitting && (
+        <Box
+          position="absolute"
+          zIndex="1000"
+          display="grid"
+          placeItems="center"
+          h="100%"
+          w="100%"
+          backdropFilter="blur(1px)"
+        >
+          <Box display="grid" placeItems="center">
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              color="var(--dark-brown)"
+              size="xl"
+            />
+            <Text fontWeight="600" color="var(--dark-brown)">
+              Submitting...
+            </Text>
+          </Box>
+        </Box>
+      )}
+      {!loading ? (
         <Box>
           <Heading as="h2" fontSize="22px" color="var(--dark-brown)">
             Add Document / Attachment
