@@ -168,6 +168,7 @@ class TrackingSerializer(serializers.Serializer):
 
 
 class DocumentActionSerializer(serializers.ModelSerializer):
+    user = users_serializers.UserSerializer()
 
     class Meta:
         model = models.DocumentAction
@@ -179,7 +180,7 @@ class FlowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.DocumentType
-        fields = ["name", "document_action"]
+        fields = ["id", "name", "document_action"]
 
     def get_document_action(self, obj):
         document_action = obj.documentaction_set

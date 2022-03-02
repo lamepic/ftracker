@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Flow.css";
-
-import { Form, Button, Space, Select, Input, notification } from "antd";
+import { Form, Button, Space, Select, Input } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { loadUsers } from "../../http/user";
 import { useStateValue } from "../../store/StateProvider";
@@ -9,21 +8,16 @@ import { useHistory } from "react-router-dom";
 import { createFlow } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box } from "@chakra-ui/react";
+import { openNotificationWithIcon } from "../../utility/helper";
 
 const { Option } = Select;
-
-const openNotificationWithIcon = (type, description) => {
-  notification[type]({
-    message: "Success",
-    description,
-  });
-};
 
 function Flow() {
   const [store, dispatch] = useStateValue();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchUsers();
@@ -41,11 +35,11 @@ function Flow() {
     try {
       const res = await createFlow(store.token, values);
       if (res.status === 200) {
-        openNotificationWithIcon("success", "Flow Created");
-        history.push("/");
+        form.resetFields();
+        openNotificationWithIcon("success", "Success", "Flow Created");
       }
     } catch (e) {
-      openNotificationWithIcon("error", e.response.data.detail);
+      openNotificationWithIcon("error", "Error", e.response.data.detail);
     }
   };
 
@@ -63,6 +57,7 @@ function Flow() {
                 // marginRight: "10px",
                 // padding: "10px",
               }}
+              form={form}
               requiredMark={false}
               layout="vertical"
             >
@@ -74,7 +69,12 @@ function Flow() {
                 <Input />
               </Form.Item>
               <Box marginTop="20px">
-                <Form.List name="users">
+                <Form.List
+                  name="users"
+                  rules={[
+                    { required: true, message: "This field is required!" },
+                  ]}
+                >
                   {(fields, { add, remove }) => (
                     <>
                       {fields.map(({ key, name, ...restField }) => (

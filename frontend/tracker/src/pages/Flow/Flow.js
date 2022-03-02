@@ -8,8 +8,10 @@ import FlowList from "./FlowList";
 const { TabPane } = Tabs;
 
 function Flow() {
+  const [activeTab, setActiveTab] = useState("");
+
   const callback = (key) => {
-    // console.log(key);
+    setActiveTab(key);
   };
 
   return (
@@ -18,11 +20,11 @@ function Flow() {
         <h2 className="flow__header">Create Document Flow</h2>
         <hr className="divider" />
         <Tabs defaultActiveKey="1" onChange={callback}>
-          <TabPane tab="Create" key="1">
+          <TabPane tab="Create" key="create">
             <CreateFlow />
           </TabPane>
-          <TabPane tab="Manage" key="2">
-            <FlowList />
+          <TabPane tab="Manage" key="manage">
+            <FlowList activeTab={activeTab} />
           </TabPane>
         </Tabs>
       </>
