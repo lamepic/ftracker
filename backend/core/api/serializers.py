@@ -175,8 +175,14 @@ class DocumentActionSerializer(serializers.ModelSerializer):
 
 
 class FlowSerializer(serializers.ModelSerializer):
-    document_action = DocumentActionSerializer()
+    document_action = serializers.SerializerMethodField()
 
     class Meta:
         model = models.DocumentType
         fields = ["name", "document_action"]
+
+    def get_document_action(self, obj):
+        document_action = obj.documentaction_set
+        serialized_document_action = DocumentActionSerializer(
+            document_action, many=True)
+        return serialized_document_action.data

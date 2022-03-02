@@ -343,3 +343,15 @@ export async function createFlow(token, data) {
   const res = await axios.post("create-flow/", data, config);
   return res;
 }
+
+export async function fetchFlow(token) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get("create-flow/", config);
+  return res;
+}

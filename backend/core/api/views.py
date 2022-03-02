@@ -547,7 +547,7 @@ class CreateFlow(views.APIView):
         return Response(request.data, status=status.HTTP_200_OK)
 
     def get(self, request, format=None):
-        flow = models.DocumentType.objects.get(
+        flow = models.DocumentType.objects.filter(
             department=request.user.department)
         serialized_data = serializers.FlowSerializer(flow, many=True)
 
