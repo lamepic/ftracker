@@ -1,3 +1,4 @@
+from xmlrpc.client import ResponseError
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -544,6 +545,13 @@ class CreateFlow(views.APIView):
             raise exceptions.ServerError
 
         return Response(request.data, status=status.HTTP_200_OK)
+
+    def get(self, request, format=None):
+        flow = models.DocumentType.objects.get(
+            department=request.user.department)
+        serialized_data = serializers.FlowSerializer(flow, many=True)
+
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
 class SearchAPIView(views.APIView):
