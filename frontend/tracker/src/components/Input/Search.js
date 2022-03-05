@@ -197,7 +197,7 @@ function Search() {
       <AutoComplete
         dropdownMatchSelectWidth={252}
         style={{
-          width: 450,
+          width: "100%",
           overflow: "hidden",
           borderRadius: "20px",
         }}

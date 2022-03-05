@@ -43,8 +43,11 @@ function Home() {
   const outgoingCount = store.outgoingCount;
 
   return (
-    <Box h="65vh">
-      <Box h="100%" display="flex" flexDirection="column">
+    <Box
+      // h="65vh"
+      bg="red"
+    >
+      {/* <Box h="100%" display="flex" flexDirection="column">
         <Box
           position="relative"
           marginTop="20px"
@@ -98,7 +101,7 @@ function Home() {
         <Link to="/dashboard/add-document">
           <Image src={addIcon} boxSize="45px" />
         </Link>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

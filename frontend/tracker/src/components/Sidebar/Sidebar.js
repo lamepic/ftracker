@@ -10,7 +10,13 @@ import { useStateValue } from "../../store/StateProvider";
 function Sidebar() {
   const [store, dispatch] = useStateValue();
   return (
-    <Box w="150px" h="100%" bg="var(--dark-brown)" borderRadius="10px">
+    <Box
+      // w="150px"
+      h="100%"
+      bg="var(--dark-brown)"
+      // borderRadius="10px"
+      display={{ sm: "none", lg: "block" }}
+    >
       <Box display="flex" flexDirection="column" alignItems="center">
         <Image src={logo} alt="logo" w="90px" objectFit="contain" />
       </Box>

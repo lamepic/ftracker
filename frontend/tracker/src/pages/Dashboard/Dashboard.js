@@ -77,21 +77,72 @@ function Dashboard() {
   }, []);
 
   return (
-    <Box h="100vh" bg="var(--background-color)" margin="auto">
-      <Container
-        maxW="container.xl"
-        h="100%"
-        display="grid"
-        placeItems="center"
+    <Box
+      // bg="var(--background-color)"
+      bg="green"
+      h="100vh"
+      minW="max"
+    >
+      {store.user !== null && (
+        <Box
+          display="flex"
+          minH="100%"
+          bg="yellow"
+          maxW={{ sm: "750px", lg: "none" }}
+          margin={{ sm: "auto" }}
+        >
+          <Box flex={{ sm: "0", lg: "0.1" }}>
+            <Sidebar />
+          </Box>
+          <Box flex={{ sm: "1", lg: "0.8" }} minH="100%">
+            <Navbar />
+            <main>
+              <Route exact path="/dashboard" component={Home} />
+              <Route path="/dashboard/incoming" component={Incoming} />
+              <Route path="/dashboard/outgoing" component={Outgoing} />
+              <Route
+                path="/dashboard/add-document"
+                component={CreateDocument}
+              />
+              <Route
+                path={`/dashboard/document/:type/:id/`}
+                component={ViewDocument}
+              />
+              <ProtectedPage path="/dashboard/archive" component={Archive} />
+
+              <Route path="/dashboard/tracker" component={Tracking} />
+
+              <Route
+                path="/dashboard/activate-document"
+                component={ActivateDocument}
+              />
+              <Route
+                path="/dashboard/activated-document"
+                component={ActivatedDocView}
+              />
+              <ProtectedPage path="/dashboard/create-flow" component={Flow} />
+              {store.openTrackingModal && <TrackingDetail />}
+            </main>
+          </Box>
+        </Box>
+      )}
+      {/* <Box
+        border="1px solid blue"
+        h="100vh"
+        // maxW="container.xl"
+        // h="100%"
+        // display="grid"
+        // placeItems="center"
       >
         {store.user !== null && (
           <Box
             display="flex"
             flexDirection="row"
-            alignItems="center"
-            h="90%"
-            w="90%"
-            margin="auto"
+            // alignItems="center"
+            // h="90%"
+            // w="90%"
+            // margin="auto"
+            bg="yellow"
           >
             <Sidebar />
             <Box w="100%" position="relative" h="100%" marginLeft="30px">
@@ -126,7 +177,7 @@ function Dashboard() {
             </Box>
           </Box>
         )}
-      </Container>
+      </Box> */}
     </Box>
   );
 }

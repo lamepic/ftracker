@@ -2,7 +2,7 @@ import { Box, CircularProgress, Heading, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import "./Navbar.css";
 import Search from "../Input/Search";
-import { BellFilled, DownOutlined } from "@ant-design/icons";
+import { BellFilled, DownOutlined, MenuOutlined } from "@ant-design/icons";
 import { useStateValue } from "../../store/StateProvider";
 import { logout } from "../../http/auth";
 import * as actionTypes from "../../store/actionTypes";
@@ -45,7 +45,7 @@ const MenuDropDown = ({ userInfo, handleLogout }) => {
             color="#9D4D01"
             fontWeight="600"
             maxW="150px"
-            marginLeft="5px"
+            // marginLeft="5px"
           >
             {userInfo.first_name} {userInfo.last_name}
           </Text>{" "}
@@ -197,7 +197,7 @@ function NotificationDropDown() {
   );
 
   return (
-    <Box onClick={handleClick} position="relative">
+    <Box onClick={handleClick} position="relative" width="fit-content">
       <CustomBadge
         count={store.notificationsCount}
         size="20px"
@@ -209,7 +209,7 @@ function NotificationDropDown() {
         placement="bottomCenter"
         arrow
       >
-        <BellFilled style={{ fontSize: "32px", color: "var(--dark-brown)" }} />
+        <BellFilled style={{ fontSize: "30px", color: "var(--dark-brown)" }} />
       </Dropdown>
     </Box>
   );
@@ -244,13 +244,22 @@ function Navbar() {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      padding="0 15px 15px 0"
+      marginTop="20px"
     >
-      <Box>
-        <Heading as="h2" fontSize="1.2rem">
+      <Box display={{ md: "block", lg: "none" }}>
+        <MenuOutlined
+          style={{ fontSize: "22px", color: "var(--dark-brown)" }}
+        />
+      </Box>
+      <Box flex="0.2" marginLeft={{ md: "15px" }}>
+        <Heading as="h2" fontSize={{ sm: "1rem", lg: "1.2rem" }}>
           Dashboard
         </Heading>
-        <Heading as="h3" fontSize="0.8rem" color="var(--dark-brown)">
+        <Heading
+          as="h3"
+          fontSize={{ sm: "0.6rem", lg: "0.8rem" }}
+          color="var(--dark-brown)"
+        >
           {getDay()}{" "}
           <Text
             color="var(--light-brown)"
@@ -259,10 +268,10 @@ function Navbar() {
           >{`${new Date().getDate()} ${getMonth()} ${new Date().getFullYear()}`}</Text>
         </Heading>
       </Box>
-      <Box>
+      <Box flex="0.5">
         <Search />
       </Box>
-      <Box _hover={{ cursor: "pointer" }}>
+      <Box _hover={{ cursor: "pointer" }} flex="0.1">
         <NotificationDropDown />
       </Box>
       <Box
@@ -270,6 +279,7 @@ function Navbar() {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        flex={{ sm: "0.2", lg: "0" }}
       >
         <Text
           className="initials"
