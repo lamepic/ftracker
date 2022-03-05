@@ -9,7 +9,6 @@ import { createFlow } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box } from "@chakra-ui/react";
 import { openNotificationWithIcon } from "../../utility/helper";
-
 const { Option } = Select;
 
 function Flow() {

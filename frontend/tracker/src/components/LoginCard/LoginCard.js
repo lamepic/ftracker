@@ -21,9 +21,10 @@ function LoginCard() {
       <Box
         borderRadius="8px"
         boxShadow="3px 3px 5px 5px #49494929"
-        w="90%"
+        w={{ sm: "50%", lg: "90%" }}
         h="auto"
-        marginTop="2.5rem"
+        margin={{ sm: "auto", lg: "0" }}
+        marginTop={{ sm: "10rem", lg: "2.5rem" }}
         padding="0 10px 10px 10px"
       >
         <Box textAlign="center" marginTop="10px" paddingTop="10px">
