@@ -33,7 +33,13 @@ function Tracking() {
       <h2 className="tracking__header">Document Tracking</h2>
       <hr className="divider" />
       {!loading ? (
-        <div className="tracking__content">
+        <Box
+          width="fit-content"
+          marginTop="10px"
+          maxH={{ sm: "85vh", lg: "75vh" }}
+          overflowY="auto"
+          paddingRight="10px"
+        >
           {outgoing.map((item) => {
             const user = item.receiver;
             const user_department = item.receiver.department?.name;
@@ -52,7 +58,7 @@ function Tracking() {
               />
             );
           })}
-        </div>
+        </Box>
       ) : (
         <Loading />
       )}

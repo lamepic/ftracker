@@ -51,43 +51,49 @@ function Home() {
       <Box
         display="flex"
         flexDirection="column"
-        marginTop={{ sm: "5rem", lg: "0" }}
+        marginTop={{ sm: "5rem", lg: "10px" }}
+        position="relative"
       >
-        <Box position="relative" marginTop="20px" margin="auto">
+        <Box position="relative" marginTop="0px" margin="auto" w="100%">
           <Box
             w="100%"
-            bg="#e3bc97"
-            h={{ sm: "120px", lg: "190px" }}
+            // bg="#e3bc97"
+            h={{ sm: "130px", lg: "210px" }}
             borderRadius="10px"
-            position="absolute"
-            bottom="0"
-            zIndex="-100"
-          ></Box>
-          <Box
-            position="absolute"
-            top={{ sm: "50px", lg: "90" }}
-            left={{ sm: "15px", lg: "30" }}
-            maxW={{ sm: "300px", lg: "600px" }}
           >
-            <Text
-              as="h3"
-              fontSize={{ sm: "2rem", lg: "2.5rem" }}
-              fontWeight="600"
-              isTruncated
+            <Box
+              position="absolute"
+              top={{ sm: "50px", lg: "90px" }}
+              left={{ sm: "15px", lg: "30" }}
+              maxW={{ sm: "350px", lg: "600px" }}
+              zIndex="100"
             >
-              Hi, {userInfo.first_name}
-            </Text>
-            <Text as="h4" fontSize={{ lg: "1rem" }} fontWeight="500">
-              Ready to start your day with Documents Tracker?
-            </Text>
+              <Text
+                as="h3"
+                fontSize={{ sm: "2rem", lg: "2.5rem" }}
+                fontWeight="600"
+                isTruncated
+              >
+                Hi, {userInfo.first_name}
+              </Text>
+              <Text as="h4" fontSize={{ lg: "1rem" }} fontWeight="500">
+                Ready to start your day with Documents Tracker?
+              </Text>
+            </Box>
+            <Image
+              src={dashboard_hero}
+              alt="dashboard-hero"
+              zIndex="10"
+              position="absolute"
+              top="0"
+            />
           </Box>
-          <Image src={dashboard_hero} alt="dashboard-hero" zIndex="100" />
         </Box>
 
         <Box
           display="flex"
           alignItems="center"
-          marginTop={{ sm: "10rem", lg: "3rem" }}
+          marginTop={{ sm: "10rem", lg: "5rem" }}
         >
           <Box marginRight="50px" marginLeft="15px">
             <Link to="/dashboard/incoming">

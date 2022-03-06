@@ -175,7 +175,7 @@ function ViewDocument() {
   return (
     <>
       {!loading ? (
-        <Box>
+        <Box marginTop={{ sm: "2rem", lg: "1.2rem" }}>
           <Box
             display="flex"
             flexDirection="row"
@@ -191,8 +191,8 @@ function ViewDocument() {
               color="var(--dark-brown)"
               _hover={{ cursor: "pointer" }}
               fontSize="15px"
-              padding="3px"
-              bg="var(--lighter-brown)"
+              padding="2px 8px"
+              bg="#e4a66c"
               borderRadius="50px"
             >
               {document.subject}
@@ -214,7 +214,11 @@ function ViewDocument() {
               );
             })}
           </Box>
-          <Box marginTop="20px" display="flex" justifyContent="space-around">
+          <Box
+            marginTop={{ sm: "2rem", lg: "1rem" }}
+            display="flex"
+            justifyContent="space-around"
+          >
             <Box
               display="flex"
               flexDirection="column"
