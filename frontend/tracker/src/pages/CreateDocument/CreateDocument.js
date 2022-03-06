@@ -45,19 +45,35 @@ const openNotificationWithIcon = (type, description) => {
 };
 
 const uploadRules = {
-  beforeUpload: (file) => {
-    const isPDF = file.type === "application/pdf";
-    if (!isPDF) {
-      openNotificationWithIcon("error", "File is not a pdf");
-      return;
-    }
-    return isPDF;
-  },
+  // beforeUpload: (file) => {
+  //   const isPDF = file.type === "application/pdf";
+  //   if (!isPDF) {
+  //     openNotificationWithIcon("error", "File is not a pdf");
+  //     return;
+  //   }
+  //   return isPDF;
+  // },
+
   onChange({ file, fileList }) {
+    console.log(file);
     if (file.status !== "uploading") {
       console.log(file, fileList);
     }
   },
+};
+
+const dummyRequest = ({ file, onSuccess }) => {
+  const isPDF = file.type === "application/pdf";
+  if (!isPDF) {
+    openNotificationWithIcon("error", "File is not a pdf");
+    onSuccess("fail");
+    return;
+  }
+  onSuccess("ok");
+
+  // setTimeout(() => {
+
+  // }, 0);
 };
 
 const getFile = (e) => {
@@ -175,7 +191,6 @@ function CreateDocument() {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
     let data = {};
     if (selectedDocumentType.name !== "Custom") {
       data = {
@@ -440,7 +455,11 @@ function CreateDocument() {
                 wrapperCol={{ ...layout.wrapperCol }}
                 getValueFromEvent={getFile}
               >
-                <Upload maxCount={1} {...uploadRules}>
+                <Upload
+                  maxCount={1}
+                  {...uploadRules}
+                  customRequest={dummyRequest}
+                >
                   <Button icon={<UploadOutlined />} style={{ width: "285px" }}>
                     Upload PDF only
                   </Button>

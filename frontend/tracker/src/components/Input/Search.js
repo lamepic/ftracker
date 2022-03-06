@@ -35,6 +35,8 @@ const searchResult = (
       });
   }
 
+  console.log(query);
+
   return query.map((item, idx) => {
     return {
       label: (

@@ -8,12 +8,13 @@
 }
 
 .forward {
-  /* background-color: var(--dark-brown); */
-  background-color: var(--blue);
+  background-color: var(--light-brown);
+  /* background-color: var(--blue); */
 }
 
 .submit {
-  background-color: #009014;
+  /* background-color: #009014; */
+  background-color: var(--dark-brown);
 }
 
 .minute-box-preview {
@@ -63,7 +64,7 @@ textarea::placeholder {
   margin-left: auto;
   margin-top: 15px;
   padding: 10px;
-  background-color: #009014;
+  background-color: var(--light-brown);
   border: none;
   color: var(--white);
   cursor: pointer;
