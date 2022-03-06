@@ -40,7 +40,12 @@ function FlowList({ activeTab }) {
   );
 
   return (
-    <Box maxW="450px" maxH="400px" overflowY="auto">
+    <Box
+      maxW="450px"
+      maxH={{ sm: "90vh", lg: "65vh" }}
+      overflowY="auto"
+      paddingRight="10px"
+    >
       <Collapse onChange={callback} accordion>
         {flows.map((flow) => {
           const { id, name, document_action } = flow;

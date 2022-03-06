@@ -138,8 +138,8 @@ function Dashboard() {
           </Box>
           <Box
             position="fixed"
-            right={{ sm: "35px", lg: "68px" }} //use this when you reset the width to default
-            bottom={{ sm: "300px", lg: "20px" }}
+            right={{ sm: "60px", lg: "68px" }} //use this when you reset the width to default
+            bottom={{ sm: "10px", lg: "20px" }}
 
             // right={{ sm: "10px", lg: "135px" }}
             // bottom={{ sm: "300px", lg: "20px" }}

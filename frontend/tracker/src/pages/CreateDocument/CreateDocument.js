@@ -252,7 +252,7 @@ function CreateDocument() {
   };
 
   return (
-    <Box position="relative">
+    <Box position="relative" marginTop="10px">
       {submitting && (
         <Box
           position="absolute"
@@ -282,7 +282,7 @@ function CreateDocument() {
             Add Document / Attachment
           </Heading>
           <hr className="divider" />
-          <Box maxW="490px">
+          <Box maxW="490px" marginTop="10px">
             <Form
               form={form}
               {...layout}
@@ -299,7 +299,7 @@ function CreateDocument() {
               >
                 <Input
                   style={{
-                    borderRadius: "3px",
+                    borderColor: "var(--dark-brown)",
                     outline: "none",
                   }}
                 />
@@ -312,9 +312,7 @@ function CreateDocument() {
               >
                 <Input
                   style={{
-                    borderRadius: "3px",
-                    // borderColor: "var(--dark-brown)",
-                    // backgroundColor: "var(--lightest-brown)",
+                    borderColor: "var(--dark-brown)",
                     outline: "none",
                   }}
                 />
@@ -328,9 +326,7 @@ function CreateDocument() {
                 <Select
                   placeholder="Select Document type"
                   style={{
-                    borderRadius: "3px",
                     borderColor: "var(--dark-brown)",
-                    backgroundColor: "var(--lightest-brown)",
                     outline: "none",
                   }}
                   onChange={(value) => onDocumentTypeChange(value)}
@@ -357,7 +353,6 @@ function CreateDocument() {
                 >
                   <Input
                     style={{
-                      borderRadius: "3px",
                       borderColor: "var(--dark-brown)",
                       backgroundColor: "var(--lightest-brown)",
                       outline: "none",
@@ -486,7 +481,11 @@ function CreateDocument() {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  style={{ width: "100px" }}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "var(--light-brown)",
+                    border: "none",
+                  }}
                 >
                   Submit
                 </Button>

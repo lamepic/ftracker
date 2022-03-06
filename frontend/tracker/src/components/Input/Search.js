@@ -16,7 +16,6 @@ const searchResult = (
   handleView,
   handleOpenActivatedDoc
 ) => {
-  console.log(query);
   if (query.length === 0) {
     return new Array(query.length)
       .join(".")
@@ -200,6 +199,8 @@ function Search() {
           width: "100%",
           overflow: "hidden",
           borderRadius: "20px",
+          border: "none",
+          outline: "none",
         }}
         options={options}
         onSelect={onSelect}
@@ -209,7 +210,7 @@ function Search() {
           size="large"
           placeholder="Search files and documents"
           style={{
-            borderRadius: "20px",
+            // borderRadius: "20px",
             border: "none",
             outline: "none",
           }}

@@ -101,8 +101,7 @@ function AttachmentModal({
           >
             <Input
               style={{
-                borderRadius: "3px",
-
+                borderColor: "var(--dark-brown)",
                 outline: "none",
               }}
             />
