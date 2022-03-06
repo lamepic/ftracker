@@ -5,7 +5,6 @@ import * as actionTypes from "../../store/actionTypes";
 import dashboard_hero from "../../assets/icons/dashboard-hero-icon.svg";
 import incoming_icon from "../../assets/icons/incoming-tray-icon.svg";
 import outgoing_icon from "../../assets/icons/outgoing-tray-icon.svg";
-import addIcon from "../../assets/icons/add-icon.svg";
 import archive from "../../assets/icons/archive.svg";
 import { useStateValue } from "../../store/StateProvider";
 import { Link } from "react-router-dom";
@@ -74,6 +73,7 @@ function Home() {
               as="h3"
               fontSize={{ sm: "2rem", lg: "2.5rem" }}
               fontWeight="600"
+              isTruncated
             >
               Hi, {userInfo.first_name}
             </Text>
@@ -117,18 +117,6 @@ function Home() {
         </Box>
       </Box>
       <hr className="divider" />
-      <Box
-        position="absolute"
-        right={{ sm: "10px", lg: "68px" }} //use this when you reset the width to default
-        bottom={{ sm: "300px", lg: "20px" }}
-
-        // right={{ sm: "10px", lg: "135px" }}
-        // bottom={{ sm: "300px", lg: "20px" }}
-      >
-        <Link to="/dashboard/add-document">
-          <Image src={addIcon} boxSize="45px" />
-        </Link>
-      </Box>
     </Box>
   );
 }

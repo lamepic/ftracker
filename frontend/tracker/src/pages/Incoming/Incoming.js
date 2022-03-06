@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./Incoming.css";
-import { Link } from "react-router-dom";
 import { useStateValue } from "../../store/StateProvider";
 import Folder from "../../components/Doc/Folder";
 import File from "../../components/Doc/File";
 import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import { fetchIncoming } from "../../http/document";
-import { Box, Image } from "@chakra-ui/react";
-import addIcon from "../../assets/icons/add-icon.svg";
+import { Box, Grid, Text } from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 import { notification } from "antd";
 
@@ -46,12 +43,19 @@ function Incoming() {
 
   return (
     <>
-      <div className="incoming">
-        <div className="incoming__container">
-          <h2 className="incoming__header">Received</h2>
+      <Box>
+        <Box marginTop="10px">
+          <Text
+            as="h2"
+            fontSize={{ sm: "1.5rem", lg: "1.7rem" }}
+            color="var(--dark-brown)"
+            fontWeight="600"
+          >
+            Received
+          </Text>
           {!loading ? (
-            <div className="incoming__content">
-              <div className="incoming__items">
+            <Box maxH={{ sm: "100vh", lg: "80vh" }} overflowY="auto">
+              <Grid templateColumns="repeat(6, 1fr)" gap={6}>
                 {incoming.map((item) => {
                   if (item.related_document.length > 0) {
                     return (
@@ -67,18 +71,13 @@ function Incoming() {
                     );
                   }
                 })}
-              </div>
-              <Box position="absolute" right="20px" bottom="20px">
-                <Link to="/dashboard/add-document">
-                  <Image src={addIcon} boxSize="45px" />
-                </Link>
-              </Box>
-            </div>
+              </Grid>
+            </Box>
           ) : (
             <Loading />
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
     </>
   );
 }

@@ -5,6 +5,7 @@ const intialState = {
   user: null,
   incomingCount: 0,
   outgoingCount: 0,
+  archiveCount: 0,
   openTrackingModal: false,
   trackingDocId: null,
   documentType: null,

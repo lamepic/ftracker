@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { loadUser } from "../../http/user";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
-import { Box, useDisclosure } from "@chakra-ui/react";
+import { Box, Image, useDisclosure } from "@chakra-ui/react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
 import { Link, Route } from "react-router-dom";
@@ -10,6 +10,7 @@ import Home from "../Home/Home";
 import Incoming from "../Incoming/Incoming";
 import Outgoing from "../Outgoing/Outgoing";
 import {
+  fetchArchiveCount,
   fetchIncomingCount,
   fetchOutgoingCount,
   notificationsCount,
@@ -23,6 +24,7 @@ import Archive from "../Archive/Archive";
 import ActivateDocument from "../ActivateDocument/ActivateDocument";
 import ActivatedDocView from "../ActivateDocument/ActivatedDocView";
 import Flow from "../Flow/Flow";
+import addIcon from "../../assets/icons/add-icon.svg";
 
 function Dashboard() {
   const [store, dispatch] = useStateValue();
@@ -52,6 +54,15 @@ function Dashboard() {
     });
   };
 
+  const _fetchArchiveCount = async () => {
+    const res = await fetchArchiveCount(store.token);
+    const data = res.data.count;
+    dispatch({
+      type: actionTypes.SET_ARCHIVE_COUNT,
+      payload: data,
+    });
+  };
+
   const _fetchOutgoingCount = async () => {
     const res = await fetchOutgoingCount(store.token);
     const data = res.data.count;
@@ -74,6 +85,7 @@ function Dashboard() {
     fetchUser();
     _fetchIncomingCount();
     _fetchOutgoingCount();
+    _fetchArchiveCount();
     fetchNotifications();
   }, []);
 
@@ -124,60 +136,20 @@ function Dashboard() {
               {store.openTrackingModal && <TrackingDetail />}
             </main>
           </Box>
+          <Box
+            position="fixed"
+            right={{ sm: "35px", lg: "68px" }} //use this when you reset the width to default
+            bottom={{ sm: "300px", lg: "20px" }}
+
+            // right={{ sm: "10px", lg: "135px" }}
+            // bottom={{ sm: "300px", lg: "20px" }}
+          >
+            <Link to="/dashboard/add-document">
+              <Image src={addIcon} boxSize="45px" />
+            </Link>
+          </Box>
         </Box>
       )}
-      {/* <Box
-        border="1px solid blue"
-        h="100vh"
-        // maxW="container.xl"
-        // h="100%"
-        // display="grid"
-        // placeItems="center"
-      >
-        {store.user !== null && (
-          <Box
-            display="flex"
-            flexDirection="row"
-            // alignItems="center"
-            // h="90%"
-            // w="90%"
-            // margin="auto"
-            bg="yellow"
-          >
-            <Sidebar />
-            <Box w="100%" position="relative" h="100%" marginLeft="30px">
-              <Navbar />
-              <main>
-                <Route exact path="/dashboard" component={Home} />
-                <Route path="/dashboard/incoming" component={Incoming} />
-                <Route path="/dashboard/outgoing" component={Outgoing} />
-                <Route
-                  path="/dashboard/add-document"
-                  component={CreateDocument}
-                />
-                <Route
-                  path={`/dashboard/document/:type/:id/`}
-                  component={ViewDocument}
-                />
-                <ProtectedPage path="/dashboard/archive" component={Archive} />
-
-                <Route path="/dashboard/tracker" component={Tracking} />
-
-                <Route
-                  path="/dashboard/activate-document"
-                  component={ActivateDocument}
-                />
-                <Route
-                  path="/dashboard/activated-document"
-                  component={ActivatedDocView}
-                />
-                <ProtectedPage path="/dashboard/create-flow" component={Flow} />
-                {store.openTrackingModal && <TrackingDetail />}
-              </main>
-            </Box>
-          </Box>
-        )}
-      </Box> */}
     </Box>
   );
 }
