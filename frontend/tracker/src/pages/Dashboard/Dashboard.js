@@ -78,23 +78,26 @@ function Dashboard() {
 
   return (
     <Box
-      // bg="var(--background-color)"
-      bg="green"
+      bg="var(--background-color)"
       h="100vh"
-      minW="max"
+      // minW="max"
     >
       {store.user !== null && (
         <Box
           display="flex"
           minH="100%"
-          bg="yellow"
-          maxW={{ sm: "750px", lg: "none" }}
+          maxW={{ sm: "750px", lg: "100%" }}
           margin={{ sm: "auto" }}
         >
           <Box flex={{ sm: "0", lg: "0.1" }}>
             <Sidebar />
           </Box>
-          <Box flex={{ sm: "1", lg: "0.8" }} minH="100%">
+          <Box
+            flex={{ sm: "1", lg: "0.8" }}
+            minH="100%"
+            marginX="auto"
+            // marginLeft={{ lg: "30px" }}
+          >
             <Navbar />
             <main>
               <Route exact path="/dashboard" component={Home} />

@@ -251,7 +251,7 @@ function Navbar() {
           style={{ fontSize: "22px", color: "var(--dark-brown)" }}
         />
       </Box>
-      <Box flex="0.2" marginLeft={{ md: "15px" }}>
+      <Box flex="0.2" marginLeft={{ md: "15px", lg: "0" }}>
         <Heading as="h2" fontSize={{ sm: "1rem", lg: "1.2rem" }}>
           Dashboard
         </Heading>
