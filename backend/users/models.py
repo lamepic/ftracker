@@ -85,6 +85,9 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
 
 class Department(models.Model):
     name = models.CharField(max_length=50, unique=True)
