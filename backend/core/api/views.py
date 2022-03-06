@@ -613,7 +613,9 @@ class SearchAPIView(views.APIView):
                 document_serializer = serializers.DocumentsSerializer(
                     item.document)
                 archive_data = {
-                    "document": document_serializer.data, "route": "archive"}
+                    "document": document_serializer.data,
+                    "route": "archive",
+                    "department": item.closed_by.department.name}
                 documents.append(archive_data)
 
         data = [doc for doc in documents if term.lower() in doc['document']

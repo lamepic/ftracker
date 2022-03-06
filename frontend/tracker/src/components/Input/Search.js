@@ -14,9 +14,9 @@ const searchResult = (
   handleTrack,
   handleRequest,
   handleView,
-  handleOpenActivatedDoc
+  handleOpenActivatedDoc,
+  store
 ) => {
-  console.log(query);
   if (query.length === 0) {
     return new Array(query.length)
       .join(".")
@@ -35,6 +35,8 @@ const searchResult = (
         };
       });
   }
+
+  console.log(query);
 
   return query.map((item, idx) => {
     return {
@@ -72,7 +74,16 @@ const searchResult = (
                 View
               </Button>
             )}
-            {item.route === "archive" && (
+            {item.route === "archive" &&
+            item.department === store.user.department.name ? (
+              <Button
+                size="middle"
+                className="search__btn"
+                onClick={() => handleView(item.route, item.document.id)}
+              >
+                View
+              </Button>
+            ) : (
               <Button
                 size="middle"
                 className="search__btn"
@@ -121,7 +132,8 @@ function Search() {
             handleTrack,
             handleRequest,
             handleView,
-            handleOpenActivatedDoc
+            handleOpenActivatedDoc,
+            store
           )
         : []
     );
