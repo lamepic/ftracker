@@ -215,7 +215,7 @@ function NotificationDropDown() {
   );
 }
 
-function Navbar() {
+function Navbar({ onOpen }) {
   const [store, dispatch] = useStateValue();
 
   const userInfo = store.user;
@@ -248,6 +248,7 @@ function Navbar() {
     >
       <Box display={{ md: "block", lg: "none" }}>
         <MenuOutlined
+          onClick={onOpen}
           style={{ fontSize: "22px", color: "var(--dark-brown)" }}
         />
       </Box>

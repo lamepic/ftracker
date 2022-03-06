@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { loadUser } from "../../http/user";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
-import { Box, Container } from "@chakra-ui/react";
+import { Box, useDisclosure } from "@chakra-ui/react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
-import { Route } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import Home from "../Home/Home";
 import Incoming from "../Incoming/Incoming";
 import Outgoing from "../Outgoing/Outgoing";
@@ -27,6 +27,7 @@ import Flow from "../Flow/Flow";
 function Dashboard() {
   const [store, dispatch] = useStateValue();
   const token = store.token;
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fetchUser = async () => {
     try {
@@ -77,11 +78,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <Box
-      bg="var(--background-color)"
-      h="100vh"
-      // minW="max"
-    >
+    <Box bg="var(--background-color)" h="100vh">
       {store.user !== null && (
         <Box
           display="flex"
@@ -90,7 +87,7 @@ function Dashboard() {
           margin={{ sm: "auto" }}
         >
           <Box flex={{ sm: "0", lg: "0.1" }}>
-            <Sidebar />
+            <Sidebar onClose={onClose} isOpen={isOpen} />
           </Box>
           <Box
             flex={{ sm: "1", lg: "0.8" }}
@@ -98,7 +95,7 @@ function Dashboard() {
             marginX="auto"
             // marginLeft={{ lg: "30px" }}
           >
-            <Navbar />
+            <Navbar onOpen={onOpen} />
             <main>
               <Route exact path="/dashboard" component={Home} />
               <Route path="/dashboard/incoming" component={Incoming} />
