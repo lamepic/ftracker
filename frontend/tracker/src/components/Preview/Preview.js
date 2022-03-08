@@ -1,7 +1,19 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import "./Preview.css";
+import { Box, Text } from "@chakra-ui/react";
+import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
 function Preview({ setOpenPreview, doc }) {
+  const content = doc.content.split("/");
+  const path = content[content.length - 1];
+
+  const docs = [{ uri: `http://192.168.40.8:8000${doc?.content}` }];
+
+  const openPreview = (e) => {
+    e.stopPropagation();
+    setOpenPreview(true);
+  };
+
   return (
     <div>
       <Box
@@ -15,16 +27,44 @@ function Preview({ setOpenPreview, doc }) {
         backdropFilter="blur(4px)"
         w="100%"
         h="100%"
-        zIndex="200"
+        zIndex="100"
         onClick={() => setOpenPreview(false)}
       >
-        <iframe
-          src={`http://192.168.40.8:8000${doc?.content}`}
-          title="preview document"
-          width="70%"
-          height="100%"
-          type="application/pdf"
-        ></iframe>
+        {path === "null" ? (
+          <Box
+            width="70%"
+            height="100%"
+            backgroundColor="var(--background-color)"
+            textAlign="center"
+            zIndex="800"
+          >
+            <Text
+              as="h3"
+              fontSize="3rem"
+              textTransform="uppercase"
+              marginTop="10rem"
+            >
+              Empty doc
+            </Text>
+            <Text as="h3" fontSize="3rem" textTransform="uppercase">
+              No Preview Available
+            </Text>
+          </Box>
+        ) : (
+          //   <iframe
+          //   src={`http://192.168.40.8:8000${doc?.content}`}
+          //   title="preview document"
+          //   width="70%"
+          //   height="100%"
+          //   type="application/pdf"
+          // ></iframe>
+          <DocViewer
+            documents={docs}
+            pluginRenderers={DocViewerRenderers}
+            style={{ width: "70%", height: "100%" }}
+            onClick={openPreview}
+          />
+        )}
       </Box>
     </div>
   );

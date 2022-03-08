@@ -26,6 +26,8 @@ urlpatterns = [
 
     path('archive/', views.ArchiveAPIView.as_view(),
          name='archive'),
+    path('archive-count/', views.ArchiveCountAPIView.as_view(),
+         name='archive_count'),
     path('archive/<user_id>/', views.ArchiveAPIView.as_view(),
          name='archive'),
 

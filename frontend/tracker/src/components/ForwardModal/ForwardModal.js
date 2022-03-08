@@ -104,7 +104,7 @@ function ForwardModal({ document, openModal, setOpenModal }) {
         const res = await forwardDocument(store.token, data);
         if (res.status === 201) {
           setOpenModal(false);
-          history.push("/dashboard/outgoing");
+          history.replace("/dashboard/outgoing");
           swal("Document has been sent succesfully", {
             icon: "success",
           });

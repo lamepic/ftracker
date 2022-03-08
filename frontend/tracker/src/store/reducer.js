@@ -27,6 +27,11 @@ const reducer = (state, action) => {
         ...state,
         outgoingCount: action.payload,
       };
+    case actionTypes.SET_ARCHIVE_COUNT:
+      return {
+        ...state,
+        archiveCount: action.payload,
+      };
     case actionTypes.SET_NOTIFICATIONS_COUNT:
       return {
         ...state,

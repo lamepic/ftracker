@@ -15,7 +15,6 @@ function Flow() {
   const [store, dispatch] = useStateValue();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const history = useHistory();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -50,15 +49,13 @@ function Flow() {
     <div>
       {!loading ? (
         <>
-          <Box maxW="450px" maxH="480px" overflowY="auto">
+          <Box maxW="450px" maxH="65vh" overflowY="auto" paddingRight="35px">
             <Form
               name="dynamic_form_nest_item"
               onFinish={onFinish}
               autoComplete="off"
               style={{
                 marginTop: "10px",
-                // marginRight: "10px",
-                // padding: "10px",
               }}
               form={form}
               requiredMark={false}

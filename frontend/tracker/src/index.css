@@ -75,3 +75,7 @@ a {
   background-color: none !important;
   pointer-events: all !important;
 }
+
+.swal-button.swal-button--confirm {
+  background-color: var(--light-brown) !important;
+}

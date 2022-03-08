@@ -97,6 +97,16 @@ class OutgoingCountAPIView(views.APIView):
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
+class ArchiveCountAPIView(views.APIView):
+    def get(self, request, format=None):
+        user = models.User.objects.get(staff_id=request.user.staff_id)
+        archive = [archive for archive in models.Archive.objects.all().order_by(
+            'created_by') if archive.created_by.department == user.department]
+        data = utils.Count(len(archive))
+        serialized_data = serializers.CountSerializer(data)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+
 class DocumentAPIView(views.APIView):
     def get(self, request, id, format=None):
         try:

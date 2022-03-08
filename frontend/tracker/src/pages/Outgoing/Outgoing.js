@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./Outgoing.css";
-import addIcon from "../../assets/icons/add-icon.svg";
-
-import { Link } from "react-router-dom";
 import Folder from "../../components/Doc/Folder";
 import File from "../../components/Doc/File";
 import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import { fetchOutgoing } from "../../http/document";
 import { useStateValue } from "../../store/StateProvider";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Grid, Text } from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 
 function Outgoing() {
@@ -35,12 +31,19 @@ function Outgoing() {
 
   return (
     <>
-      <div className="outgoing">
-        <div className="outgoing__container">
-          <h2 className="outgoing__header">Pending</h2>
+      <Box>
+        <Box marginTop="10px">
+          <Text
+            as="h2"
+            fontSize={{ sm: "1.5rem", lg: "1.7rem" }}
+            color="var(--dark-brown)"
+            fontWeight="600"
+          >
+            Pending
+          </Text>
           {!loading ? (
-            <div className="outgoing__content">
-              <div className="outgoing__items">
+            <Box maxH={{ sm: "100vh", lg: "80vh" }} overflowY="auto">
+              <Grid templateColumns="repeat(6, 1fr)" gap={6}>
                 {outgoing.map((item) => {
                   if (item.related_document.length > 0) {
                     return (
@@ -56,18 +59,13 @@ function Outgoing() {
                     );
                   }
                 })}
-              </div>
-              <Box position="absolute" right="20px" bottom="20px">
-                <Link to="/dashboard/add-document">
-                  <Image src={addIcon} boxSize="45px" />
-                </Link>
-              </Box>
-            </div>
+              </Grid>
+            </Box>
           ) : (
             <Loading />
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
     </>
   );
 }

@@ -3,7 +3,7 @@ import React from "react";
 
 function Loading() {
   return (
-    <Center h="81vh">
+    <Center h={{ sm: "90vh", lg: "75vh" }}>
       <Spinner
         thickness="4px"
         speed="0.65s"
