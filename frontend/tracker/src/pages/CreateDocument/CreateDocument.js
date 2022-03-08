@@ -461,7 +461,7 @@ function CreateDocument() {
                   customRequest={dummyRequest}
                 >
                   <Button icon={<UploadOutlined />} style={{ width: "285px" }}>
-                    Upload PDF only
+                    Upload
                   </Button>
                 </Upload>
               </Form.Item>
@@ -477,7 +477,7 @@ function CreateDocument() {
                   style={{ width: "285px" }}
                   onClick={() => setOpenModal(true)}
                 >
-                  Upload Attachments (PDF only)
+                  Upload Attachments
                 </Button>
                 {openModal && (
                   <AttachmentModal
