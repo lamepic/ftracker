@@ -3,6 +3,8 @@
 # dependencies
 frontend/tracker/node_modules
 backend/api/__pycache__
+backend/users/__pycache__
+backend/core/__pycache__
 backend/api/migrations
 backend/tracker/__pycache__
 backend/media
