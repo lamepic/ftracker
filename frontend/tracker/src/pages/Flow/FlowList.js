@@ -20,15 +20,12 @@ function FlowList({ activeTab }) {
     try {
       const res = await fetchFlow(store.token);
       setFlows(res.data);
-      console.log(res.data);
     } catch (e) {
       openNotificationWithIcon("error", "Error", e.response.data.detail);
     }
   };
 
-  const callback = (key) => {
-    console.log(key);
-  };
+  const callback = (key) => {};
 
   const genExtra = () => (
     <EditOutlined
@@ -52,16 +49,20 @@ function FlowList({ activeTab }) {
             const { id, name, document_action } = flow;
 
             const data = document_action.map((item) => {
-              const { action, user } = item;
+              const { action, user, id } = item;
               const name = `${user.first_name} ${user.last_name}`;
               const actionText =
                 action.toLowerCase() === "f" ? "Forward" : "Copy";
-              return { actionText, name };
+              return { actionText, name, key: id };
             });
 
             const columns = [
               { title: "Name", dataIndex: "name", key: "name" },
-              { title: "Action", dataIndex: "actionText", key: "actionText" },
+              {
+                title: "Action",
+                dataIndex: "actionText",
+                key: "actionText",
+              },
             ];
 
             return (
