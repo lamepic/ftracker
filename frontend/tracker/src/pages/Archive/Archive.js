@@ -7,17 +7,17 @@ import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box, Grid, Text } from "@chakra-ui/react";
-import {
-  FileAddOutlined,
-  FolderAddOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
+import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
+import CreateFileModal from "../../components/CustomModals/CreateFileModal";
 
 function Archive() {
   const [store] = useStateValue();
   const [archive, setArchive] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
+  const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
 
   const archiveCount = store.archiveCount;
 
@@ -48,9 +48,23 @@ function Archive() {
           >
             Archive
           </Text>
-          <Box display="flex" alignItems="center" marginTop="5px">
-            <ToolbarOption text="New Folder" Icon={FolderAddOutlined} />
-            <ToolbarOption text="Upload File" Icon={UploadOutlined} />
+          <Box
+            display="flex"
+            alignItems="center"
+            marginTop="5px"
+            // border="1px solid red"
+            bg="#eaeaea"
+          >
+            <ToolbarOption
+              text="New Folder"
+              Icon={FolderAddOutlined}
+              openModal={setOpenCreateFolderModal}
+            />
+            <ToolbarOption
+              text="Upload File"
+              Icon={UploadOutlined}
+              openModal={setOpenCreateFileModal}
+            />
           </Box>
           {!loading ? (
             <Box
@@ -84,6 +98,18 @@ function Archive() {
           )}
         </Box>
       </Box>
+      {openCreateFolderModal && (
+        <CreateFolderModal
+          setOpenCreateFolderModal={setOpenCreateFolderModal}
+          openCreateFolderModal={openCreateFolderModal}
+        />
+      )}
+      {openCreateFileModal && (
+        <CreateFileModal
+          setOpenCreateFileModal={setOpenCreateFileModal}
+          openCreateFileModal={openCreateFileModal}
+        />
+      )}
     </>
   );
 }

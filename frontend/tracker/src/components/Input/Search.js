@@ -38,6 +38,8 @@ const searchResult = (
 
   console.log(query);
 
+  console.log(store.user.is_department);
+
   return query.map((item, idx) => {
     return {
       label: (
@@ -75,7 +77,8 @@ const searchResult = (
               </Button>
             )}
             {item.route === "archive" &&
-              item.department === store.user.department.name && (
+              item.department === store.user.department.name &&
+              store.user.is_department && (
                 <Button
                   size="middle"
                   className="search__btn"
@@ -85,7 +88,8 @@ const searchResult = (
                 </Button>
               )}
             {item.route === "archive" &&
-              item.department !== store.user.department.name && (
+              !store.user.is_department &&
+              item.department === store.user.department.name && (
                 <Button
                   size="middle"
                   className="search__btn"
