@@ -48,7 +48,13 @@ function Archive() {
           >
             Archive
           </Text>
-          <Box display="flex" alignItems="center" marginTop="5px">
+          <Box
+            display="flex"
+            alignItems="center"
+            marginTop="5px"
+            // border="1px solid red"
+            bg="#eaeaea"
+          >
             <ToolbarOption
               text="New Folder"
               Icon={FolderAddOutlined}

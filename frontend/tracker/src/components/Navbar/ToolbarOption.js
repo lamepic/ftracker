@@ -12,7 +12,7 @@ function ToolbarOption({ Icon, text, openModal }) {
       }}
       marginRight="10px"
       transition="all 0.3s ease-in-out"
-      padding="5px"
+      padding="8px"
       onClick={() => openModal(true)}
     >
       <Icon
