@@ -15,8 +15,13 @@ function Login() {
       alignItems="center"
       justifyContent="center"
     >
-      <Box bg="var(--white)" w="80%" h="80%" display="flex">
-        <Box flex="0.7">
+      <Box
+        bg="var(--white)"
+        w="80%"
+        h="80%"
+        display={{ sm: "block", lg: "flex" }}
+      >
+        <Box flex={{ lg: "0.7" }} display={{ sm: "none", lg: "block" }}>
           <Box
             display="flex"
             justifyContent="space-between"
@@ -24,12 +29,7 @@ function Login() {
             marginTop="3rem"
             marginLeft="18%"
           >
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              // marginLeft={{ md: "9rem" }}
-            >
+            <Box display="flex" flexDirection="column" alignItems="center">
               <Image src={logo} alt="logo" w="90px" objectFit="contain" />
               <Box
                 display="flex"
@@ -47,7 +47,7 @@ function Login() {
             </Box>
             <Box
               fontSize={{ lg: "8.4rem" }}
-              marginRight="3rem"
+              marginRight={{ lg: "3rem" }}
               textTransform="uppercase"
               marginTop="auto"
             >
@@ -73,7 +73,6 @@ function Login() {
             <Image
               src={login_banner}
               alt="logo"
-              // htmlWidth="580px"
               objectFit="contain"
               marginLeft="50px"
               w="80%"
@@ -81,7 +80,7 @@ function Login() {
             />
           </Box>
         </Box>
-        <Box flex="0.3">
+        <Box flex={{ lg: "0.3", sm: "1" }} h={{ sm: "100%", lg: "auto" }}>
           <LoginCard />
         </Box>
       </Box>

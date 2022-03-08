@@ -16,7 +16,6 @@ const searchResult = (
   handleView,
   handleOpenActivatedDoc
 ) => {
-  console.log(query);
   if (query.length === 0) {
     return new Array(query.length)
       .join(".")
@@ -35,6 +34,8 @@ const searchResult = (
         };
       });
   }
+
+  console.log(query);
 
   return query.map((item, idx) => {
     return {
@@ -197,9 +198,11 @@ function Search() {
       <AutoComplete
         dropdownMatchSelectWidth={252}
         style={{
-          width: 450,
+          width: "100%",
           overflow: "hidden",
           borderRadius: "20px",
+          border: "none",
+          outline: "none",
         }}
         options={options}
         onSelect={onSelect}
@@ -209,7 +212,7 @@ function Search() {
           size="large"
           placeholder="Search files and documents"
           style={{
-            borderRadius: "20px",
+            // borderRadius: "20px",
             border: "none",
             outline: "none",
           }}

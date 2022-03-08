@@ -44,24 +44,13 @@ const openNotificationWithIcon = (type, description) => {
   });
 };
 
-const uploadRules = {
-  beforeUpload: (file) => {
-    const isPDF = file.type === "application/pdf";
-    if (!isPDF) {
-      openNotificationWithIcon("error", "File is not a pdf");
-      return;
-    }
-    return isPDF;
-  },
-  onChange({ file, fileList }) {
-    if (file.status !== "uploading") {
-      console.log(file, fileList);
-    }
-  },
+const dummyRequest = ({ file, onSuccess }) => {
+  setTimeout(() => {
+    onSuccess("fail");
+  }, 0);
 };
 
 const getFile = (e) => {
-  console.log("Upload event:", e);
   if (Array.isArray(e)) {
     return e;
   }
@@ -175,7 +164,6 @@ function CreateDocument() {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
     let data = {};
     if (selectedDocumentType.name !== "Custom") {
       data = {
@@ -252,7 +240,7 @@ function CreateDocument() {
   };
 
   return (
-    <Box position="relative">
+    <Box position="relative" marginTop="10px">
       {submitting && (
         <Box
           position="absolute"
@@ -282,7 +270,7 @@ function CreateDocument() {
             Add Document / Attachment
           </Heading>
           <hr className="divider" />
-          <Box maxW="490px">
+          <Box maxW="490px" marginTop="10px">
             <Form
               form={form}
               {...layout}
@@ -299,7 +287,7 @@ function CreateDocument() {
               >
                 <Input
                   style={{
-                    borderRadius: "3px",
+                    borderColor: "var(--dark-brown)",
                     outline: "none",
                   }}
                 />
@@ -312,9 +300,7 @@ function CreateDocument() {
               >
                 <Input
                   style={{
-                    borderRadius: "3px",
-                    // borderColor: "var(--dark-brown)",
-                    // backgroundColor: "var(--lightest-brown)",
+                    borderColor: "var(--dark-brown)",
                     outline: "none",
                   }}
                 />
@@ -328,9 +314,7 @@ function CreateDocument() {
                 <Select
                   placeholder="Select Document type"
                   style={{
-                    borderRadius: "3px",
                     borderColor: "var(--dark-brown)",
-                    backgroundColor: "var(--lightest-brown)",
                     outline: "none",
                   }}
                   onChange={(value) => onDocumentTypeChange(value)}
@@ -357,7 +341,6 @@ function CreateDocument() {
                 >
                   <Input
                     style={{
-                      borderRadius: "3px",
                       borderColor: "var(--dark-brown)",
                       backgroundColor: "var(--lightest-brown)",
                       outline: "none",
@@ -445,9 +428,9 @@ function CreateDocument() {
                 wrapperCol={{ ...layout.wrapperCol }}
                 getValueFromEvent={getFile}
               >
-                <Upload maxCount={1} {...uploadRules}>
+                <Upload maxCount={1} customRequest={dummyRequest}>
                   <Button icon={<UploadOutlined />} style={{ width: "285px" }}>
-                    Upload PDF only
+                    Upload
                   </Button>
                 </Upload>
               </Form.Item>
@@ -463,7 +446,7 @@ function CreateDocument() {
                   style={{ width: "285px" }}
                   onClick={() => setOpenModal(true)}
                 >
-                  Upload Attachments (PDF only)
+                  Upload Attachments
                 </Button>
                 {openModal && (
                   <AttachmentModal
@@ -486,7 +469,11 @@ function CreateDocument() {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  style={{ width: "100px" }}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "var(--light-brown)",
+                    border: "none",
+                  }}
                 >
                   Submit
                 </Button>

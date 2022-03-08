@@ -78,3 +78,9 @@
 .search__btn:hover {
   color: var(--dark-brown);
 }
+
+.ant-input.ant-select-selection-search-input:hover {
+  border: none !important;
+  outline: none !important;
+  overflow: hidden;
+}

@@ -1,10 +1,7 @@
-.flow {
-  margin-left: 10px;
-}
-
 .flow__header {
   color: var(--dark-brown);
   font-size: 1.7rem;
+  font-weight: 600;
 }
 
 .flow .divider {

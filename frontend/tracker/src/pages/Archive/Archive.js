@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from "react";
-import "./Archive.css";
 
-import { Link } from "react-router-dom";
 import { useStateValue } from "../../store/StateProvider";
 import Folder from "../../components/Doc/Folder";
 import File from "../../components/Doc/File";
 import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
-import { Box, Image } from "@chakra-ui/react";
-import addIcon from "../../assets/icons/add-icon.svg";
+import { Box, Grid, Text } from "@chakra-ui/react";
+import {
+  FileAddOutlined,
+  FolderAddOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import ToolbarOption from "../../components/Navbar/ToolbarOption";
 
 function Archive() {
   const [store] = useStateValue();
   const [archive, setArchive] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const archiveCount = store.archiveCount;
+
   const _fetchUserArchive = async () => {
     const res = await fetchUserArchive(store.token, store.user.staff_id);
     const data = res.data;
-    console.log(data);
     setArchive(data);
   };
 
@@ -28,20 +32,38 @@ function Archive() {
     setLoading(false);
   }, []);
 
-  if (archive.length === 0) {
+  if (archiveCount === 0) {
     return <EmptyPage type="archived" />;
   }
 
   return (
     <>
-      <div className="archive">
-        <div className="archive__container">
-          <h2 className="archive__header">Archive</h2>
+      <Box>
+        <Box marginTop="10px">
+          <Text
+            as="h2"
+            fontSize={{ sm: "1.5rem", lg: "1.7rem" }}
+            color="var(--dark-brown)"
+            fontWeight="600"
+          >
+            Archive
+          </Text>
+          <Box display="flex" alignItems="center" marginTop="5px">
+            <ToolbarOption text="New Folder" Icon={FolderAddOutlined} />
+            <ToolbarOption text="Upload File" Icon={UploadOutlined} />
+          </Box>
           {!loading ? (
-            <div className="archive__content">
-              <div className="archive__items">
+            <Box
+              maxH={{ sm: "100vh", lg: "80vh" }}
+              overflowY="auto"
+              marginTop="10px"
+            >
+              <Grid
+                templateColumns={{ sm: "repeat(4, 1fr)", lg: "repeat(6, 1fr)" }}
+                gap={6}
+              >
                 {archive.map((item) => {
-                  if (item?.document.related_document?.length > 0) {
+                  if (item.document.related_document.length > 0) {
                     return (
                       <Folder
                         doc={item}
@@ -55,18 +77,13 @@ function Archive() {
                     );
                   }
                 })}
-              </div>
-              <Box position="absolute" right="20px" bottom="20px">
-                <Link to="/dashboard/add-document">
-                  <Image src={addIcon} boxSize="45px" />
-                </Link>
-              </Box>
-            </div>
+              </Grid>
+            </Box>
           ) : (
             <Loading />
-          )}{" "}
-        </div>
-      </div>
+          )}
+        </Box>
+      </Box>
     </>
   );
 }

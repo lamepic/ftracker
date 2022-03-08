@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./AttachmentModal.css";
 
-import { Button, Form, Input, Modal, notification, Upload } from "antd";
+import { Button, Form, Input, Modal, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 const layout = {
@@ -18,34 +18,18 @@ const validateMessages = {
   required: "This field is required!",
 };
 
-const openNotificationWithIcon = (type, description) => {
-  notification[type]({
-    message: "Error",
-    description,
-  });
-};
-
-const uploadRules = {
-  beforeUpload: (file) => {
-    const isPDF = file.type === "application/pdf";
-    if (!isPDF) {
-      openNotificationWithIcon("error", "File is not a pdf");
-    }
-    return isPDF;
-  },
-  onChange({ file, fileList }) {
-    if (file.status !== "uploading") {
-      console.log(file, fileList);
-    }
-  },
-};
-
 const getFile = (e) => {
   console.log("Upload event:", e);
   if (Array.isArray(e)) {
     return e;
   }
   return e && e.fileList;
+};
+
+const dummyRequest = ({ file, onSuccess }) => {
+  setTimeout(() => {
+    onSuccess("fail");
+  }, 0);
 };
 
 function AttachmentModal({
@@ -101,8 +85,7 @@ function AttachmentModal({
           >
             <Input
               style={{
-                borderRadius: "3px",
-
+                borderColor: "var(--dark-brown)",
                 outline: "none",
               }}
             />
@@ -119,9 +102,9 @@ function AttachmentModal({
               },
             ]}
           >
-            <Upload maxCount={1} {...uploadRules}>
+            <Upload maxCount={1} customRequest={dummyRequest}>
               <Button icon={<UploadOutlined />} style={{ width: "275px" }}>
-                Upload PDF only
+                Upload
               </Button>
             </Upload>
           </Form.Item>

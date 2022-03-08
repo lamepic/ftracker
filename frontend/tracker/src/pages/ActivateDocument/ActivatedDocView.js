@@ -36,7 +36,7 @@ function ActivateDocView() {
   return (
     <>
       {!loading ? (
-        <Box>
+        <Box marginTop={{ sm: "2rem", lg: "1.2rem" }}>
           <Box
             display="flex"
             flexDirection="row"

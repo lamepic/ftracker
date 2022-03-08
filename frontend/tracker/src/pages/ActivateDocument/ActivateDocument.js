@@ -65,7 +65,6 @@ function ActivateDocument() {
     const data = {
       request_id: request.id,
       receiver_id: request.requested_by.staff_id,
-      // sender_id: store.user.employee_id,
       document_id: request.document.id,
       expire_at: new_date,
     };
@@ -100,7 +99,7 @@ function ActivateDocument() {
   return (
     <>
       {!loading ? (
-        <Box>
+        <Box marginTop={{ sm: "2rem", lg: "1.2rem" }}>
           <Box
             display="flex"
             flexDirection="row"

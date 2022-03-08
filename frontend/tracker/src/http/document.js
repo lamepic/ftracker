@@ -131,6 +131,18 @@ export async function fetchArchive(token) {
   return res;
 }
 
+export async function fetchArchiveCount(token) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get(`archive-count/`, config);
+  return res;
+}
+
 // Tracking trail of a document
 export async function fetchTracking(token, document_id) {
   const config = {
