@@ -75,23 +75,25 @@ const searchResult = (
               </Button>
             )}
             {item.route === "archive" &&
-            item.department === store.user.department.name ? (
-              <Button
-                size="middle"
-                className="search__btn"
-                onClick={() => handleView(item.route, item.document.id)}
-              >
-                View
-              </Button>
-            ) : (
-              <Button
-                size="middle"
-                className="search__btn"
-                onClick={() => handleRequest(item.document.id)}
-              >
-                Request
-              </Button>
-            )}
+              item.department === store.user.department.name && (
+                <Button
+                  size="middle"
+                  className="search__btn"
+                  onClick={() => handleView(item.route, item.document.id)}
+                >
+                  View
+                </Button>
+              )}
+            {item.route === "archive" &&
+              item.department !== store.user.department.name && (
+                <Button
+                  size="middle"
+                  className="search__btn"
+                  onClick={() => handleRequest(item.document.id)}
+                >
+                  Request
+                </Button>
+              )}
             {item.route === "pending" && (
               <Button size="middle" className="search__btn" disabled>
                 Pending
