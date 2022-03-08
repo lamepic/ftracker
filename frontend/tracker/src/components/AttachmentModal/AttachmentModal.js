@@ -26,6 +26,12 @@ const getFile = (e) => {
   return e && e.fileList;
 };
 
+const dummyRequest = ({ file, onSuccess }) => {
+  setTimeout(() => {
+    onSuccess("fail");
+  }, 0);
+};
+
 function AttachmentModal({
   getAttachments,
   attachments,
@@ -96,7 +102,7 @@ function AttachmentModal({
               },
             ]}
           >
-            <Upload maxCount={1}>
+            <Upload maxCount={1} customRequest={dummyRequest}>
               <Button icon={<UploadOutlined />} style={{ width: "275px" }}>
                 Upload
               </Button>

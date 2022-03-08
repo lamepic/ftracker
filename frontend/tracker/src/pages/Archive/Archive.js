@@ -7,7 +7,12 @@ import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box, Grid, Text } from "@chakra-ui/react";
-import { FileAddOutlined, FolderAddOutlined } from "@ant-design/icons";
+import {
+  FileAddOutlined,
+  FolderAddOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import ToolbarOption from "../../components/Navbar/ToolbarOption";
 
 function Archive() {
   const [store] = useStateValue();
@@ -35,46 +40,17 @@ function Archive() {
     <>
       <Box>
         <Box marginTop="10px">
-          <Box display="flex" alignItems="center">
-            <Text
-              as="h2"
-              fontSize={{ sm: "1.5rem", lg: "1.7rem" }}
-              color="var(--dark-brown)"
-              fontWeight="600"
-            >
-              Archive
-            </Text>
-            <Box
-              marginLeft="30px"
-              display="flex"
-              alignItems="center"
-              // w="100%"
-              // padding="5px"
-            >
-              <Box
-                _hover={{
-                  cursor: "pointer",
-                  backgroundColor: "var(--lightest-brown)",
-                }}
-                marginRight="10px"
-                padding="5px"
-              >
-                <FolderAddOutlined
-                  style={{ color: "var(--dark-brown)", fontSize: "1.5rem" }}
-                />
-              </Box>
-              <Box
-                _hover={{
-                  cursor: "pointer",
-                  backgroundColor: "var(--lightest-brown)",
-                }}
-                padding="5px"
-              >
-                <FileAddOutlined
-                  style={{ color: "var(--dark-brown)", fontSize: "1.5rem" }}
-                />
-              </Box>
-            </Box>
+          <Text
+            as="h2"
+            fontSize={{ sm: "1.5rem", lg: "1.7rem" }}
+            color="var(--dark-brown)"
+            fontWeight="600"
+          >
+            Archive
+          </Text>
+          <Box display="flex" alignItems="center" marginTop="5px">
+            <ToolbarOption text="New Folder" Icon={FolderAddOutlined} />
+            <ToolbarOption text="Upload File" Icon={UploadOutlined} />
           </Box>
           {!loading ? (
             <Box
