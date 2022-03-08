@@ -94,7 +94,7 @@ function Dashboard() {
       {store.user !== null && (
         <Box
           display="flex"
-          minH="100%"
+          // minH="100%"
           maxW={{ sm: "750px", lg: "100%" }}
           margin={{ sm: "auto" }}
         >
@@ -105,7 +105,10 @@ function Dashboard() {
             flex={{ sm: "1", lg: "0.8" }}
             minH="100%"
             marginX="auto"
+            // paddingX="1.5rem"
             // marginLeft={{ lg: "30px" }}
+            h="100vh"
+            overflow="auto"
           >
             <Navbar onOpen={onOpen} />
             <main>

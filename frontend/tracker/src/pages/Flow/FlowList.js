@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { Collapse, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { fetchFlow } from "../../http/document";
@@ -46,30 +46,44 @@ function FlowList({ activeTab }) {
       overflowY="auto"
       paddingRight="10px"
     >
-      <Collapse onChange={callback} accordion>
-        {flows.map((flow) => {
-          const { id, name, document_action } = flow;
+      {flows.length > 0 ? (
+        <Collapse onChange={callback} accordion>
+          {flows.map((flow) => {
+            const { id, name, document_action } = flow;
 
-          const data = document_action.map((item) => {
-            const { action, user } = item;
-            const name = `${user.first_name} ${user.last_name}`;
-            const actionText =
-              action.toLowerCase() === "f" ? "Forward" : "Copy";
-            return { actionText, name };
-          });
+            const data = document_action.map((item) => {
+              const { action, user } = item;
+              const name = `${user.first_name} ${user.last_name}`;
+              const actionText =
+                action.toLowerCase() === "f" ? "Forward" : "Copy";
+              return { actionText, name };
+            });
 
-          const columns = [
-            { title: "Name", dataIndex: "name", key: "name" },
-            { title: "Action", dataIndex: "actionText", key: "actionText" },
-          ];
+            const columns = [
+              { title: "Name", dataIndex: "name", key: "name" },
+              { title: "Action", dataIndex: "actionText", key: "actionText" },
+            ];
 
-          return (
-            <Collapse.Panel header={name} key={id} extra={genExtra()}>
-              <Table columns={columns} dataSource={data} />
-            </Collapse.Panel>
-          );
-        })}
-      </Collapse>
+            return (
+              <Collapse.Panel header={name} key={id} extra={genExtra()}>
+                <Table columns={columns} dataSource={data} />
+              </Collapse.Panel>
+            );
+          })}
+        </Collapse>
+      ) : (
+        <Box>
+          <Text
+            as="h2"
+            fontSize="1.5rem"
+            color="var(--dark-brown)"
+            fontWeight="600"
+            marginTop="20px"
+          >
+            No Flows to Manage
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 }

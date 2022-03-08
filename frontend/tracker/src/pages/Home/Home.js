@@ -43,23 +43,31 @@ function Home() {
 
   return (
     <Box
-      marginTop={{ sm: "2rem", lg: "" }}
+      marginTop={{ sm: "2rem", lg: "2.2rem" }}
       maxW={{ sm: "95%", lg: "100%" }}
       marginX="auto"
       marginLeft={{ sm: "35px", lg: "0" }}
+      // bg={{ md: "yellow", lg: "red", xl: "blue" }}
     >
       <Box
         display="flex"
         flexDirection="column"
         marginTop={{ sm: "5rem", lg: "10px" }}
         position="relative"
+        flex="1"
       >
-        <Box position="relative" marginTop="0px" margin="auto" w="100%">
+        <Box
+          position="relative"
+          marginTop={{ sm: "0px" }}
+          margin="auto"
+          w="100%"
+        >
           <Box
             w="100%"
-            // bg="#e3bc97"
-            h={{ sm: "130px", lg: "210px" }}
+            h={{ sm: "130px", lg: "220px" }}
             borderRadius="10px"
+            bg="#E3BC97"
+            marginTop={{ lg: "2rem" }}
           >
             <Box
               position="absolute"
@@ -86,6 +94,9 @@ function Home() {
               zIndex="10"
               position="absolute"
               top="0"
+              right="0"
+              h="100%"
+              w="auto"
             />
           </Box>
         </Box>
@@ -93,7 +104,7 @@ function Home() {
         <Box
           display="flex"
           alignItems="center"
-          marginTop={{ sm: "10rem", lg: "5rem" }}
+          marginTop={{ sm: "10rem", lg: "4rem" }}
         >
           <Box marginRight="50px" marginLeft="15px">
             <Link to="/dashboard/incoming">

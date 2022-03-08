@@ -7,7 +7,12 @@ function Preview({ setOpenPreview, doc }) {
   const content = doc.content.split("/");
   const path = content[content.length - 1];
 
-  const docs = [{ uri: `http://127.0.0.1:8000${doc?.content}` }];
+  const docs = [{ uri: `http://192.168.40.8:8000${doc?.content}` }];
+
+  const openPreview = (e) => {
+    e.stopPropagation();
+    setOpenPreview(true);
+  };
 
   return (
     <div>
@@ -57,6 +62,7 @@ function Preview({ setOpenPreview, doc }) {
             documents={docs}
             pluginRenderers={DocViewerRenderers}
             style={{ width: "70%", height: "100%" }}
+            onClick={openPreview}
           />
         )}
       </Box>
