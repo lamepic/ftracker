@@ -1,8 +1,11 @@
-import React from "react";
-import "./AttachmentModal.css";
-
-import { Button, Form, Input, Modal, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Upload } from "antd";
+import Modal from "antd/lib/modal/Modal";
+import React from "react";
+
+const validateMessages = {
+  required: "This field is required!",
+};
 
 const layout = {
   labelCol: {
@@ -14,56 +17,37 @@ const layout = {
   },
 };
 
-const validateMessages = {
-  required: "This field is required!",
-};
-
-const getFile = (e) => {
-  console.log("Upload event:", e);
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e && e.fileList;
-};
-
 const dummyRequest = ({ file, onSuccess }) => {
   setTimeout(() => {
     onSuccess("fail");
   }, 0);
 };
 
-function AttachmentModal({
-  getAttachments,
-  attachments,
-  openModal,
-  setOpenModal,
-}) {
+const getFile = (e) => {
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e && e.fileList;
+};
+
+function CreateFileModal({ setOpenCreateFileModal, openCreateFileModal }) {
   const [form] = Form.useForm();
 
   const handleCancel = () => {
-    setOpenModal(false);
+    setOpenCreateFileModal(false);
   };
 
   const onFinish = (values) => {
     console.log(values);
-    const new_attachment = {
-      file: values.document[0].originFileObj,
-      subject: values.subject,
-    };
-    console.log(new_attachment);
-    const items = [...attachments, new_attachment];
-    getAttachments(items);
-    setOpenModal(false);
-    setOpenModal(false);
   };
-
   return (
     <>
       <Modal
-        title="Add Attachment"
-        visible={openModal}
+        title="Upload File"
+        visible={openCreateFileModal}
         onOk={form.submit}
         onCancel={handleCancel}
+        style={{ top: 20 }}
       >
         <Form
           {...layout}
@@ -75,7 +59,7 @@ function AttachmentModal({
         >
           <Form.Item
             labelAlign="left"
-            name="subject"
+            name="name"
             label="Subject"
             rules={[
               {
@@ -92,15 +76,27 @@ function AttachmentModal({
           </Form.Item>
           <Form.Item
             labelAlign="left"
-            name="document"
-            label="Document"
-            // wrapperCol={{ ...layout.labelCol, offset: 9 }}
-            getValueFromEvent={getFile}
+            name="name"
+            label="Reference"
             rules={[
               {
                 required: true,
               },
             ]}
+          >
+            <Input
+              style={{
+                borderColor: "var(--dark-brown)",
+                outline: "none",
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            labelAlign="left"
+            name="document"
+            label="File"
+            wrapperCol={{ ...layout.wrapperCol }}
+            getValueFromEvent={getFile}
           >
             <Upload maxCount={1} customRequest={dummyRequest}>
               <Button icon={<UploadOutlined />} style={{ width: "275px" }}>
@@ -114,4 +110,4 @@ function AttachmentModal({
   );
 }
 
-export default AttachmentModal;
+export default CreateFileModal;
