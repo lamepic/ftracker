@@ -88,6 +88,11 @@ class DocumentActionAdmin(admin.ModelAdmin):
     list_filter = ['document_type']
 
 
-# @admin.register(models.DocumentFlowPosition)
-# class DocumentFlowAdmin(admin.ModelAdmin):
-#     list_display = ['order']
+@admin.register(models.Folder)
+class FolderAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+
+
+@admin.register(models.ArchiveDocument)
+class ArchiveDocumentAdmin(admin.ModelAdmin):
+    list_display = ["subject", "reference"]
