@@ -168,6 +168,26 @@ class ActivateDocument(models.Model):
         return f'{self.document.subject} - {self.expire_at}'
 
 
+class Folder(models.Model):
+    name = models.CharField(max_length=60)
+    subfolder = models.ForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True)
+    document = models.ForeignKey(
+        "ArchiveDocument", on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ArchiveDocument(models.Model):
+    subject = models.CharField(max_length=60)
+    reference = models.CharField(max_length=60, blank=True, null=True)
+    content = models.FileField(upload_to="documents/")
+
+    def __str__(self):
+        return self.subject
+
+
 @receiver(post_save, sender=ActivateDocument)
 def expire_date_handler(sender, instance, created, **kwargs):
     secret_id = random.randint(1, 9999)
