@@ -1,4 +1,7 @@
+from unittest.util import _MAX_LENGTH
 from rest_framework import serializers
+
+from backend.users.api.serializers import DepartmentSerializer
 
 from .. import models
 
@@ -165,6 +168,8 @@ class CountSerializer(serializers.Serializer):
 
 class TrackingSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=50)
+    department = serializers.CharField(max_length=30)
+    # date = serializers.DateTimeField()
 
 
 class FlowSerializer(serializers.ModelSerializer):
