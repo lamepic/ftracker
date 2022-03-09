@@ -84,7 +84,7 @@ function TrackingDetail() {
                         </>
                       }
                     >
-                      Forwarded
+                      <Text _hover={{ cursor: "pointer" }}>Forwarded</Text>
                     </Popover>
                   }
                   key={idx}
@@ -114,7 +114,7 @@ function TrackingDetail() {
                         </>
                       }
                     >
-                      In progress
+                      <Text _hover={{ cursor: "pointer" }}>In progress</Text>
                     </Popover>
                   }
                   key={idx}
