@@ -5,7 +5,7 @@ import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 import Modal from "antd/lib/modal/Modal";
 import { CircularProgress } from "@chakra-ui/react";
-import { Steps } from "antd";
+import { Popover, Steps } from "antd";
 
 function TrackingDetail() {
   const [store, dispatch] = useStateValue();
@@ -17,6 +17,7 @@ function TrackingDetail() {
   const _fetchTracking = async () => {
     const res = await fetchTracking(store.token, documentId);
     const data = res.data;
+    console.log(data);
     setTracking(data);
     setLoading(false);
   };
@@ -35,6 +36,7 @@ function TrackingDetail() {
       payload: null,
     });
   };
+
   return (
     <div>
       <Modal
@@ -62,14 +64,22 @@ function TrackingDetail() {
                 <Steps.Step
                   description={label.name}
                   style={{ marginBottom: "2em" }}
-                  title="Forwarded"
+                  title={
+                    <Popover content="More information about step one">
+                      Forwarded
+                    </Popover>
+                  }
                   key={idx}
                 />
               ) : (
                 <Steps.Step
                   description={label.name}
                   style={{ marginBottom: "2em" }}
-                  title="In progress"
+                  title={
+                    <Popover content="More information about step one">
+                      In progress
+                    </Popover>
+                  }
                   key={idx}
                 />
               )
