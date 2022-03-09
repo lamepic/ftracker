@@ -1,8 +1,6 @@
 from unittest.util import _MAX_LENGTH
 from rest_framework import serializers
 
-from backend.users.api.serializers import DepartmentSerializer
-
 from .. import models
 
 from users.api import serializers as users_serializers
