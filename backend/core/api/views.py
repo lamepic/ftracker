@@ -779,3 +779,14 @@ class FolderAPIView(views.APIView):
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except:
             raise exceptions.ServerError
+
+
+class ArchiveDocumentAPIView(views.APIView):
+
+    def get(self, request, format=None):
+
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def post(self, request, format=None):
+        print(request.data)
+        return Response({}, status=status.HTTP_201_CREATED)
