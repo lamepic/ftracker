@@ -6,6 +6,7 @@ backend/users/__pycache__
 backend/users/migrations
 backend/core/__pycache__
 backend/core/api/__pycache__
+backend/core/libs/__pycache__
 backend/core/migrations
 backend/tracker/__pycache__
 backend/media
