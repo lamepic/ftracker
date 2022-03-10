@@ -1,4 +1,5 @@
 from unittest.util import _MAX_LENGTH
+from attr import fields
 from rest_framework import serializers
 
 from .. import models
@@ -200,17 +201,8 @@ class FolderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', "slug", 'children')
 
 
-# class FolderSerializer(serializers.ModelSerializer):
-#     children = serializers.SerializerMethodField(source='get_children')
+class ArchiveDocumentSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = models.Folder
-#         # add here rest of the fields from model
-#         fields = ("id", 'name', 'children',)
-
-#     def get_children(self, obj):
-#         print(self.context)
-#         children = self.context['children'].get(obj.id, [])
-#         serializer = FolderSerializer(
-#             children, many=True, context=self.context)
-#         return serializer.data
+    class Meta:
+        model = models.ArchiveDocument
+        fields = ["subject", "reference", "content"]
