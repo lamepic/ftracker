@@ -36,7 +36,7 @@ export async function createFolder(token, data) {
   return res;
 }
 
-export async function fetchFiles(token, data) {
+export async function createFile(token, data) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -44,6 +44,13 @@ export async function fetchFiles(token, data) {
     },
   };
 
-  const res = await axios.get(`files/${data}`, config);
+  const formData = new FormData();
+
+  formData.append("file", data.file);
+  formData.append("subject", data.subject);
+  formData.append("reference", data.reference);
+  formData.append("parentFolderId", data.parentFolderId);
+
+  const res = await axios.post("file/", formData, config);
   return res;
 }

@@ -785,10 +785,19 @@ class FolderAPIView(views.APIView):
 
 class ArchiveFileAPIView(views.APIView):
 
-    def get(self, request, parent_folder_id, format=None):
-        # files = models.ArchiveDocument.objects.get()
-        return Response({}, status=status.HTTP_201_CREATED)
-
     def post(self, request, format=None):
-        print(request.data)
-        return Response({}, status=status.HTTP_201_CREATED)
+        subject = request.data.get("subject")
+        reference = request.data.get("reference")
+        file = request.data.get("file")
+        parent_folder_id = request.data.get("parentFolderId")
+
+        try:
+            parent_folder = models.Folder.objects.get_queryset().filter(
+                id=parent_folder_id)
+
+            file = models.ArchiveFile.objects.create(
+                subject=subject, reference=reference, content=file, folder=parent_folder[0])
+            serialized_data = serializers.ArchiveFileSerializer(file)
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        except:
+            raise exceptions.ServerError

@@ -22,7 +22,6 @@ function Directory() {
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folder, setFolder] = useState({});
-  const [files, setFiles] = useState();
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
 
@@ -38,14 +37,6 @@ function Directory() {
     const res = await fetchSubfolders(store.token, params.slug);
     const data = res.data[0];
     setFolder(data);
-    _fetchFiles(data.id);
-    console.log(data);
-  };
-
-  const _fetchFiles = async (id) => {
-    const res = await fetchFiles(store.token, id);
-    const data = res.data;
-    console.log(data);
   };
 
   return (
@@ -163,6 +154,9 @@ function Directory() {
         <CreateFileModal
           setOpenCreateFileModal={setOpenCreateFileModal}
           openCreateFileModal={openCreateFileModal}
+          folderId={folder.id}
+          appendFile={setFolder}
+          parentFolder={folder}
         />
       )}
       {openPreview && (

@@ -19,7 +19,6 @@ const validateMessages = {
 };
 
 const getFile = (e) => {
-  console.log("Upload event:", e);
   if (Array.isArray(e)) {
     return e;
   }
@@ -45,12 +44,10 @@ function AttachmentModal({
   };
 
   const onFinish = (values) => {
-    console.log(values);
     const new_attachment = {
       file: values.document[0].originFileObj,
       subject: values.subject,
     };
-    console.log(new_attachment);
     const items = [...attachments, new_attachment];
     getAttachments(items);
     setOpenModal(false);

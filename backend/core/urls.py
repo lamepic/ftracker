@@ -65,7 +65,5 @@ urlpatterns = [
     path('folders/', views.FolderAPIView.as_view(), name='folders'),
     path('folders/<slug>/', views.FolderAPIView.as_view(), name='folders'),
 
-    path('files/<parent_folder_id>/',
-         views.ArchiveFileAPIView.as_view(), name='files'),
-    #     path('files/<slug>/', views.FolderAPIView.as_view(), name='folders'),
+    path('file/', views.ArchiveFileAPIView.as_view(), name='files'),
 ]
