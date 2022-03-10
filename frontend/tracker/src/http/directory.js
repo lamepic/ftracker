@@ -23,3 +23,15 @@ export async function fetchSubfolders(token, slug) {
   const res = await axios.get(`folders/${slug}`, config);
   return res;
 }
+
+export async function createFolder(token, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post("folders/", data, config);
+  return res;
+}

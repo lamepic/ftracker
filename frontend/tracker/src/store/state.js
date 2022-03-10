@@ -12,7 +12,7 @@ const intialState = {
   notificationsCount: 0,
   request_details: null,
   activatedDocumentDetails: null,
-  breadcrumbs: [],
+  breadcrumbs: localStorage.getItem("breadcrumbs"),
 };
 
 export default intialState;

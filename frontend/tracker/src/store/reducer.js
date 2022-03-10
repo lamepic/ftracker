@@ -63,11 +63,20 @@ const reducer = (state, action) => {
         activatedDocumentDetails: action.payload,
       };
     case actionTypes.SET_BREADCRUMBS:
+      const new_breadcrumb = JSON.stringify(action.payload);
+      localStorage.setItem(
+        "breadcrumbs",
+        JSON.stringify([...state.breadcrumbs, new_breadcrumb])
+      );
       return {
         ...state,
         breadcrumbs: [...state.breadcrumbs, action.payload],
       };
     case actionTypes.REMOVE_BREADCRUMBS:
+      localStorage.setItem(
+        "breadcrumbs",
+        JSON.stringify(state.breadcrumbs.slice(0, action.payload + 1))
+      );
       return {
         ...state,
         breadcrumbs: state.breadcrumbs.slice(0, action.payload + 1),

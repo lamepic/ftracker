@@ -3,11 +3,6 @@ from rest_framework import routers
 
 from .api import views
 
-# router = routers.DefaultRouter()
-
-# router.register(
-#     r'folders', views.FolderAPIView, basename='folder')
-
 app_name = "core"
 
 urlpatterns = [
@@ -70,6 +65,3 @@ urlpatterns = [
     path('folders/', views.FolderAPIView.as_view(), name='folders'),
     path('folders/<slug>/', views.FolderAPIView.as_view(), name='folders'),
 ]
-
-
-# urlpatterns += router.urls

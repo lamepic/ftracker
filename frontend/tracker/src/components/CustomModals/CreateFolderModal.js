@@ -1,6 +1,8 @@
 import React from "react";
-import { Input, Form } from "antd";
+import { Input, Form, notification } from "antd";
 import Modal from "antd/lib/modal/Modal";
+import { createFolder } from "../../http/directory";
+import { useStateValue } from "../../store/StateProvider";
 
 const validateMessages = {
   required: "This field is required!",
@@ -19,15 +21,35 @@ const layout = {
 function CreateFolderModal({
   setOpenCreateFolderModal,
   openCreateFolderModal,
+  folderId,
+  appendSubFolder,
+  parentFolder,
 }) {
   const [form] = Form.useForm();
+  const [store, dispatch] = useStateValue();
 
   const handleCancel = () => {
     setOpenCreateFolderModal(false);
   };
 
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    try {
+      const res = await createFolder(store.token, {
+        name: values.name,
+        folderId,
+      });
+      appendSubFolder({
+        ...parentFolder,
+        children: [...parentFolder?.children, res.data],
+      });
+      console.log(res.data);
+    } catch (e) {
+      notification.error({
+        message: "Error",
+        description: e.response.detail,
+      });
+    }
+    setOpenCreateFolderModal(false);
   };
   return (
     <>

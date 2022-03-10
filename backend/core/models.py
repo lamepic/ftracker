@@ -1,5 +1,6 @@
 import random
 import json
+import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
@@ -196,9 +197,9 @@ class Folder(MPTTModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        unique_id = uuid.uuid4()
         if not self.slug:
-            generate_slug = f'{self.name} {self.id}'
-            self.slug = slugify(generate_slug)
+            self.slug = slugify(unique_id)
         return super().save(*args, **kwargs)
 
 

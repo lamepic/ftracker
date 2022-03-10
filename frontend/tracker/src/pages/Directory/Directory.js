@@ -19,10 +19,10 @@ function Directory() {
   const [loading, setLoading] = useState();
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
-  const [folders, setFolders] = useState([]);
+  const [folder, setFolder] = useState({});
 
   useEffect(() => {
-    setFolders([]);
+    setFolder({});
     _fetchFolders();
     setLoading(false);
   }, [params]);
@@ -42,7 +42,7 @@ function Directory() {
   const _fetchFolders = async () => {
     const res = await fetchSubfolders(store.token, params.slug);
     const data = res.data[0];
-    setFolders(data);
+    setFolder(data);
   };
 
   return (
@@ -121,7 +121,7 @@ function Directory() {
                 }}
                 gap={6}
               >
-                {folders.children?.map((folder) => {
+                {folder.children?.map((folder) => {
                   return (
                     <DirectoryIcon
                       name={folder.name}
@@ -141,6 +141,9 @@ function Directory() {
         <CreateFolderModal
           setOpenCreateFolderModal={setOpenCreateFolderModal}
           openCreateFolderModal={openCreateFolderModal}
+          folderId={folder.id}
+          appendSubFolder={setFolder}
+          parentFolder={folder}
         />
       )}
       {openCreateFileModal && (
