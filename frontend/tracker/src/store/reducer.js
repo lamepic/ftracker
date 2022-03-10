@@ -72,6 +72,12 @@ const reducer = (state, action) => {
         ...state,
         breadcrumbs: state.breadcrumbs.slice(0, action.payload + 1),
       };
+    case actionTypes.POP_BREADCRUMBS:
+      console.log(state.breadcrumbs);
+      return {
+        ...state,
+        breadcrumbs: state.breadcrumbs.slice(0, state.breadcrumbs.length - 1),
+      };
     case actionTypes.CLEAR_BREADCRUMBS:
       return {
         ...state,

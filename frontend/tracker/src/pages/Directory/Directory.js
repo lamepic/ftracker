@@ -27,7 +27,17 @@ function Directory() {
     setLoading(false);
   }, [params]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    const popbreadcrumb = () => {
+      dispatch({
+        type: actionTypes.POP_BREADCRUMBS,
+      });
+    };
+
+    window.addEventListener("popstate", popbreadcrumb);
+
+    return () => window.removeEventListener("popstate", popbreadcrumb);
+  }, []);
 
   const _fetchFolders = async () => {
     const res = await fetchSubfolders(store.token, params.slug);
