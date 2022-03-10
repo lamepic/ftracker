@@ -57,18 +57,20 @@ function Directory() {
               openModal={setOpenCreateFileModal}
             />
           </Box>
-          <Text
-            marginTop="20px"
-            _hover={{ cursor: "pointer" }}
-            fontSize="0.8rem"
-            color="var(--dark-brown)"
-            fontWeight="500"
-          >
+          <Box marginTop="20px">
             <Breadcrumb separator=">">
               <Breadcrumb.Item
                 onClick={() => history.push(`/dashboard/archive/`)}
               >
-                Archive
+                <Text
+                  _hover={{ cursor: "pointer" }}
+                  fontSize="0.9rem"
+                  // color="var(--dark-brown)"
+                  fontWeight="500"
+                  as="span"
+                >
+                  Archive
+                </Text>
               </Breadcrumb.Item>
               {store.breadcrumbs.map((breadcrumb, idx) => {
                 return (
@@ -82,13 +84,20 @@ function Directory() {
                     }}
                     key={breadcrumb.slug}
                   >
-                    {breadcrumb.name}
+                    <Text
+                      _hover={{ cursor: "pointer" }}
+                      fontSize="0.9rem"
+                      // color="var(--dark-brown)"
+                      fontWeight="500"
+                      as="span"
+                    >
+                      {breadcrumb.name}
+                    </Text>
                   </Breadcrumb.Item>
                 );
               })}
             </Breadcrumb>
-          </Text>
-
+          </Box>
           {!loading ? (
             <Box
               maxH={{ sm: "100vh", lg: "80vh" }}
