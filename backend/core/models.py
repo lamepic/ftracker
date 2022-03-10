@@ -50,6 +50,8 @@ class Document(models.Model):
     document_type = models.ForeignKey(
         DocumentType, on_delete=models.CASCADE, null=True, blank=True)
     encrypt = models.BooleanField(default=False)
+    folder = models.ForeignKey(
+        "Folder", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.subject
@@ -134,7 +136,7 @@ class Archive(models.Model):
     created_by = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='created_by_employee')
     closed_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='closed_by_employee')
+        User, on_delete=models.CASCADE, related_name='closed_by_employee', null=True, blank=True)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name='archive_document')
     close_date = models.DateTimeField(auto_now_add=True)
@@ -177,7 +179,7 @@ class CategoryManager(TreeManager):
         return queryset
 
     def children(self, slug):
-        queryset = self.get_queryset().filter(slug=slug, level__lte=10)
+        queryset = self.get_queryset().filter(slug=slug, level__lte=50)
         return queryset
 
 
@@ -201,16 +203,17 @@ class Folder(MPTTModel):
         return super().save(*args, **kwargs)
 
 
-class ArchiveFile(models.Model):
-    subject = models.CharField(max_length=60)
-    reference = models.CharField(max_length=60, blank=True, null=True)
-    content = models.FileField(upload_to="documents/")
-    folder = models.ForeignKey(
-        Folder, on_delete=models.SET_NULL, null=True, blank=True)
-    created_by = models.ForeignKey(users_model.Department, on_delete=models.CASCADE)
+# class ArchiveFile(models.Model):
+#     subject = models.CharField(max_length=60)
+#     reference = models.CharField(max_length=60, blank=True, null=True)
+#     content = models.FileField(upload_to="documents/")
+#     folder = models.ForeignKey(
+#         Folder, on_delete=models.SET_NULL, null=True, blank=True)
+#     created_by = models.ForeignKey(
+#         users_model.Department, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.subject
+#     def __str__(self):
+#         return self.subject
 
 
 @receiver(post_save, sender=ActivateDocument)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
-import { Box, Grid, Text } from "@chakra-ui/react";
+import { Box, Grid, Text, Spinner } from "@chakra-ui/react";
 import { Breadcrumb } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
@@ -8,7 +8,7 @@ import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import DirectoryIcon from "../../components/Doc/DirectoryIcon";
 import Loading from "../../components/Loading/Loading";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
-import { fetchFiles, fetchSubfolders } from "../../http/directory";
+import { fetchSubfolders } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
@@ -24,6 +24,7 @@ function Directory() {
   const [folder, setFolder] = useState({});
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     setFolder({});
@@ -86,7 +87,7 @@ function Directory() {
                   Archive
                 </Text>
               </Breadcrumb.Item>
-              {store.breadcrumbs.map((breadcrumb, idx) => {
+              {store.breadcrumbs?.map((breadcrumb, idx) => {
                 return (
                   <Breadcrumb.Item
                     onClick={() => {
@@ -167,6 +168,8 @@ function Directory() {
           folderId={folder.id}
           appendFile={setFolder}
           parentFolder={folder}
+          submitting={submitting}
+          setSubmitting={setSubmitting}
         />
       )}
       {openPreview && (

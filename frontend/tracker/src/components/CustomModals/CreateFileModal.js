@@ -38,6 +38,8 @@ function CreateFileModal({
   folderId,
   appendFile,
   parentFolder,
+  submitting,
+  setSubmitting,
 }) {
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
@@ -47,6 +49,7 @@ function CreateFileModal({
   };
 
   const onFinish = async (values) => {
+    setSubmitting(true);
     const data = {
       subject: values.subject,
       file: values.document[0].originFileObj,
@@ -56,6 +59,9 @@ function CreateFileModal({
 
     try {
       const res = await createFile(store.token, data);
+      if (res.status === 201) {
+        setSubmitting(false);
+      }
       appendFile({
         ...parentFolder,
         documents: [...parentFolder?.documents, res.data],
@@ -74,9 +80,14 @@ function CreateFileModal({
       <Modal
         title="Upload File"
         visible={openCreateFileModal}
-        onOk={form.submit}
         onCancel={handleCancel}
         style={{ top: 20 }}
+        confirmLoading={submitting}
+        footer={[
+          <Button type="primary" onClick={form.submit} loading={submitting}>
+            {submitting ? "Uploading..." : "Upload"}
+          </Button>,
+        ]}
       >
         <Form
           {...layout}

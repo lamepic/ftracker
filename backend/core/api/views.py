@@ -432,6 +432,7 @@ class RequestDocumentAPIView(views.APIView):
 
     def post(self, request, format=None):
         data = request.data
+        print(data)
 
         try:
             document = get_object_or_404(
@@ -444,7 +445,8 @@ class RequestDocumentAPIView(views.APIView):
                 staff_id=request.user.staff_id)
             archive_document = models.Archive.objects.get(
                 document__id=document.id)
-            requested_from = archive_document.closed_by
+
+            requested_from = archive_document.created_by if archive_document.closed_by == None else archive_document.closed_by
 
             existing_request = models.RequestDocument.objects.filter(
                 document__id=document.id, requested_by=requested_by, active=True)
@@ -640,19 +642,19 @@ class SearchAPIView(views.APIView):
                 archive_data = {
                     "document": document_serializer.data,
                     "route": "archive",
-                    "department": item.closed_by.department.name}
+                    "department": item.created_by.department.name if item.closed_by == None else item.closed_by.department.name}
                 documents.append(archive_data)
 
-        # uploaded archive files
-        archive_files = [
-            archive for archive in models.ArchiveFile.objects.all()]
-        for item in archive_files:
-            document_serializer = serializers.ArchiveFileSerializer(item)
-            archive_data = {
-                "document": document_serializer.data,
-                "route": "archive",
-                "department": item.created_by.name}
-            documents.append(archive_data)
+        # # uploaded archive files
+        # archive_files = [
+        #     archive for archive in models.ArchiveFile.objects.all()]
+        # for item in archive_files:
+        #     document_serializer = serializers.ArchiveFileSerializer(item)
+        #     archive_data = {
+        #         "document": document_serializer.data,
+        #         "route": "archive",
+        #         "department": item.created_by.name}
+        #     documents.append(archive_data)
 
         data = [doc for doc in documents if term.lower() in doc['document']
                 ['subject'].lower()]
@@ -803,12 +805,23 @@ class ArchiveFileAPIView(views.APIView):
         parent_folder_id = request.data.get("parentFolderId")
 
         try:
-            parent_folder = models.Folder.objects.get_queryset().filter(
-                id=parent_folder_id)
+            if parent_folder_id != "undefined":
+                parent_folder = models.Folder.objects.get_queryset().filter(
+                    id=parent_folder_id)
+                file = models.Document.objects.create(
+                    subject=subject, ref=reference, content=file, created_by=request.user, folder=parent_folder[0])
+            else:
+                file = models.Document.objects.create(
+                    subject=subject, ref=reference, content=file, created_by=request.user)
 
-            file = models.ArchiveFile.objects.create(
-                subject=subject, reference=reference, content=file, folder=parent_folder[0])
-            serialized_data = serializers.ArchiveFileSerializer(file)
+                archive = models.Archive.objects.create(
+                    document=file, created_by=request.user)
+
+            serialized_data = serializers.DocumentsSerializer(file)
+            # file = models.ArchiveFile.objects.create(
+            #     subject=subject, reference=reference, content=file, folder=parent_folder[0])
+            # serialized_data = serializers.ArchiveFileSerializer(file)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
-        except:
+        except Exception as err:
+            print(err)
             raise exceptions.ServerError

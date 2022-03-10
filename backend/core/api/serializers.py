@@ -189,15 +189,12 @@ class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
-    # def to_native(self, value):
-    #     return FolderSerializer(value, context={"parent": self.parent.object, "parent_serializer": self.parent})
 
+# class ArchiveFileSerializer(serializers.ModelSerializer):
 
-class ArchiveFileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.ArchiveFile
-        fields = ["id", "subject", "reference", "content"]
+#     class Meta:
+#         model = models.ArchiveFile
+#         fields = ["id", "subject", "reference", "content"]
 
 
 class FolderSerializer(serializers.ModelSerializer):
@@ -209,7 +206,7 @@ class FolderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', "slug", "documents", 'children')
 
     def get_documents(self, obj):
-        documents = obj.archivefile_set
-        serialized_related_document = ArchiveFileSerializer(
+        documents = obj.document_set
+        serialized_document = DocumentsSerializer(
             documents, many=True)
-        return serialized_related_document.data
+        return serialized_document.data

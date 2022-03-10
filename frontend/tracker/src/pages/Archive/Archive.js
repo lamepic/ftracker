@@ -14,6 +14,8 @@ import CreateFileModal from "../../components/CustomModals/CreateFileModal";
 import { fetchFolders } from "../../http/directory";
 import DirectoryIcon from "../../components/Doc/DirectoryIcon";
 import * as actionTypes from "../../store/actionTypes";
+import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
+import Preview from "../../components/Preview/Preview";
 
 function Archive() {
   const [store, dispatch] = useStateValue();
@@ -22,6 +24,9 @@ function Archive() {
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folders, setFolders] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [previewDoc, setPreviewDoc] = useState({});
+  const [openPreview, setOpenPreview] = useState(false);
 
   const archiveCount = store.archiveCount;
 
@@ -85,7 +90,10 @@ function Archive() {
                 gap={6}
               >
                 {archive.map((item) => {
-                  if (item.document.related_document.length > 0) {
+                  if (
+                    item.document.related_document.length > 0 &&
+                    item.closed_by !== null
+                  ) {
                     return (
                       <Folder
                         doc={item}
@@ -93,12 +101,22 @@ function Archive() {
                         type="archive"
                       />
                     );
-                  } else {
+                  } else if (item.closed_by !== null) {
                     return (
                       <File doc={item} key={item.document.id} type="archive" />
                     );
+                  } else if (item.closed_by === null) {
+                    return (
+                      <DirectoryFileIcon
+                        key={item.document.id}
+                        setPreviewDoc={setPreviewDoc}
+                        setOpenPreview={setOpenPreview}
+                        document={item.document}
+                      />
+                    );
                   }
                 })}
+
                 {folders.map((folder) => {
                   return (
                     <DirectoryIcon
@@ -127,7 +145,12 @@ function Archive() {
         <CreateFileModal
           setOpenCreateFileModal={setOpenCreateFileModal}
           openCreateFileModal={openCreateFileModal}
+          submitting={submitting}
+          setSubmitting={setSubmitting}
         />
+      )}
+      {openPreview && (
+        <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
     </>
   );
