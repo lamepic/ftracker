@@ -767,9 +767,15 @@ class FolderAPIView(views.APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as err:
             raise exceptions.ServerError
-        
-    
-    def post(self, request, format=None):
-        print(request.data)
-        return Response({}, status=status.HTTP_200_OK)
 
+    def post(self, request, format=None):
+        folder_name = request.data.get("name")
+        parent_folder_id = request.data.get("folderId")
+
+        try:
+            new_folder = models.Folder.objects.create(
+                name=folder_name, parent_id=parent_folder_id)
+            serialized_data = serializers.FolderSerializer(new_folder)
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        except:
+            raise exceptions.ServerError

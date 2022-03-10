@@ -54,7 +54,6 @@ function AttachmentModal({
     const items = [...attachments, new_attachment];
     getAttachments(items);
     setOpenModal(false);
-    setOpenModal(false);
   };
 
   return (
