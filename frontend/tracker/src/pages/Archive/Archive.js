@@ -119,6 +119,8 @@ function Archive() {
         <CreateFolderModal
           setOpenCreateFolderModal={setOpenCreateFolderModal}
           openCreateFolderModal={openCreateFolderModal}
+          addFolder={setFolders}
+          parentFolder={folders}
         />
       )}
       {openCreateFileModal && (

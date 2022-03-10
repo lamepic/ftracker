@@ -8,9 +8,11 @@ import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import DirectoryIcon from "../../components/Doc/DirectoryIcon";
 import Loading from "../../components/Loading/Loading";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
-import { fetchSubfolders } from "../../http/directory";
+import { fetchFiles, fetchSubfolders } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
+import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
+import Preview from "../../components/Preview/Preview";
 
 function Directory() {
   const [store, dispatch] = useStateValue();
@@ -20,6 +22,9 @@ function Directory() {
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folder, setFolder] = useState({});
+  const [files, setFiles] = useState();
+  const [previewDoc, setPreviewDoc] = useState({});
+  const [openPreview, setOpenPreview] = useState(false);
 
   useEffect(() => {
     setFolder({});
@@ -32,8 +37,15 @@ function Directory() {
   const _fetchFolders = async () => {
     const res = await fetchSubfolders(store.token, params.slug);
     const data = res.data[0];
-    console.log(data);
     setFolder(data);
+    _fetchFiles(data.id);
+    console.log(data);
+  };
+
+  const _fetchFiles = async (id) => {
+    const res = await fetchFiles(store.token, id);
+    const data = res.data;
+    console.log(data);
   };
 
   return (
@@ -112,6 +124,16 @@ function Directory() {
                 }}
                 gap={6}
               >
+                {folder.documents?.map((document) => {
+                  return (
+                    <DirectoryFileIcon
+                      key={document.id}
+                      setPreviewDoc={setPreviewDoc}
+                      setOpenPreview={setOpenPreview}
+                      document={document}
+                    />
+                  );
+                })}
                 {folder.children?.map((folder) => {
                   return (
                     <DirectoryIcon
@@ -142,6 +164,9 @@ function Directory() {
           setOpenCreateFileModal={setOpenCreateFileModal}
           openCreateFileModal={openCreateFileModal}
         />
+      )}
+      {openPreview && (
+        <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
     </>
   );

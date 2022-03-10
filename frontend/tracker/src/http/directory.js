@@ -35,3 +35,15 @@ export async function createFolder(token, data) {
   const res = await axios.post("folders/", data, config);
   return res;
 }
+
+export async function fetchFiles(token, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get(`files/${data}`, config);
+  return res;
+}

@@ -193,16 +193,23 @@ class RecursiveField(serializers.Serializer):
     #     return FolderSerializer(value, context={"parent": self.parent.object, "parent_serializer": self.parent})
 
 
+class ArchiveFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ArchiveFile
+        fields = ["id", "subject", "reference", "content"]
+
+
 class FolderSerializer(serializers.ModelSerializer):
     children = RecursiveField(many=True, required=False)
+    documents = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Folder
-        fields = ('id', 'name', "slug", 'children')
+        fields = ('id', 'name', "slug", "documents", 'children')
 
-
-class ArchiveDocumentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.ArchiveDocument
-        fields = ["subject", "reference", "content"]
+    def get_documents(self, obj):
+        documents = obj.archivefile_set
+        serialized_related_document = ArchiveFileSerializer(
+            documents, many=True)
+        return serialized_related_document.data

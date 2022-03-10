@@ -766,6 +766,7 @@ class FolderAPIView(views.APIView):
             serializer = serializers.FolderSerializer(tree, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as err:
+            print(err)
             raise exceptions.ServerError
 
     def post(self, request, format=None):
@@ -777,14 +778,15 @@ class FolderAPIView(views.APIView):
                 name=folder_name, parent_id=parent_folder_id)
             serialized_data = serializers.FolderSerializer(new_folder)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
-        except:
+        except Exception as err:
+            print(err)
             raise exceptions.ServerError
 
 
-class ArchiveDocumentAPIView(views.APIView):
+class ArchiveFileAPIView(views.APIView):
 
-    def get(self, request, format=None):
-
+    def get(self, request, parent_folder_id, format=None):
+        # files = models.ArchiveDocument.objects.get()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def post(self, request, format=None):
