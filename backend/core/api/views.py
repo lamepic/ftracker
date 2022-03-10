@@ -754,7 +754,6 @@ class CreateDocument(views.APIView):
 
 
 class FolderAPIView(views.APIView):
-    permission_classes = (AllowAny,)
 
     def get(self, request, slug=None, format=None):
         try:
@@ -767,30 +766,10 @@ class FolderAPIView(views.APIView):
             serializer = serializers.FolderSerializer(tree, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as err:
-            print(err)
+            raise exceptions.ServerError
+        
+    
+    def post(self, request, format=None):
+        print(request.data)
+        return Response({}, status=status.HTTP_200_OK)
 
-
-# class FolderAPIView(viewsets.ModelViewSet):
-
-#     queryset = models.Folder.objects.all()
-#     serializer_class = serializers.FolderSerializer
-#     permission_classes = (AllowAny,)
-
-#     @action(detail=True, methods=['get'])
-#     def tree(self, request, pk=None):
-#         """
-#         Detail route of an category that returns it's descendants in a tree structure.
-#         """
-#         category = self.get_object()
-#         # add here any select_related/prefetch_related fields to improve api performance
-#         descendants = category.get_descendants()
-
-#         children_dict = defaultdict(list)
-#         for descendant in descendants:
-#             children_dict[descendant.get_parent().pk].append(descendant)
-
-#         context = self.get_serializer_context()
-#         context['children'] = children_dict
-#         serializer = serializers.FolderSerializer(category, context=context)
-
-#         return Response(serializer.data, status=status.HTTP_200_OK)
