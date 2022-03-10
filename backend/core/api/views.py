@@ -631,7 +631,7 @@ class SearchAPIView(views.APIView):
                 "document": document_serializer.data, "route": "outgoing"}
             documents.append(outgoing_data)
 
-        # archived documents
+        # created archived documents
         archive = [archive for archive in models.Archive.objects.all()]
         for item in archive:
             if item.document not in active_requested_document_lst and item.document not in activated_document_lst:
@@ -642,6 +642,17 @@ class SearchAPIView(views.APIView):
                     "route": "archive",
                     "department": item.closed_by.department.name}
                 documents.append(archive_data)
+
+        # uploaded archive files
+        archive_files = [
+            archive for archive in models.ArchiveFile.objects.all()]
+        for item in archive_files:
+            document_serializer = serializers.ArchiveFileSerializer(item)
+            archive_data = {
+                "document": document_serializer.data,
+                "route": "archive",
+                "department": item.created_by.name}
+            documents.append(archive_data)
 
         data = [doc for doc in documents if term.lower() in doc['document']
                 ['subject'].lower()]

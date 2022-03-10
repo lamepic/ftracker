@@ -207,6 +207,7 @@ class ArchiveFile(models.Model):
     content = models.FileField(upload_to="documents/")
     folder = models.ForeignKey(
         Folder, on_delete=models.SET_NULL, null=True, blank=True)
+    created_by = models.ForeignKey(users_model.Department, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.subject
