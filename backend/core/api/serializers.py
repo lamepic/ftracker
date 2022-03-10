@@ -1,4 +1,5 @@
 from unittest.util import _MAX_LENGTH
+from attr import fields
 from rest_framework import serializers
 
 from .. import models
@@ -192,25 +193,23 @@ class RecursiveField(serializers.Serializer):
     #     return FolderSerializer(value, context={"parent": self.parent.object, "parent_serializer": self.parent})
 
 
+class ArchiveFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ArchiveFile
+        fields = ["id", "subject", "reference", "content"]
+
+
 class FolderSerializer(serializers.ModelSerializer):
     children = RecursiveField(many=True, required=False)
+    documents = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Folder
-        fields = ('id', 'name', "slug", 'children')
+        fields = ('id', 'name', "slug", "documents", 'children')
 
-
-# class FolderSerializer(serializers.ModelSerializer):
-#     children = serializers.SerializerMethodField(source='get_children')
-
-#     class Meta:
-#         model = models.Folder
-#         # add here rest of the fields from model
-#         fields = ("id", 'name', 'children',)
-
-#     def get_children(self, obj):
-#         print(self.context)
-#         children = self.context['children'].get(obj.id, [])
-#         serializer = FolderSerializer(
-#             children, many=True, context=self.context)
-#         return serializer.data
+    def get_documents(self, obj):
+        documents = obj.archivefile_set
+        serialized_related_document = ArchiveFileSerializer(
+            documents, many=True)
+        return serialized_related_document.data

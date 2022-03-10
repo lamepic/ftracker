@@ -631,7 +631,7 @@ class SearchAPIView(views.APIView):
                 "document": document_serializer.data, "route": "outgoing"}
             documents.append(outgoing_data)
 
-        # archived documents
+        # created archived documents
         archive = [archive for archive in models.Archive.objects.all()]
         for item in archive:
             if item.document not in active_requested_document_lst and item.document not in activated_document_lst:
@@ -642,6 +642,17 @@ class SearchAPIView(views.APIView):
                     "route": "archive",
                     "department": item.closed_by.department.name}
                 documents.append(archive_data)
+
+        # uploaded archive files
+        archive_files = [
+            archive for archive in models.ArchiveFile.objects.all()]
+        for item in archive_files:
+            document_serializer = serializers.ArchiveFileSerializer(item)
+            archive_data = {
+                "document": document_serializer.data,
+                "route": "archive",
+                "department": item.created_by.name}
+            documents.append(archive_data)
 
         data = [doc for doc in documents if term.lower() in doc['document']
                 ['subject'].lower()]
@@ -766,6 +777,7 @@ class FolderAPIView(views.APIView):
             serializer = serializers.FolderSerializer(tree, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as err:
+            print(err)
             raise exceptions.ServerError
 
     def post(self, request, format=None):
@@ -776,6 +788,27 @@ class FolderAPIView(views.APIView):
             new_folder = models.Folder.objects.create(
                 name=folder_name, parent_id=parent_folder_id)
             serialized_data = serializers.FolderSerializer(new_folder)
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        except Exception as err:
+            print(err)
+            raise exceptions.ServerError
+
+
+class ArchiveFileAPIView(views.APIView):
+
+    def post(self, request, format=None):
+        subject = request.data.get("subject")
+        reference = request.data.get("reference")
+        file = request.data.get("file")
+        parent_folder_id = request.data.get("parentFolderId")
+
+        try:
+            parent_folder = models.Folder.objects.get_queryset().filter(
+                id=parent_folder_id)
+
+            file = models.ArchiveFile.objects.create(
+                subject=subject, reference=reference, content=file, folder=parent_folder[0])
+            serialized_data = serializers.ArchiveFileSerializer(file)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except:
             raise exceptions.ServerError

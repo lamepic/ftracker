@@ -8,9 +8,11 @@ import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import DirectoryIcon from "../../components/Doc/DirectoryIcon";
 import Loading from "../../components/Loading/Loading";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
-import { fetchSubfolders } from "../../http/directory";
+import { fetchFiles, fetchSubfolders } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
+import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
+import Preview from "../../components/Preview/Preview";
 
 function Directory() {
   const [store, dispatch] = useStateValue();
@@ -20,6 +22,8 @@ function Directory() {
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folder, setFolder] = useState({});
+  const [previewDoc, setPreviewDoc] = useState({});
+  const [openPreview, setOpenPreview] = useState(false);
 
   useEffect(() => {
     setFolder({});
@@ -121,6 +125,16 @@ function Directory() {
                 }}
                 gap={6}
               >
+                {folder.documents?.map((document) => {
+                  return (
+                    <DirectoryFileIcon
+                      key={document.id}
+                      setPreviewDoc={setPreviewDoc}
+                      setOpenPreview={setOpenPreview}
+                      document={document}
+                    />
+                  );
+                })}
                 {folder.children?.map((folder) => {
                   return (
                     <DirectoryIcon
@@ -150,7 +164,13 @@ function Directory() {
         <CreateFileModal
           setOpenCreateFileModal={setOpenCreateFileModal}
           openCreateFileModal={openCreateFileModal}
+          folderId={folder.id}
+          appendFile={setFolder}
+          parentFolder={folder}
         />
+      )}
+      {openPreview && (
+        <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
     </>
   );

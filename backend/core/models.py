@@ -185,8 +185,6 @@ class Folder(MPTTModel):
     name = models.CharField(max_length=60)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
-    document = models.ForeignKey(
-        "ArchiveDocument", on_delete=models.SET_NULL, null=True, blank=True)
     slug = models.SlugField()
     objects = CategoryManager()
 
@@ -203,10 +201,13 @@ class Folder(MPTTModel):
         return super().save(*args, **kwargs)
 
 
-class ArchiveDocument(models.Model):
+class ArchiveFile(models.Model):
     subject = models.CharField(max_length=60)
     reference = models.CharField(max_length=60, blank=True, null=True)
     content = models.FileField(upload_to="documents/")
+    folder = models.ForeignKey(
+        Folder, on_delete=models.SET_NULL, null=True, blank=True)
+    created_by = models.ForeignKey(users_model.Department, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.subject

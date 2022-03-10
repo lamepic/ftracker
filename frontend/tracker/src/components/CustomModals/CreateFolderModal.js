@@ -24,6 +24,7 @@ function CreateFolderModal({
   folderId,
   appendSubFolder,
   parentFolder,
+  addFolder,
 }) {
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
@@ -38,10 +39,14 @@ function CreateFolderModal({
         name: values.name,
         folderId,
       });
-      appendSubFolder({
-        ...parentFolder,
-        children: [...parentFolder?.children, res.data],
-      });
+      if (addFolder) {
+        addFolder([...parentFolder, res.data]);
+      } else {
+        appendSubFolder({
+          ...parentFolder,
+          children: [...parentFolder?.children, res.data],
+        });
+      }
       console.log(res.data);
     } catch (e) {
       notification.error({

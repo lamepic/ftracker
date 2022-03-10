@@ -98,6 +98,6 @@ class CustomMPTTModelAdmin(DraggableMPTTAdmin):
 admin.site.register(models.Folder, CustomMPTTModelAdmin)
 
 
-@admin.register(models.ArchiveDocument)
-class ArchiveDocumentAdmin(admin.ModelAdmin):
+@admin.register(models.ArchiveFile)
+class ArchiveFileAdmin(admin.ModelAdmin):
     list_display = ["subject", "reference"]

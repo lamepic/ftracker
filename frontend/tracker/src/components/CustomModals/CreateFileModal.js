@@ -1,7 +1,9 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Upload } from "antd";
+import { Button, Form, Input, notification, Upload } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React from "react";
+import { createFile } from "../../http/directory";
+import { useStateValue } from "../../store/StateProvider";
 
 const validateMessages = {
   required: "This field is required!",
@@ -19,7 +21,7 @@ const layout = {
 
 const dummyRequest = ({ file, onSuccess }) => {
   setTimeout(() => {
-    onSuccess("fail");
+    onSuccess("ok");
   }, 0);
 };
 
@@ -30,15 +32,42 @@ const getFile = (e) => {
   return e && e.fileList;
 };
 
-function CreateFileModal({ setOpenCreateFileModal, openCreateFileModal }) {
+function CreateFileModal({
+  setOpenCreateFileModal,
+  openCreateFileModal,
+  folderId,
+  appendFile,
+  parentFolder,
+}) {
   const [form] = Form.useForm();
+  const [store, dispatch] = useStateValue();
 
   const handleCancel = () => {
     setOpenCreateFileModal(false);
   };
 
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    const data = {
+      subject: values.subject,
+      file: values.document[0].originFileObj,
+      reference: values.reference,
+      parentFolderId: folderId,
+    };
+
+    try {
+      const res = await createFile(store.token, data);
+      appendFile({
+        ...parentFolder,
+        documents: [...parentFolder?.documents, res.data],
+      });
+    } catch (e) {
+      console.log(e.response);
+      // notification.error({
+      //   message: "Error",
+      //   description: e.response.detail,
+      // });
+    }
+    setOpenCreateFileModal(false);
   };
   return (
     <>
@@ -59,7 +88,7 @@ function CreateFileModal({ setOpenCreateFileModal, openCreateFileModal }) {
         >
           <Form.Item
             labelAlign="left"
-            name="name"
+            name="subject"
             label="Subject"
             rules={[
               {
@@ -76,7 +105,7 @@ function CreateFileModal({ setOpenCreateFileModal, openCreateFileModal }) {
           </Form.Item>
           <Form.Item
             labelAlign="left"
-            name="name"
+            name="reference"
             label="Reference"
             rules={[
               {
