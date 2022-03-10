@@ -182,3 +182,35 @@ class FlowSerializer(serializers.ModelSerializer):
         serialized_document_action = DocumentActionSerializer(
             document_action, many=True)
         return serialized_document_action.data
+
+
+class RecursiveField(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+    # def to_native(self, value):
+    #     return FolderSerializer(value, context={"parent": self.parent.object, "parent_serializer": self.parent})
+
+
+class FolderSerializer(serializers.ModelSerializer):
+    children = RecursiveField(many=True, required=False)
+
+    class Meta:
+        model = models.Folder
+        fields = ('id', 'name', "slug", 'children')
+
+
+# class FolderSerializer(serializers.ModelSerializer):
+#     children = serializers.SerializerMethodField(source='get_children')
+
+#     class Meta:
+#         model = models.Folder
+#         # add here rest of the fields from model
+#         fields = ("id", 'name', 'children',)
+
+#     def get_children(self, obj):
+#         print(self.context)
+#         children = self.context['children'].get(obj.id, [])
+#         serializer = FolderSerializer(
+#             children, many=True, context=self.context)
+#         return serializer.data

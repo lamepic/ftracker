@@ -62,6 +62,21 @@ const reducer = (state, action) => {
         ...state,
         activatedDocumentDetails: action.payload,
       };
+    case actionTypes.SET_BREADCRUMBS:
+      return {
+        ...state,
+        breadcrumbs: [...state.breadcrumbs, action.payload],
+      };
+    case actionTypes.REMOVE_BREADCRUMBS:
+      return {
+        ...state,
+        breadcrumbs: state.breadcrumbs.slice(0, action.payload + 1),
+      };
+    case actionTypes.CLEAR_BREADCRUMBS:
+      return {
+        ...state,
+        breadcrumbs: [],
+      };
     case actionTypes.LOGIN_FAIL:
     case actionTypes.AUTH_ERROR:
     case actionTypes.LOGOUT_SUCCESS:

@@ -1,3 +1,5 @@
+from collections import defaultdict
+from mptt.utils import get_cached_trees
 from xmlrpc.client import ResponseError
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
@@ -7,8 +9,11 @@ from datetime import datetime
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import generics, views
+from rest_framework.decorators import action
+from rest_framework import generics, views, viewsets
 from rest_framework import status
+
+from mptt.templatetags.mptt_tags import cache_tree_children
 
 import json
 from ..libs import exceptions, utils
@@ -746,3 +751,46 @@ class CreateDocument(views.APIView):
                 raise exceptions.ServerError
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)
+
+
+class FolderAPIView(views.APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, slug=None, format=None):
+        try:
+            if slug is None:
+                tree = cache_tree_children(models.Folder.objects.viewable())
+                serializer = serializers.FolderSerializer(tree, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            tree = cache_tree_children(models.Folder.objects.children(slug))
+            serializer = serializers.FolderSerializer(tree, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+
+
+# class FolderAPIView(viewsets.ModelViewSet):
+
+#     queryset = models.Folder.objects.all()
+#     serializer_class = serializers.FolderSerializer
+#     permission_classes = (AllowAny,)
+
+#     @action(detail=True, methods=['get'])
+#     def tree(self, request, pk=None):
+#         """
+#         Detail route of an category that returns it's descendants in a tree structure.
+#         """
+#         category = self.get_object()
+#         # add here any select_related/prefetch_related fields to improve api performance
+#         descendants = category.get_descendants()
+
+#         children_dict = defaultdict(list)
+#         for descendant in descendants:
+#             children_dict[descendant.get_parent().pk].append(descendant)
+
+#         context = self.get_serializer_context()
+#         context['children'] = children_dict
+#         serializer = serializers.FolderSerializer(category, context=context)
+
+#         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -25,6 +25,7 @@ import ActivateDocument from "../ActivateDocument/ActivateDocument";
 import ActivatedDocView from "../ActivateDocument/ActivatedDocView";
 import Flow from "../Flow/Flow";
 import addIcon from "../../assets/icons/add-icon.svg";
+import Directory from "../Directory/Directory";
 
 function Dashboard() {
   const [store, dispatch] = useStateValue();
@@ -123,7 +124,11 @@ function Dashboard() {
                 path={`/dashboard/document/:type/:id/`}
                 component={ViewDocument}
               />
-              <ProtectedPage path="/dashboard/archive" component={Archive} />
+              <ProtectedPage
+                exact
+                path="/dashboard/archive/"
+                component={Archive}
+              />
 
               <Route path="/dashboard/tracker" component={Tracking} />
 
@@ -135,6 +140,12 @@ function Dashboard() {
                 path="/dashboard/activated-document"
                 component={ActivatedDocView}
               />
+              <Route
+                exact
+                path="/dashboard/archive/:slug"
+                component={Directory}
+              />
+
               <ProtectedPage path="/dashboard/create-flow" component={Flow} />
               {store.openTrackingModal && <TrackingDetail />}
             </main>
