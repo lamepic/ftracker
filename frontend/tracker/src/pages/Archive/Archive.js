@@ -11,13 +11,17 @@ import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
+import { fetchFolders } from "../../http/directory";
+import DirectoryIcon from "../../components/Doc/DirectoryIcon";
+import * as actionTypes from "../../store/actionTypes";
 
 function Archive() {
-  const [store] = useStateValue();
+  const [store, dispatch] = useStateValue();
   const [archive, setArchive] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
+  const [folders, setFolders] = useState([]);
 
   const archiveCount = store.archiveCount;
 
@@ -27,8 +31,18 @@ function Archive() {
     setArchive(data);
   };
 
+  const _fetchFolders = async () => {
+    const res = await fetchFolders(store.token);
+    const data = res.data;
+    setFolders(data);
+    dispatch({
+      type: actionTypes.CLEAR_BREADCRUMBS,
+    });
+  };
+
   useEffect(() => {
     _fetchUserArchive();
+    _fetchFolders();
     setLoading(false);
   }, []);
 
@@ -48,13 +62,7 @@ function Archive() {
           >
             Archive
           </Text>
-          <Box
-            display="flex"
-            alignItems="center"
-            marginTop="5px"
-            // border="1px solid red"
-            bg="#eaeaea"
-          >
+          <Box display="flex" alignItems="center" marginTop="5px" bg="#eaeaea">
             <ToolbarOption
               text="New Folder"
               Icon={FolderAddOutlined}
@@ -70,7 +78,7 @@ function Archive() {
             <Box
               maxH={{ sm: "100vh", lg: "80vh" }}
               overflowY="auto"
-              marginTop="10px"
+              marginTop="20px"
             >
               <Grid
                 templateColumns={{ sm: "repeat(4, 1fr)", lg: "repeat(6, 1fr)" }}
@@ -90,6 +98,15 @@ function Archive() {
                       <File doc={item} key={item.document.id} type="archive" />
                     );
                   }
+                })}
+                {folders.map((folder) => {
+                  return (
+                    <DirectoryIcon
+                      name={folder.name}
+                      key={folder.id}
+                      slug={folder.slug}
+                    />
+                  );
                 })}
               </Grid>
             </Box>

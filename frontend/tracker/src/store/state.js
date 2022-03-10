@@ -12,6 +12,7 @@ const intialState = {
   notificationsCount: 0,
   request_details: null,
   activatedDocumentDetails: null,
+  breadcrumbs: [],
 };
 
 export default intialState;

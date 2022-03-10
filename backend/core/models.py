@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.template.defaultfilters import slugify
+from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
 
 from users import models as users_model
@@ -168,15 +170,36 @@ class ActivateDocument(models.Model):
         return f'{self.document.subject} - {self.expire_at}'
 
 
-class Folder(models.Model):
+class CategoryManager(TreeManager):
+    def viewable(self):
+        queryset = self.get_queryset().filter(level=0)
+        return queryset
+
+    def children(self, slug):
+        queryset = self.get_queryset().filter(slug=slug, level__lte=10)
+        return queryset
+
+
+class Folder(MPTTModel):
     name = models.CharField(max_length=60)
-    subfolder = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE,
+                            null=True, blank=True, related_name='children')
     document = models.ForeignKey(
-        "ArchiveDocument", on_delete=models.SET_NULL, null=True)
+        "ArchiveDocument", on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.SlugField()
+    objects = CategoryManager()
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            generate_slug = f'{self.name} {self.id}'
+            self.slug = slugify(generate_slug)
+        return super().save(*args, **kwargs)
 
 
 class ArchiveDocument(models.Model):

@@ -3,14 +3,14 @@ import "./DocIcon.css";
 
 import folder from "../../assets/icons/folder-icon.svg";
 import { Link } from "react-router-dom";
-import { Skeleton } from "antd";
+import { Image } from "@chakra-ui/react";
 
 function Folder({ doc, type }) {
   return (
     <>
       <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
         <div className="folder">
-          <img src={folder} alt="folder" className="folder__img" />
+          <Image src={folder} alt="folder" className="folder__img" />
           <p className="folder__title">{doc.document.subject}</p>
         </div>
       </Link>
