@@ -44,9 +44,10 @@ function CreateFolderModal({
       });
       console.log(res.data);
     } catch (e) {
+      // console.log(e.response);
       notification.error({
         message: "Error",
-        description: e.response.data,
+        description: e.response.detail,
       });
     }
     setOpenCreateFolderModal(false);
