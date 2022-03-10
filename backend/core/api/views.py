@@ -190,21 +190,31 @@ class TrackingAPIView(views.APIView):
             document = get_object_or_404(models.Document, id=document_id)
             trails = models.Trail.objects.filter(document__id=document_id)
             creator = document.created_by
-            creator_name = utils.Tracking(
-                f'{creator.first_name} {creator.last_name}')
-            trackingStep.append(creator_name)
+            creator_detail = {
+                "name": f'{creator.first_name} {creator.last_name}',
+                "department": creator.department.name,
+                # "date": document.created_at
+            }
+            creator_data = utils.Tracking(
+                creator_detail["name"], creator_detail["department"])
+            trackingStep.append(creator_data)
 
             for i in range(len(trails)-1, -1, -1):
                 trail = trails[i]
-                name = f'{trail.receiver.first_name} {trail.receiver.last_name}'
-                data = utils.Tracking(name)
+                other_users_detail = {
+                    "name": f'{trail.receiver.first_name} {trail.receiver.last_name}',
+                    "department": trail.receiver.department.name,
+                    # "date": document.created_at
+                }
+                data = utils.Tracking(
+                    other_users_detail["name"], other_users_detail["department"])
                 trackingStep.append(data)
         except:
             raise exceptions.TrackingNotFound
 
         serialized_data = serializers.TrackingSerializer(
             trackingStep, many=True)
-
+        print(serialized_data.data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 

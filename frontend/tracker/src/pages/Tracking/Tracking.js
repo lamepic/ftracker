@@ -43,7 +43,7 @@ function Tracking() {
           {outgoing.map((item) => {
             const user = item.receiver;
             const user_department = item.receiver.department?.name;
-            const doc = item.document.subject;
+            const doc = item.document;
             const id = item.document.id;
             const meta_info = item.meta_info;
 

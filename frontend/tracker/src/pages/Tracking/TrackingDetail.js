@@ -4,8 +4,8 @@ import { fetchTracking } from "../../http/document";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 import Modal from "antd/lib/modal/Modal";
-import { CircularProgress } from "@chakra-ui/react";
-import { Steps } from "antd";
+import { CircularProgress, Text } from "@chakra-ui/react";
+import { Popover, Steps } from "antd";
 
 function TrackingDetail() {
   const [store, dispatch] = useStateValue();
@@ -35,6 +35,7 @@ function TrackingDetail() {
       payload: null,
     });
   };
+
   return (
     <div>
       <Modal
@@ -62,14 +63,60 @@ function TrackingDetail() {
                 <Steps.Step
                   description={label.name}
                   style={{ marginBottom: "2em" }}
-                  title="Forwarded"
+                  title={
+                    <Popover
+                      content={
+                        <>
+                          <Text
+                            fontSize="0.8rem"
+                            fontWeight="500"
+                            color="var(--dark-brown)"
+                          >
+                            Department: {label.department}
+                          </Text>
+                          <Text
+                            fontSize="0.8rem"
+                            fontWeight="500"
+                            color="var(--dark-brown)"
+                          >
+                            Date: Don't forget to add timestamp to db
+                          </Text>
+                        </>
+                      }
+                    >
+                      <Text _hover={{ cursor: "pointer" }}>Forwarded</Text>
+                    </Popover>
+                  }
                   key={idx}
                 />
               ) : (
                 <Steps.Step
                   description={label.name}
                   style={{ marginBottom: "2em" }}
-                  title="In progress"
+                  title={
+                    <Popover
+                      content={
+                        <>
+                          <Text
+                            fontSize="0.8rem"
+                            fontWeight="500"
+                            color="var(--dark-brown)"
+                          >
+                            Department: {label.department}
+                          </Text>
+                          <Text
+                            fontSize="0.8rem"
+                            fontWeight="500"
+                            color="var(--dark-brown)"
+                          >
+                            Date: Don't forget to add timestamp to db
+                          </Text>
+                        </>
+                      }
+                    >
+                      <Text _hover={{ cursor: "pointer" }}>In progress</Text>
+                    </Popover>
+                  }
                   key={idx}
                 />
               )

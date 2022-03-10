@@ -2,13 +2,13 @@
 
 # dependencies
 frontend/tracker/node_modules
-backend/api/__pycache__
 backend/users/__pycache__
+backend/users/migrations
 backend/core/__pycache__
+backend/core/api/__pycache__
+backend/core/migrations
 backend/tracker/__pycache__
 backend/media
-backend/core/migrations
-backend/users/migrations
 /.pnp
 .pnp.js
 .env
