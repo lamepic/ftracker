@@ -32,6 +32,51 @@ const getFile = (e) => {
   return e && e.fileList;
 };
 
+const uploadRules = {
+  beforeUpload: (file) => {
+    const isPDF = file.type === "application/pdf";
+    const isDOC = file.type === "application/msword";
+    const isDOCX =
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const isXLS = file.type === "application/vnd.ms-excel";
+    const isXLSX =
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    const isTXT = file.type === "text/plain";
+    const isPPT = file.type === "application/vnd.ms-powerpoint";
+    const isPPTX =
+      file.type ===
+      "applicatiapplication/vnd.openxmlformats-officedocument.presentationml.presentation";
+    const isJPG = file.type === "image/jpg";
+    const isJPGEG = file.type === "image/jpeg";
+
+    if (
+      isPDF ||
+      isDOC ||
+      isDOCX ||
+      isXLS ||
+      isXLSX ||
+      isTXT ||
+      isPPT ||
+      isPPTX ||
+      isJPG ||
+      isJPGEG
+    ) {
+      return true || Upload.LIST_IGNORE;
+    } else {
+      notification.error({
+        message: "Error",
+        description: "Unsupported File format",
+      });
+      return false;
+    }
+  },
+  onChange: (info) => {
+    console.log(info.fileList);
+  },
+};
+
 function CreateFileModal({
   setOpenCreateFileModal,
   openCreateFileModal,
@@ -56,6 +101,7 @@ function CreateFileModal({
       file: values.document[0].originFileObj,
       reference: values.reference,
       parentFolderId: folderId,
+      filename: values.document[0].originFileObj.name,
     };
 
     try {
@@ -74,7 +120,7 @@ function CreateFileModal({
       }
     } catch (e) {
       setSubmitting(false);
-      notification.error({
+      return notification.error({
         message: "Error",
         description: e.response.data.detail,
       });
@@ -154,7 +200,7 @@ function CreateFileModal({
               },
             ]}
           >
-            <Upload maxCount={1} customRequest={dummyRequest}>
+            <Upload maxCount={1} customRequest={dummyRequest} {...uploadRules}>
               <Button icon={<UploadOutlined />} style={{ width: "275px" }}>
                 Upload
               </Button>

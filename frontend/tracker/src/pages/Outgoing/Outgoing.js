@@ -15,9 +15,13 @@ function Outgoing() {
   const outgoingCount = store.outgoingCount;
 
   const _fetchOutgoing = async () => {
-    const res = await fetchOutgoing(store.token);
-    const data = res.data;
-    setOutgoing(data);
+    try {
+      const res = await fetchOutgoing(store.token);
+      const data = res.data;
+      setOutgoing(data);
+    } catch (e) {
+      console.log(e.response);
+    }
   };
 
   useEffect(() => {

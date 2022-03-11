@@ -139,7 +139,7 @@ function CreateDocument() {
       const res = await departments(store.token);
       setDepartments(res.data);
     } catch (error) {
-      notification.error({
+      return notification.error({
         message: "Error",
         description: error.response.data.detail,
       });
@@ -156,7 +156,7 @@ function CreateDocument() {
       const res = await loadUsers(store.token);
       setUsers(res.data);
     } catch (error) {
-      notification.error({
+      return notification.error({
         message: "Error",
         description: error.response.data.detail,
       });
@@ -231,13 +231,17 @@ function CreateDocument() {
             const res = await createDocument(store.token, data);
             if (res.status === 201) {
               setSubmitting(false);
-              history.push("/dashboard/outgoing");
+              history.replace("/dashboard/outgoing");
               swal("Document has been sent succesfully", {
                 icon: "success",
               });
             }
           } catch (error) {
-            openNotificationWithIcon("Error", error.response.data.detail);
+            setSubmitting(false);
+            return notification.error({
+              message: "Error",
+              description: error.response.data.detail,
+            });
           }
         }
       });

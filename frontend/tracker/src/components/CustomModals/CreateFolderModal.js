@@ -49,7 +49,7 @@ function CreateFolderModal({
       }
       console.log(res.data);
     } catch (e) {
-      notification.error({
+      return notification.error({
         message: "Error",
         description: e.response.data.detail,
       });

@@ -1,8 +1,11 @@
+from asyncio import exceptions
 import random
 import json
+from tabnanny import filename_only
 import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.forms import ValidationError
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -44,7 +47,8 @@ class DocumentType(models.Model):
 class Document(models.Model):
     content = models.FileField(upload_to='documents/', blank=True, null=False)
     subject = models.CharField(max_length=100)
-    ref = models.CharField(max_length=60, blank=True, null=True)
+    filename = models.CharField(max_length=100)
+    ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
     created_by = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='document_creator')
     document_type = models.ForeignKey(
@@ -52,13 +56,27 @@ class Document(models.Model):
     encrypt = models.BooleanField(default=False)
     folder = models.ForeignKey(
         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.subject
 
     def save(self, *args, **kwargs):
-        path = self.content.path
-        self.doc_content_url = path
+        if len(self.subject.strip()) == 0:
+            raise ValidationError("Subject cannot be blank")
+        if len(self.ref.strip()) == 0:
+            raise ValidationError("Reference cannot be blank")
+
+        if self.content:
+            filename = self.content.name
+            check = (".pdf", ".docx", ".xls", ".xlsx",
+                     ".ppt", ".pptx", ".txt", ".jpeg", ".jpg")
+            if not filename.endswith(check):
+                raise ValidationError("Unsupported File format")
+
+        self.subject = self.subject.strip()
+        self.ref = self.ref.strip()
+
         super(Document, self).save(*args, **kwargs)
 
 
@@ -71,9 +89,21 @@ class RelatedDocument(models.Model):
         return self.subject
 
     def save(self, *args, **kwargs):
-        self.document.related_document = True
-        self.subject = self.subject.capitalize()
+        if len(self.subject.strip()) == 0:
+            raise ValidationError("Subject cannot be blank")
+        if len(self.ref.strip()) == 0:
+            raise ValidationError("Reference cannot be blank")
 
+        if self.content:
+            filename = self.content.name
+            check = (".pdf", ".docx", ".xls", ".xlsx",
+                     ".ppt", ".pptx", ".txt", ".jpeg", ".jpg")
+            if not filename.endswith(check):
+                raise ValidationError("Unsupported File format")
+
+        self.document.related_document = True
+        self.subject = self.subject.strip()
+        self.ref = self.ref.strip()
         super(RelatedDocument, self).save(*args, **kwargs)
 
 
@@ -173,9 +203,9 @@ class ActivateDocument(models.Model):
         return f'{self.document.subject} - {self.expire_at}'
 
 
-class CategoryManager(TreeManager):
-    def viewable(self):
-        queryset = self.get_queryset().filter(level=0)
+class FolderManager(TreeManager):
+    def viewable(self, user):
+        queryset = self.get_queryset().filter(created_by=user, level=0)
         return queryset
 
     def children(self, slug):
@@ -188,7 +218,8 @@ class Folder(MPTTModel):
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
     slug = models.SlugField()
-    objects = CategoryManager()
+    objects = FolderManager()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -197,9 +228,13 @@ class Folder(MPTTModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        if len(self.name.strip()) == 0:
+            raise ValidationError("Name cannot be blank")
+
         unique_id = uuid.uuid4()
         if not self.slug:
             self.slug = slugify(unique_id)
+
         return super().save(*args, **kwargs)
 
 
@@ -216,7 +251,7 @@ class Folder(MPTTModel):
 #         return self.subject
 
 
-@receiver(post_save, sender=ActivateDocument)
+@ receiver(post_save, sender=ActivateDocument)
 def expire_date_handler(sender, instance, created, **kwargs):
     secret_id = random.randint(1, 9999)
     if created:

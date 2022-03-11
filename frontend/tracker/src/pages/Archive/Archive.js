@@ -52,9 +52,9 @@ function Archive() {
     setLoading(false);
   }, []);
 
-  if (archiveCount === 0) {
-    return <EmptyPage type="archived" />;
-  }
+  // if (archiveCount === 0) {
+  //   return <EmptyPage type="archived" />;
+  // }
 
   return (
     <>
@@ -68,7 +68,13 @@ function Archive() {
           >
             Archive
           </Text>
-          <Box display="flex" alignItems="center" marginTop="5px" bg="#eaeaea">
+          <Box
+            display="flex"
+            alignItems="center"
+            marginTop="5px"
+            borderTop="0.5px solid #000"
+            borderBottom="0.5px solid #000"
+          >
             <ToolbarOption
               text="New Folder"
               Icon={FolderAddOutlined}
@@ -106,7 +112,7 @@ function Archive() {
                     return (
                       <File doc={item} key={item.document.id} type="archive" />
                     );
-                  } else if (item.closed_by === null) {
+                  } else {
                     return (
                       <DirectoryFileIcon
                         key={item.document.id}

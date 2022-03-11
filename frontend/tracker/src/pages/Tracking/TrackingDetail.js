@@ -18,6 +18,7 @@ function TrackingDetail() {
     const res = await fetchTracking(store.token, documentId);
     const data = res.data;
     setTracking(data);
+    console.log(data);
     setLoading(false);
   };
 
@@ -79,7 +80,14 @@ function TrackingDetail() {
                             fontWeight="500"
                             color="var(--dark-brown)"
                           >
-                            Date: Don't forget to add timestamp to db
+                            Date: {new Date(label.date).toDateString()}
+                          </Text>
+                          <Text
+                            fontSize="0.8rem"
+                            fontWeight="500"
+                            color="var(--dark-brown)"
+                          >
+                            Time: {new Date(label.date).toLocaleTimeString()}
                           </Text>
                         </>
                       }
@@ -109,7 +117,14 @@ function TrackingDetail() {
                             fontWeight="500"
                             color="var(--dark-brown)"
                           >
-                            Date: Don't forget to add timestamp to db
+                            Date: {new Date(label.date).toDateString()}
+                          </Text>
+                          <Text
+                            fontSize="0.8rem"
+                            fontWeight="500"
+                            color="var(--dark-brown)"
+                          >
+                            Time: {new Date(label.date).toLocaleTimeString()}
                           </Text>
                         </>
                       }

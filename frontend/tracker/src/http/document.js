@@ -14,9 +14,11 @@ export async function createDocument(token, data) {
   const receiver = data.receiver;
   const department = data.department;
   let document = data.document;
+  let filename = null;
 
   if (document !== null) {
     document = document[0].originFileObj;
+    filename = document.name;
   }
 
   const formData = new FormData();
@@ -27,6 +29,7 @@ export async function createDocument(token, data) {
   formData.append("reference", data.reference);
   formData.append("documentType", data.documentType);
   formData.append("encrypt", data.encrypt);
+  formData.append("filename", filename);
 
   for (let count = 0; count < data.attachments.length; count++) {
     formData.append(`attachment_${count}`, data.attachments[count].file);

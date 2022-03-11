@@ -1,6 +1,4 @@
-from collections import defaultdict
-from mptt.utils import get_cached_trees
-from xmlrpc.client import ResponseError
+from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -107,7 +105,8 @@ class ArchiveCountAPIView(views.APIView):
         user = models.User.objects.get(staff_id=request.user.staff_id)
         archive = [archive for archive in models.Archive.objects.all().order_by(
             'created_by') if archive.created_by.department == user.department]
-        data = utils.Count(len(archive))
+        folder_archive = models.Folder.objects.viewable(request.user)
+        data = utils.Count(len(archive) + len(folder_archive))
         serialized_data = serializers.CountSerializer(data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
@@ -193,10 +192,10 @@ class TrackingAPIView(views.APIView):
             creator_detail = {
                 "name": f'{creator.first_name} {creator.last_name}',
                 "department": creator.department.name,
-                # "date": document.created_at
+                "date": document.created_at
             }
             creator_data = utils.Tracking(
-                creator_detail["name"], creator_detail["department"])
+                creator_detail["name"], creator_detail["department"], creator_detail["date"])
             trackingStep.append(creator_data)
 
             for i in range(len(trails)-1, -1, -1):
@@ -204,10 +203,10 @@ class TrackingAPIView(views.APIView):
                 other_users_detail = {
                     "name": f'{trail.receiver.first_name} {trail.receiver.last_name}',
                     "department": trail.receiver.department.name,
-                    # "date": document.created_at
+                    "date": trail.date
                 }
                 data = utils.Tracking(
-                    other_users_detail["name"], other_users_detail["department"])
+                    other_users_detail["name"], other_users_detail["department"], other_users_detail["date"])
                 trackingStep.append(data)
         except:
             raise exceptions.TrackingNotFound
@@ -571,8 +570,8 @@ class CreateFlow(views.APIView):
                 if act.startswith('c'):
                     document_action = models.DocumentAction.objects.create(
                         user=employee, action='CC', document_type=document_type)
-        except Exception:
-            raise exceptions.ServerError
+        except Exception as err:
+            raise exceptions.ServerError(err)
 
         return Response(request.data, status=status.HTTP_200_OK)
 
@@ -672,6 +671,7 @@ class CreateDocument(views.APIView):
         document = data.get('document')
         reference = data.get('reference')
         subject = data.get('subject')
+        filename = data.get('filename')
         encrypt = json.loads(data.get('encrypt'))
 
         receiver = get_object_or_404(
@@ -692,7 +692,8 @@ class CreateDocument(views.APIView):
             try:
                 # creating documents and attachments
                 document = models.Document.objects.create(
-                    content=document, subject=subject, created_by=sender, ref=reference, document_type=document_type, encrypt=encrypt)
+                    content=document, subject=subject, created_by=sender,
+                    ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
                 if document:
                     count = 0
                     for item in data_lst:
@@ -724,13 +725,14 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
-                raise exceptions.ServerError
+                raise exceptions.ServerError(err)
         else:
             try:
                 document_type = models.DocumentType.objects.get(
                     id=data_document_type)
                 document = models.Document.objects.create(
-                    content=document, subject=subject, created_by=sender, ref=reference, document_type=document_type)
+                    content=document, subject=subject, created_by=sender,
+                    ref=reference, document_type=document_type, filename=filename)
                 if document:
                     count = 0
                     for item in data_lst:
@@ -761,7 +763,7 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
-                raise exceptions.ServerError
+                raise exceptions.ServerError(err)
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)
 
@@ -771,7 +773,8 @@ class FolderAPIView(views.APIView):
     def get(self, request, slug=None, format=None):
         try:
             if slug is None:
-                tree = cache_tree_children(models.Folder.objects.viewable())
+                tree = cache_tree_children(
+                    models.Folder.objects.viewable(request.user))
                 serializer = serializers.FolderSerializer(tree, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -788,12 +791,11 @@ class FolderAPIView(views.APIView):
 
         try:
             new_folder = models.Folder.objects.create(
-                name=folder_name, parent_id=parent_folder_id)
+                name=folder_name, parent_id=parent_folder_id, created_by=request.user)
             serialized_data = serializers.FolderSerializer(new_folder)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
-            print(err)
-            raise exceptions.ServerError
+            raise exceptions.ServerError(err)
 
 
 class ArchiveFileAPIView(views.APIView):
@@ -803,17 +805,23 @@ class ArchiveFileAPIView(views.APIView):
         reference = request.data.get("reference")
         file = request.data.get("file")
         parent_folder_id = request.data.get("parentFolderId")
+        filename = request.data.get("filename")
 
         try:
             if parent_folder_id != "undefined":
                 parent_folder = models.Folder.objects.get_queryset().filter(
                     id=parent_folder_id)
                 file = models.Document.objects.create(
-                    subject=subject, ref=reference, content=file, created_by=request.user, folder=parent_folder[0])
+                    subject=subject, ref=reference, content=file,
+                    created_by=request.user, folder=parent_folder[0], filename=filename)
                 serialized_data = serializers.DocumentsSerializer(file)
             else:
-                file = models.Document.objects.create(
-                    subject=subject, ref=reference, content=file, created_by=request.user)
+                try:
+                    file = models.Document.objects.create(
+                        subject=subject, ref=reference, content=file, created_by=request.user, filename=filename)
+                except IntegrityError:
+                    raise exceptions.ServerError(
+                        "Reference exists, please provide a unique reference")
 
                 archive = models.Archive.objects.create(
                     document=file, created_by=request.user)

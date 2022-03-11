@@ -1,7 +1,7 @@
 import React from "react";
 import "./AttachmentModal.css";
 
-import { Button, Form, Input, Modal, Upload } from "antd";
+import { Button, Form, Input, Modal, notification, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 const layout = {
@@ -44,6 +44,12 @@ function AttachmentModal({
   };
 
   const onFinish = (values) => {
+    if (!values.subject.trim().length > 0) {
+      return notification.error({
+        message: "Error",
+        description: "Field cannot be blank",
+      });
+    }
     const new_attachment = {
       file: values.document[0].originFileObj,
       subject: values.subject,

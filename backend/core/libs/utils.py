@@ -48,7 +48,7 @@ class Count:
 
 
 class Tracking:
-    def __init__(self, name, department, date=None,):
+    def __init__(self, name, department, date):
         self.name = name
         self.department = department
-        # self.date = date
+        self.date = date

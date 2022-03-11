@@ -9,6 +9,8 @@ function EmptyPage({ type }) {
     header = "Received";
   } else if (type === "outgoing") {
     header = "Pending";
+  } else if (type === "tracking") {
+    header = "Tracking";
   } else {
     header = "Archive";
   }
