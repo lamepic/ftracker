@@ -810,18 +810,15 @@ class ArchiveFileAPIView(views.APIView):
                     id=parent_folder_id)
                 file = models.Document.objects.create(
                     subject=subject, ref=reference, content=file, created_by=request.user, folder=parent_folder[0])
+                serialized_data = serializers.DocumentsSerializer(file)
             else:
                 file = models.Document.objects.create(
                     subject=subject, ref=reference, content=file, created_by=request.user)
 
                 archive = models.Archive.objects.create(
                     document=file, created_by=request.user)
+                serialized_data = serializers.ArchiveSerializer(archive)
 
-            serialized_data = serializers.DocumentsSerializer(file)
-            # file = models.ArchiveFile.objects.create(
-            #     subject=subject, reference=reference, content=file, folder=parent_folder[0])
-            # serialized_data = serializers.ArchiveFileSerializer(file)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
-            print(err)
-            raise exceptions.ServerError
+            raise exceptions.ServerError(err)

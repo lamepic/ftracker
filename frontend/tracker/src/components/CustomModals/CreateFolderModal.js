@@ -51,7 +51,7 @@ function CreateFolderModal({
     } catch (e) {
       notification.error({
         message: "Error",
-        description: e.response.detail,
+        description: e.response.data.detail,
       });
     }
     setOpenCreateFolderModal(false);

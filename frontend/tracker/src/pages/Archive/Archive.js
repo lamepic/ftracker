@@ -33,6 +33,7 @@ function Archive() {
   const _fetchUserArchive = async () => {
     const res = await fetchUserArchive(store.token, store.user.staff_id);
     const data = res.data;
+    // console.log(data);
     setArchive(data);
   };
 
@@ -81,7 +82,7 @@ function Archive() {
           </Box>
           {!loading ? (
             <Box
-              maxH={{ sm: "100vh", lg: "80vh" }}
+              maxH={{ sm: "100vh", lg: "70vh" }}
               overflowY="auto"
               marginTop="20px"
             >
@@ -147,6 +148,8 @@ function Archive() {
           openCreateFileModal={openCreateFileModal}
           submitting={submitting}
           setSubmitting={setSubmitting}
+          appendFileToArchive={setArchive}
+          parentFolder={archive}
         />
       )}
       {openPreview && (

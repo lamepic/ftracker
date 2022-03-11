@@ -40,6 +40,7 @@ function CreateFileModal({
   parentFolder,
   submitting,
   setSubmitting,
+  appendFileToArchive,
 }) {
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
@@ -61,17 +62,22 @@ function CreateFileModal({
       const res = await createFile(store.token, data);
       if (res.status === 201) {
         setSubmitting(false);
+        console.log(res.data);
+        if (appendFileToArchive) {
+          appendFileToArchive([...parentFolder, res.data]);
+        } else {
+          appendFile({
+            ...parentFolder,
+            documents: [...parentFolder?.documents, res.data],
+          });
+        }
       }
-      appendFile({
-        ...parentFolder,
-        documents: [...parentFolder?.documents, res.data],
-      });
     } catch (e) {
-      console.log(e.response);
-      // notification.error({
-      //   message: "Error",
-      //   description: e.response.detail,
-      // });
+      setSubmitting(false);
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
     }
     setOpenCreateFileModal(false);
   };
@@ -84,7 +90,12 @@ function CreateFileModal({
         style={{ top: 20 }}
         confirmLoading={submitting}
         footer={[
-          <Button type="primary" onClick={form.submit} loading={submitting}>
+          <Button
+            type="primary"
+            onClick={form.submit}
+            loading={submitting}
+            key="footer"
+          >
             {submitting ? "Uploading..." : "Upload"}
           </Button>,
         ]}
@@ -137,6 +148,11 @@ function CreateFileModal({
             label="File"
             wrapperCol={{ ...layout.wrapperCol }}
             getValueFromEvent={getFile}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
             <Upload maxCount={1} customRequest={dummyRequest}>
               <Button icon={<UploadOutlined />} style={{ width: "275px" }}>

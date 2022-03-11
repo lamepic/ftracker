@@ -139,7 +139,10 @@ function CreateDocument() {
       const res = await departments(store.token);
       setDepartments(res.data);
     } catch (error) {
-      console.log("Fetch departments", error);
+      notification.error({
+        message: "Error",
+        description: error.response.data.detail,
+      });
     }
   };
 
@@ -153,7 +156,10 @@ function CreateDocument() {
       const res = await loadUsers(store.token);
       setUsers(res.data);
     } catch (error) {
-      console.log("Fetch Users", error);
+      notification.error({
+        message: "Error",
+        description: error.response.data.detail,
+      });
     }
   };
 
@@ -207,7 +213,6 @@ function CreateDocument() {
               });
             }
           } catch (err) {
-            console.log(err.response.data.detail);
             openNotificationWithIcon("error", err.response.data.detail);
           }
         }
