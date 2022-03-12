@@ -1,31 +1,31 @@
 import React, { useEffect } from "react";
-import { loadUser } from "../../http/user";
-import { useStateValue } from "../../store/StateProvider";
-import * as actionTypes from "../../store/actionTypes";
-import { Box, Image, useDisclosure } from "@chakra-ui/react";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Navbar from "../../components/Navbar/Navbar";
-import { Link, Route } from "react-router-dom";
-import Home from "../Home/Home";
-import Incoming from "../Incoming/Incoming";
-import Outgoing from "../Outgoing/Outgoing";
 import {
   fetchArchiveCount,
   fetchIncomingCount,
   fetchOutgoingCount,
   notificationsCount,
 } from "../../http/document";
-import CreateDocument from "../CreateDocument/CreateDocument";
-import Tracking from "../Tracking/Tracking";
-import TrackingDetail from "../Tracking/TrackingDetail";
-import ViewDocument from "../ViewDocument/ViewDocument";
-import ProtectedPage from "../../utility/ProtectedPage";
+import Home from "../Home/Home";
+import Flow from "../Flow/Flow";
 import Archive from "../Archive/Archive";
+import { loadUser } from "../../http/user";
+import Incoming from "../Incoming/Incoming";
+import Outgoing from "../Outgoing/Outgoing";
+import Tracking from "../Tracking/Tracking";
+import Directory from "../Directory/Directory";
+import { Link, Route } from "react-router-dom";
+import Navbar from "../../components/Navbar/Navbar";
+import addIcon from "../../assets/icons/add-icon.svg";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import * as actionTypes from "../../store/actionTypes";
+import TrackingDetail from "../Tracking/TrackingDetail";
+import ProtectedPage from "../../utility/ProtectedPage";
+import ViewDocument from "../ViewDocument/ViewDocument";
+import { useStateValue } from "../../store/StateProvider";
+import { Box, Image, useDisclosure } from "@chakra-ui/react";
+import CreateDocument from "../CreateDocument/CreateDocument";
 import ActivateDocument from "../ActivateDocument/ActivateDocument";
 import ActivatedDocView from "../ActivateDocument/ActivatedDocView";
-import Flow from "../Flow/Flow";
-import addIcon from "../../assets/icons/add-icon.svg";
-import Directory from "../Directory/Directory";
 
 function Dashboard() {
   const [store, dispatch] = useStateValue();
@@ -95,7 +95,6 @@ function Dashboard() {
       {store.user !== null && (
         <Box
           display="flex"
-          // minH="100%"
           maxW={{ sm: "750px", lg: "100%" }}
           margin={{ sm: "auto" }}
         >
@@ -106,8 +105,6 @@ function Dashboard() {
             flex={{ sm: "1", lg: "0.8" }}
             minH="100%"
             marginX="auto"
-            // paddingX="1.5rem"
-            // marginLeft={{ lg: "30px" }}
             h="100vh"
             overflow="auto"
           >
