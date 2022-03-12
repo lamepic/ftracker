@@ -1,12 +1,12 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 
-from .forms import UserAdminChangeForm, UserAdminCreationForm
 from . import models
+from .forms import UserAdminChangeForm, UserAdminCreationForm
 
 User = get_user_model()
 USERNAME_FIELD = User.USERNAME_FIELD
