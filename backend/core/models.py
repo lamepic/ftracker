@@ -7,6 +7,7 @@ from django.forms import ValidationError
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext as _
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
@@ -61,7 +62,7 @@ class Document(models.Model):
 
     def save(self, *args, **kwargs):
         if len(self.subject.strip()) == 0:
-            raise ValidationError("Subject cannot be blank")
+            raise ValidationError(_("Subject cannot be blank"))
         if len(self.ref.strip()) == 0:
             raise ValidationError("Reference cannot be blank")
 
