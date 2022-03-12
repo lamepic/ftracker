@@ -1,16 +1,14 @@
-from asyncio import exceptions
 import random
 import json
-from tabnanny import filename_only
 import uuid
 from django.db import models
-from django.contrib.auth import get_user_model
-from django.forms import ValidationError
-from django_celery_beat.models import PeriodicTask, CrontabSchedule
-from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.forms import ValidationError
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
 
 from users import models as users_model
@@ -236,19 +234,6 @@ class Folder(MPTTModel):
             self.slug = slugify(unique_id)
 
         return super().save(*args, **kwargs)
-
-
-# class ArchiveFile(models.Model):
-#     subject = models.CharField(max_length=60)
-#     reference = models.CharField(max_length=60, blank=True, null=True)
-#     content = models.FileField(upload_to="documents/")
-#     folder = models.ForeignKey(
-#         Folder, on_delete=models.SET_NULL, null=True, blank=True)
-#     created_by = models.ForeignKey(
-#         users_model.Department, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return self.subject
 
 
 @ receiver(post_save, sender=ActivateDocument)
