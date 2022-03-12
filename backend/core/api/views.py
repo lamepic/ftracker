@@ -1,23 +1,21 @@
-from django.db import IntegrityError
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import get_user_model
-from django.db.models import Q
-from datetime import datetime
-
-from rest_framework.exceptions import APIException
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework import generics, views, viewsets
-from rest_framework import status
-
-from mptt.templatetags.mptt_tags import cache_tree_children
-
 import json
-from ..libs import exceptions, utils
-from . import serializers
+from datetime import datetime
+from click import help_option
+from django.db.models import Q
+from django.db import IntegrityError
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+
+from rest_framework import views
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
 from .. import models
+from . import serializers
+from ..libs import exceptions, utils
 from users.api import serializers as user_serializers
+from mptt.templatetags.mptt_tags import cache_tree_children
 
 User = get_user_model()
 
@@ -571,7 +569,7 @@ class CreateFlow(views.APIView):
                     document_action = models.DocumentAction.objects.create(
                         user=employee, action='CC', document_type=document_type)
         except Exception as err:
-            raise exceptions.ServerError(err)
+            raise exceptions.ServerError(err.args[0])
 
         return Response(request.data, status=status.HTTP_200_OK)
 
@@ -644,17 +642,6 @@ class SearchAPIView(views.APIView):
                     "department": item.created_by.department.name if item.closed_by == None else item.closed_by.department.name}
                 documents.append(archive_data)
 
-        # # uploaded archive files
-        # archive_files = [
-        #     archive for archive in models.ArchiveFile.objects.all()]
-        # for item in archive_files:
-        #     document_serializer = serializers.ArchiveFileSerializer(item)
-        #     archive_data = {
-        #         "document": document_serializer.data,
-        #         "route": "archive",
-        #         "department": item.created_by.name}
-        #     documents.append(archive_data)
-
         data = [doc for doc in documents if term.lower() in doc['document']
                 ['subject'].lower()]
 
@@ -725,7 +712,7 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
-                raise exceptions.ServerError(err)
+                raise exceptions.ServerError(err.args[0])
         else:
             try:
                 document_type = models.DocumentType.objects.get(
@@ -763,7 +750,7 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
-                raise exceptions.ServerError(err)
+                raise exceptions.ServerError(err.args[0])
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)
 
@@ -782,8 +769,7 @@ class FolderAPIView(views.APIView):
             serializer = serializers.FolderSerializer(tree, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as err:
-            print(err)
-            raise exceptions.ServerError
+            raise exceptions.ServerError(err.args[0])
 
     def post(self, request, format=None):
         folder_name = request.data.get("name")
@@ -795,7 +781,7 @@ class FolderAPIView(views.APIView):
             serialized_data = serializers.FolderSerializer(new_folder)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
-            raise exceptions.ServerError(err)
+            raise exceptions.ServerError(err.args[0])
 
 
 class ArchiveFileAPIView(views.APIView):
@@ -829,4 +815,4 @@ class ArchiveFileAPIView(views.APIView):
 
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
-            raise exceptions.ServerError(err)
+            raise exceptions.ServerError(err.args[0])
