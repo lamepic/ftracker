@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
-from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
+from mptt.admin import DraggableMPTTAdmin
 
 
 from . import models
@@ -38,7 +38,6 @@ class TrailAdmin(admin.ModelAdmin):
         "document__subject",
     )
     list_filter = ('status',)
-    # actions = [mark_as_complete, ]
 
     def document_type(self, obj):
         return obj.document.document_type
@@ -89,15 +88,9 @@ class DocumentActionAdmin(admin.ModelAdmin):
     list_filter = ['document_type']
 
 
-# class CustomMPTTModelAdmin(MPTTModelAdmin):
 class CustomMPTTModelAdmin(DraggableMPTTAdmin):
     # specify pixel amount for this ModelAdmin only:
     mptt_level_indent = 20
 
 
 admin.site.register(models.Folder, CustomMPTTModelAdmin)
-
-
-# @admin.register(models.ArchiveFile)
-# class ArchiveFileAdmin(admin.ModelAdmin):
-#     list_display = ["subject", "reference"]
