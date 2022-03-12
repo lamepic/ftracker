@@ -1,5 +1,3 @@
-from unittest.util import _MAX_LENGTH
-from attr import fields
 from rest_framework import serializers
 
 from .. import models
@@ -189,12 +187,6 @@ class RecursiveField(serializers.Serializer):
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
-
-# class ArchiveFileSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = models.ArchiveFile
-#         fields = ["id", "subject", "reference", "content"]
 
 
 class FolderSerializer(serializers.ModelSerializer):
