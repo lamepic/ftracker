@@ -1,4 +1,3 @@
-from msilib.schema import Error
 from celery import shared_task
 
 from celery import Celery, states
