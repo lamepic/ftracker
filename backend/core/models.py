@@ -62,7 +62,7 @@ class Document(models.Model):
 
     def save(self, *args, **kwargs):
         if len(self.subject.strip()) == 0:
-            raise ValidationError(_("Subject cannot be blank"))
+            raise ValidationError("Subject cannot be blank")
         if len(self.ref.strip()) == 0:
             raise ValidationError("Reference cannot be blank")
 
