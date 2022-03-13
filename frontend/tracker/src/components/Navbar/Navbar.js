@@ -45,7 +45,6 @@ const MenuDropDown = ({ userInfo, handleLogout }) => {
             color="#9D4D01"
             fontWeight="600"
             maxW="150px"
-            // marginLeft="5px"
           >
             {userInfo.first_name} {userInfo.last_name}
           </Text>{" "}
@@ -215,21 +214,22 @@ function NotificationDropDown() {
   );
 }
 
+const getDay = () => {
+  const event = new Date();
+  const options = { weekday: "long" };
+  return event.toLocaleDateString("en-US", options);
+};
+
+const getMonth = () => {
+  const event = new Date();
+  const options = { month: "long" };
+  return event.toLocaleDateString("en-US", options);
+};
+
 function Navbar({ onOpen }) {
   const [store, dispatch] = useStateValue();
 
   const userInfo = store.user;
-  const getDay = () => {
-    const event = new Date();
-    const options = { weekday: "long" };
-    return event.toLocaleDateString("en-US", options);
-  };
-
-  const getMonth = () => {
-    const event = new Date();
-    const options = { month: "long" };
-    return event.toLocaleDateString("en-US", options);
-  };
 
   const handleLogout = async () => {
     const res = await logout(store.token);

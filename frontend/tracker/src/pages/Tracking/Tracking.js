@@ -1,38 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./Tracking.css";
 import { Box } from "@chakra-ui/react";
 import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import Loading from "../../components/Loading/Loading";
 import TrackingCard from "../../components/TrackingCard/TrackingCard";
 import { fetchOutgoing } from "../../http/document";
-import { useStateValue } from "../../store/StateProvider";
+import useFetchData from "../../hooks/useFetchData";
 
 function Tracking() {
-  const [store] = useStateValue();
-  const [outgoing, setOutgoing] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, data: outgoing } = useFetchData(fetchOutgoing);
 
-  const outgoingCount = store.outgoingCount;
-
-  const _fetchOutgoing = async () => {
-    const res = await fetchOutgoing(store.token);
-    const data = res.data;
-    setOutgoing(data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    _fetchOutgoing(store.token);
-  }, []);
-
-  if (outgoingCount === 0) {
-    return <EmptyPage type="tracking" />;
+  if (loading) {
+    return <Loading />;
   }
+
   return (
     <Box>
       <h2 className="tracking__header">Document Tracking</h2>
       <hr className="divider" />
-      {!loading ? (
+      {outgoing.length > 0 ? (
         <Box
           width="fit-content"
           marginTop="10px"
@@ -60,7 +46,7 @@ function Tracking() {
           })}
         </Box>
       ) : (
-        <Loading />
+        <EmptyPage type="tracking" />
       )}
     </Box>
   );

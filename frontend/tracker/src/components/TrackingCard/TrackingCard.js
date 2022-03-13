@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./TrackingCard.css";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 import { Button, Card } from "antd";

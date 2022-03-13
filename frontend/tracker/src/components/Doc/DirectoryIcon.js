@@ -22,13 +22,18 @@ function DirectoryIcon({ name, slug }) {
     <Box onClick={handleClick}>
       <Box
         display="flex"
-        flexDirection="column"
+        flexDirection="row"
         justifyContent="center"
         alignItems="center"
-        _hover={{ backgroundColor: "#e3bc97" }}
+        // _hover={{ backgroundColor: "#e3bc97" }}
         transition="all 500ms ease-in-out"
       >
-        <Image src={Directory_Icon} alt="folder" className="folder__img" />
+        <Image
+          src={Directory_Icon}
+          alt="folder"
+          width="15px"
+          marginRight="5px"
+        />
         <p className="folder__title">{capitalize(name)}</p>
       </Box>
     </Box>

@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./Home.css";
 import { Box, Image, Text } from "@chakra-ui/react";
-import * as actionTypes from "../../store/actionTypes";
 import dashboard_hero from "../../assets/icons/dashboard-hero-icon.svg";
 import incoming_icon from "../../assets/icons/incoming-tray-icon.svg";
 import outgoing_icon from "../../assets/icons/outgoing-tray-icon.svg";
@@ -9,33 +8,12 @@ import archive from "../../assets/icons/archive.svg";
 import { useStateValue } from "../../store/StateProvider";
 import { Link } from "react-router-dom";
 import HomeOption from "../../components/HomeOption/HomeOption";
-import { fetchIncomingCount, fetchOutgoingCount } from "../../http/document";
+import useFetchCount from "../../hooks/useFetchCount";
+import addIcon from "../../assets/icons/add-icon.svg";
 
 function Home() {
+  useFetchCount(true, true, true, true);
   const [store, dispatch] = useStateValue();
-
-  useEffect(() => {
-    _fetchIncomingCount();
-    _fetchOutgoingCount();
-  }, []);
-
-  const _fetchIncomingCount = async () => {
-    const res = await fetchIncomingCount(store.token);
-    const data = res.data.count;
-    dispatch({
-      type: actionTypes.SET_INCOMING_COUNT,
-      payload: data,
-    });
-  };
-
-  const _fetchOutgoingCount = async () => {
-    const res = await fetchOutgoingCount(store.token);
-    const data = res.data.count;
-    dispatch({
-      type: actionTypes.SET_OUTGOING_COUNT,
-      payload: data,
-    });
-  };
 
   const userInfo = store.user;
   const incomingCount = store.incomingCount;
@@ -47,7 +25,6 @@ function Home() {
       maxW={{ sm: "95%", lg: "100%" }}
       marginX="auto"
       marginLeft={{ sm: "35px", lg: "0" }}
-      // bg={{ md: "yellow", lg: "red", xl: "blue" }}
     >
       <Box
         display="flex"
@@ -134,6 +111,15 @@ function Home() {
         </Box>
       </Box>
       <hr className="divider" />
+      <Box
+        position="fixed"
+        right={{ sm: "60px", lg: "68px" }}
+        bottom={{ sm: "10px", lg: "20px" }}
+      >
+        <Link to="/dashboard/add-document">
+          <Image src={addIcon} boxSize="45px" />
+        </Link>
+      </Box>
     </Box>
   );
 }

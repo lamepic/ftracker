@@ -1,6 +1,8 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
 import "./EmptyPage.css";
+import addIcon from "../../assets/icons/add-icon.svg";
 
 function EmptyPage({ type }) {
   let header = "";
@@ -37,6 +39,15 @@ function EmptyPage({ type }) {
             No {type} Files
           </Text>
         </Box>
+      </Box>
+      <Box
+        position="fixed"
+        right={{ sm: "60px", lg: "68px" }}
+        bottom={{ sm: "10px", lg: "20px" }}
+      >
+        <Link to="/dashboard/add-document">
+          <Image src={addIcon} boxSize="45px" />
+        </Link>
       </Box>
     </Box>
   );

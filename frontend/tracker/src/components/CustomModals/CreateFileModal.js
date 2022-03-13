@@ -1,7 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, notification, Upload } from "antd";
 import Modal from "antd/lib/modal/Modal";
-import React from "react";
+import React, { useRef } from "react";
 import { createFile } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 

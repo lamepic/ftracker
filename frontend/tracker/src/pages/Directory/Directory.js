@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
-import { Box, Grid, Text, Spinner } from "@chakra-ui/react";
-import { Breadcrumb } from "antd";
+import { Box, Grid, Text } from "@chakra-ui/react";
+import { Breadcrumb, notification } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
@@ -13,12 +13,17 @@ import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
 import Preview from "../../components/Preview/Preview";
+import Toolbar from "../../components/Navbar/Toolbar";
+import GridData from "../../components/DataDisplay/GridData";
+import TableData from "../../components/DataDisplay/TableData";
+import { capitalize } from "../../utility/helper";
+import moment from "moment";
 
 function Directory() {
   const [store, dispatch] = useStateValue();
-  const params = useParams();
+  const { slug } = useParams();
   const history = useHistory();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folder, setFolder] = useState({});
@@ -27,10 +32,9 @@ function Directory() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    setFolder({});
-    _fetchFolders();
-    setLoading(false);
-  }, [params]);
+    // setFolder({});
+    _fetchSubFolders();
+  }, [slug]);
 
   useEffect(() => {
     const popbreadcrumb = () => {
@@ -44,23 +48,74 @@ function Directory() {
     return () => window.removeEventListener("popstate", popbreadcrumb);
   }, []);
 
-  const _fetchFolders = async () => {
-    const res = await fetchSubfolders(store.token, params.slug);
-    const data = res.data[0];
-    setFolder(data);
+  const _fetchSubFolders = async () => {
+    try {
+      const res = await fetchSubfolders(store.token, slug);
+      const data = res.data[0];
+      setFolder(data);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      return notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
+    }
   };
+
+  const documentData = folder.documents?.map((document) => {
+    return {
+      name: (
+        <DirectoryFileIcon
+          key={document.id}
+          setPreviewDoc={setPreviewDoc}
+          setOpenPreview={setOpenPreview}
+          document={document}
+        />
+      ),
+      filename: document.filename,
+      subject: capitalize(document.subject),
+      created_at: moment(document.created_at).toLocaleString(),
+      type: "File",
+      key: document.id,
+    };
+  });
+
+  const subFolderData = folder.children?.map((subfolder) => {
+    return {
+      key: subfolder.id,
+      name: (
+        <DirectoryIcon
+          name={subfolder.name}
+          key={subfolder.id}
+          slug={subfolder.slug}
+        />
+      ),
+      date_created: null,
+      type: "Folder",
+      foldername: subfolder.name,
+      created_at: moment(subfolder.created_at).toLocaleString(),
+      subject: "-",
+    };
+  });
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
       <Box>
-        <Box marginTop="20px">
-          <Box
-            display="flex"
-            alignItems="center"
-            marginTop="5px"
-            borderTop="0.5px solid #000"
-            borderBottom="0.5px solid #000"
+        <Box marginTop="10px">
+          <Text
+            as="h2"
+            fontSize={{ sm: "1.5rem", lg: "1.7rem" }}
+            color="var(--dark-brown)"
+            fontWeight="600"
           >
+            Archive
+          </Text>
+          <Toolbar>
             <ToolbarOption
               text="New Folder"
               Icon={FolderAddOutlined}
@@ -71,7 +126,7 @@ function Directory() {
               Icon={UploadOutlined}
               openModal={setOpenCreateFileModal}
             />
-          </Box>
+          </Toolbar>
           <Box marginTop="20px">
             <Breadcrumb separator=">">
               <Breadcrumb.Item
@@ -80,7 +135,6 @@ function Directory() {
                 <Text
                   _hover={{ cursor: "pointer" }}
                   fontSize="0.9rem"
-                  // color="var(--dark-brown)"
                   fontWeight="500"
                   as="span"
                 >
@@ -102,7 +156,6 @@ function Directory() {
                     <Text
                       _hover={{ cursor: "pointer" }}
                       fontSize="0.9rem"
-                      // color="var(--dark-brown)"
                       fontWeight="500"
                       as="span"
                     >
@@ -113,20 +166,15 @@ function Directory() {
               })}
             </Breadcrumb>
           </Box>
-          {!loading ? (
-            <Box
-              maxH={{ sm: "100vh", lg: "80vh" }}
-              overflowY="auto"
-              marginTop="20px"
-            >
-              <Grid
-                templateColumns={{
-                  sm: "repeat(4, 1fr)",
-                  lg: "repeat(6, 1fr)",
-                }}
-                gap={6}
-              >
-                {folder.documents?.map((document) => {
+          {/* {folder.documents?.length + folder.children?.length > 0 ? ( */}
+          <Box
+            maxH={{ sm: "100vh", lg: "80vh" }}
+            overflowY="auto"
+            marginTop="20px"
+          >
+            {/* <GridData> */}
+            {/* if folder has documents/files in it  */}
+            {/* {folder.documents?.map((document) => {
                   return (
                     <DirectoryFileIcon
                       key={document.id}
@@ -135,8 +183,9 @@ function Directory() {
                       document={document}
                     />
                   );
-                })}
-                {folder.children?.map((folder) => {
+                })} */}
+            {/* if the folder has folders in it */}
+            {/* {folder.children?.map((folder) => {
                   return (
                     <DirectoryIcon
                       name={folder.name}
@@ -144,12 +193,20 @@ function Directory() {
                       slug={folder.slug}
                     />
                   );
-                })}
-              </Grid>
-            </Box>
-          ) : (
-            <Loading />
-          )}
+                })} */}
+            {/* </GridData> */}
+            <TableData data={[...documentData, ...subFolderData]} />
+          </Box>
+          {/* ) : (
+            <Text
+              textAlign="center"
+              marginTop="20px"
+              fontWeight="500"
+              color="var(--dark-brown)"
+            >
+              Empty folder
+            </Text>
+          )} */}
         </Box>
       </Box>
       {openCreateFolderModal && (

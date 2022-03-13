@@ -1,98 +1,33 @@
-import React, { useEffect } from "react";
-import {
-  fetchArchiveCount,
-  fetchIncomingCount,
-  fetchOutgoingCount,
-  notificationsCount,
-} from "../../http/document";
+import React from "react";
 import Home from "../Home/Home";
 import Flow from "../Flow/Flow";
 import Archive from "../Archive/Archive";
-import { loadUser } from "../../http/user";
 import Incoming from "../Incoming/Incoming";
 import Outgoing from "../Outgoing/Outgoing";
 import Tracking from "../Tracking/Tracking";
 import Directory from "../Directory/Directory";
-import { Link, Route } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
-import addIcon from "../../assets/icons/add-icon.svg";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import * as actionTypes from "../../store/actionTypes";
 import TrackingDetail from "../Tracking/TrackingDetail";
 import ProtectedPage from "../../utility/ProtectedPage";
 import ViewDocument from "../ViewDocument/ViewDocument";
 import { useStateValue } from "../../store/StateProvider";
-import { Box, Image, useDisclosure } from "@chakra-ui/react";
+import { Box, useDisclosure } from "@chakra-ui/react";
 import CreateDocument from "../CreateDocument/CreateDocument";
 import ActivateDocument from "../ActivateDocument/ActivateDocument";
 import ActivatedDocView from "../ActivateDocument/ActivatedDocView";
+import useFetchCount from "../../hooks/useFetchCount";
+import useFetchUser from "../../hooks/useFetchUser";
 
 function Dashboard() {
+  useFetchCount(true, true, true, true);
+  const user = useFetchUser();
   const [store, dispatch] = useStateValue();
-  const token = store.token;
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const fetchUser = async () => {
-    try {
-      const res = await loadUser(token);
-      dispatch({
-        type: actionTypes.USER_LOADED,
-        payload: res.data,
-      });
-    } catch {
-      dispatch({
-        type: actionTypes.AUTH_ERROR,
-      });
-    }
-  };
-
-  const _fetchIncomingCount = async () => {
-    const res = await fetchIncomingCount(store.token);
-    const data = res.data.count;
-    dispatch({
-      type: actionTypes.SET_INCOMING_COUNT,
-      payload: data,
-    });
-  };
-
-  const _fetchArchiveCount = async () => {
-    const res = await fetchArchiveCount(store.token);
-    const data = res.data.count;
-    dispatch({
-      type: actionTypes.SET_ARCHIVE_COUNT,
-      payload: data,
-    });
-  };
-
-  const _fetchOutgoingCount = async () => {
-    const res = await fetchOutgoingCount(store.token);
-    const data = res.data.count;
-    dispatch({
-      type: actionTypes.SET_OUTGOING_COUNT,
-      payload: data,
-    });
-  };
-
-  const fetchNotifications = async () => {
-    const res = await notificationsCount(store.token);
-    const data = res.data;
-    dispatch({
-      type: actionTypes.SET_NOTIFICATIONS_COUNT,
-      payload: data.count,
-    });
-  };
-
-  useEffect(() => {
-    fetchUser();
-    _fetchIncomingCount();
-    _fetchOutgoingCount();
-    _fetchArchiveCount();
-    fetchNotifications();
-  }, []);
 
   return (
     <Box bg="var(--background-color)" h="100vh">
-      {store.user !== null && (
+      {user !== null && (
         <Box
           display="flex"
           maxW={{ sm: "750px", lg: "100%" }}
@@ -142,23 +77,20 @@ function Dashboard() {
                 path="/dashboard/archive/:slug"
                 component={Directory}
               />
-
+              {/* <Route path="*" component={() => <p>404</p>} /> */}
               <ProtectedPage path="/dashboard/create-flow" component={Flow} />
               {store.openTrackingModal && <TrackingDetail />}
             </main>
           </Box>
-          <Box
+          {/* <Box
             position="fixed"
-            right={{ sm: "60px", lg: "68px" }} //use this when you reset the width to default
+            right={{ sm: "60px", lg: "68px" }}
             bottom={{ sm: "10px", lg: "20px" }}
-
-            // right={{ sm: "10px", lg: "135px" }}
-            // bottom={{ sm: "300px", lg: "20px" }}
           >
             <Link to="/dashboard/add-document">
               <Image src={addIcon} boxSize="45px" />
             </Link>
-          </Box>
+          </Box> */}
         </Box>
       )}
     </Box>

@@ -36,10 +36,6 @@ const searchResult = (
       });
   }
 
-  console.log(query);
-
-  console.log(store.user.is_department);
-
   return query.map((item, idx) => {
     return {
       label: (
@@ -54,6 +50,7 @@ const searchResult = (
                 size="middle"
                 className="search__btn"
                 onClick={() => handleTrack(item.document.id)}
+                type="text"
               >
                 Track
               </Button>
@@ -63,6 +60,7 @@ const searchResult = (
                 size="middle"
                 className="search__btn"
                 onClick={() => handleView(item.route, item.document.id)}
+                type="text"
               >
                 View
               </Button>
@@ -70,8 +68,9 @@ const searchResult = (
             {item.route === "activated" && (
               <Button
                 size="middle"
-                style={{ color: "#9d4d01", fontWeight: 600 }}
+                className="search__btn"
                 onClick={() => handleOpenActivatedDoc(item)}
+                type="text"
               >
                 View
               </Button>
@@ -83,6 +82,7 @@ const searchResult = (
                   size="middle"
                   className="search__btn"
                   onClick={() => handleView(item.route, item.document.id)}
+                  type="text"
                 >
                   View
                 </Button>
@@ -94,6 +94,7 @@ const searchResult = (
                   size="middle"
                   className="search__btn"
                   onClick={() => handleRequest(item.document.id)}
+                  type="text"
                 >
                   Request
                 </Button>
@@ -147,10 +148,6 @@ function Search() {
 
   const handleSearch = async (value) => {
     setDebouncedTerm(value);
-  };
-
-  const onSelect = (value) => {
-    console.log("onSelect", value);
   };
 
   const handleTrack = (id) => {
@@ -222,7 +219,7 @@ function Search() {
           outline: "none",
         }}
         options={options}
-        onSelect={onSelect}
+        // onSelect={onSelect}
         onSearch={handleSearch}
       >
         <Input

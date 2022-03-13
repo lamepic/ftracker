@@ -51,28 +51,35 @@ class LogoutAPIView(views.APIView):
 
 class IncomingAPIView(views.APIView):
     def get(self, request, document_id=None, format=None):
+        try:
+            if document_id:
+                incoming_document = models.Trail.objects.filter(
+                    document__id=document_id)[0]
+                serialized_data = serializers.IncomingSerializer(
+                    incoming_document)
+                return Response(serialized_data.data, status=status.HTTP_200_OK)
 
-        if document_id:
-            incoming_document = models.Trail.objects.filter(
-                document__id=document_id)[0]
-            serialized_data = serializers.IncomingSerializer(incoming_document)
-            return Response(serialized_data.data, status=status.HTTP_200_OK)
+            user = models.User.objects.get(staff_id=request.user.staff_id)
+            incoming = models.Trail.objects.filter(
+                forwarded=True,
+                receiver=user, status='P')
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
 
-        user = models.User.objects.get(staff_id=request.user.staff_id)
-        incoming = models.Trail.objects.filter(
-            forwarded=True,
-            receiver=user, status='P')
         serialized_data = serializers.IncomingSerializer(incoming, many=True)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
 class IncomingCountAPIView(views.APIView):
     def get(self, request, format=None):
-        user = models.User.objects.get(staff_id=request.user.staff_id)
-        incoming = models.Trail.objects.filter(
-            forwarded=True,
-            receiver=user, status='P')
-        data = utils.Count(len(incoming))
+        try:
+            user = models.User.objects.get(staff_id=request.user.staff_id)
+            incoming = models.Trail.objects.filter(
+                forwarded=True,
+                receiver=user, status='P')
+            data = utils.Count(len(incoming))
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
         serialized_data = serializers.CountSerializer(data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 

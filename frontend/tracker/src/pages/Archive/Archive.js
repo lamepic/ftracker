@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useStateValue } from "../../store/StateProvider";
 import Folder from "../../components/Doc/Folder";
 import File from "../../components/Doc/File";
-import EmptyPage from "../../components/EmptyPage/EmptyPage";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box, Grid, Text } from "@chakra-ui/react";
@@ -16,6 +15,11 @@ import DirectoryIcon from "../../components/Doc/DirectoryIcon";
 import * as actionTypes from "../../store/actionTypes";
 import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
 import Preview from "../../components/Preview/Preview";
+import { notification } from "antd";
+import Toolbar from "../../components/Navbar/Toolbar";
+import TableData from "../../components/DataDisplay/TableData";
+import { capitalize } from "../../utility/helper";
+import moment from "moment";
 
 function Archive() {
   const [store, dispatch] = useStateValue();
@@ -28,33 +32,87 @@ function Archive() {
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
 
-  const archiveCount = store.archiveCount;
-
   const _fetchUserArchive = async () => {
-    const res = await fetchUserArchive(store.token, store.user.staff_id);
-    const data = res.data;
-    // console.log(data);
-    setArchive(data);
+    try {
+      const res = await fetchUserArchive(store.token, store.user.staff_id);
+      const data = res.data;
+      setArchive(data);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
+    }
   };
 
   const _fetchFolders = async () => {
-    const res = await fetchFolders(store.token);
-    const data = res.data;
-    setFolders(data);
-    dispatch({
-      type: actionTypes.CLEAR_BREADCRUMBS,
-    });
+    try {
+      const res = await fetchFolders(store.token);
+      const data = res.data;
+      setFolders(data);
+      dispatch({
+        type: actionTypes.CLEAR_BREADCRUMBS,
+      });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
+    }
   };
 
   useEffect(() => {
     _fetchUserArchive();
     _fetchFolders();
-    setLoading(false);
   }, []);
 
-  // if (archiveCount === 0) {
-  //   return <EmptyPage type="archived" />;
-  // }
+  const folderData = folders.map((folder) => {
+    return {
+      key: folder.id,
+      name: (
+        <DirectoryIcon name={folder.name} key={folder.id} slug={folder.slug} />
+      ),
+      date_created: null,
+      type: "Folder",
+      foldername: folder.name,
+      created_at: moment(folder.created_at).toLocaleString(),
+      subject: "-",
+    };
+  });
+
+  const archiveData = archive.map((item) => {
+    let name = null;
+    if (item.document.related_document.length > 0 && item.closed_by !== null) {
+      name = <Folder doc={item} key={item.document.id} type="archive" />;
+    } else if (item.closed_by !== null) {
+      name = <File doc={item} key={item.document.id} type="archive" />;
+    } else {
+      name = (
+        <DirectoryFileIcon
+          key={item.document.id}
+          setPreviewDoc={setPreviewDoc}
+          setOpenPreview={setOpenPreview}
+          document={item.document}
+        />
+      );
+    }
+    return {
+      name: name,
+      subject: item.document.subject,
+      created_at: moment(item.created_at).toLocaleString(),
+      type: "File",
+      key: item.document.id,
+      filename: item.document.filename,
+    };
+  });
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -68,13 +126,7 @@ function Archive() {
           >
             Archive
           </Text>
-          <Box
-            display="flex"
-            alignItems="center"
-            marginTop="5px"
-            borderTop="0.5px solid #000"
-            borderBottom="0.5px solid #000"
-          >
+          <Toolbar>
             <ToolbarOption
               text="New Folder"
               Icon={FolderAddOutlined}
@@ -85,18 +137,18 @@ function Archive() {
               Icon={UploadOutlined}
               openModal={setOpenCreateFileModal}
             />
-          </Box>
-          {!loading ? (
+          </Toolbar>
+          {archive.length + folders.length > 0 ? (
             <Box
               maxH={{ sm: "100vh", lg: "70vh" }}
               overflowY="auto"
               marginTop="20px"
             >
-              <Grid
+              {/* <Grid
                 templateColumns={{ sm: "repeat(4, 1fr)", lg: "repeat(6, 1fr)" }}
                 gap={6}
-              >
-                {archive.map((item) => {
+              > */}
+              {/* {archive.map((item) => {
                   if (
                     item.document.related_document.length > 0 &&
                     item.closed_by !== null
@@ -122,9 +174,9 @@ function Archive() {
                       />
                     );
                   }
-                })}
+                })} */}
 
-                {folders.map((folder) => {
+              {/* {folders.map((folder) => {
                   return (
                     <DirectoryIcon
                       name={folder.name}
@@ -132,11 +184,23 @@ function Archive() {
                       slug={folder.slug}
                     />
                   );
-                })}
-              </Grid>
+                })} */}
+              {/* </Grid> */}
+              <TableData data={[...archiveData, ...folderData]} />
             </Box>
           ) : (
-            <Loading />
+            <Box>
+              <Text
+                textAlign="center"
+                as="h3"
+                color="var(--light-brown)"
+                fontSize="3rem"
+                textTransform="uppercase"
+                marginTop="10rem"
+              >
+                Archive is Empty
+              </Text>
+            </Box>
           )}
         </Box>
       </Box>

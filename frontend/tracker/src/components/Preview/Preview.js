@@ -51,13 +51,6 @@ function Preview({ setOpenPreview, doc }) {
             </Text>
           </Box>
         ) : (
-          //   <iframe
-          //   src={`http://192.168.40.8:8000${doc?.content}`}
-          //   title="preview document"
-          //   width="70%"
-          //   height="100%"
-          //   type="application/pdf"
-          // ></iframe>
           <DocViewer
             documents={docs}
             pluginRenderers={DocViewerRenderers}

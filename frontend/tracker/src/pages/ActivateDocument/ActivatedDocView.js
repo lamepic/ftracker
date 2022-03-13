@@ -1,5 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { Box, Text } from "@chakra-ui/react";
 import { Redirect } from "react-router-dom";
 import Loading from "../../components/Loading/Loading";
 import { fetchDocument } from "../../http/document";

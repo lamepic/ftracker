@@ -27,6 +27,7 @@ class DocumentAction(models.Model):
     action = models.CharField(max_length=2, choices=ACTION_OPTIONS)
     document_type = models.ForeignKey(
         'DocumentType', on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name} - {self.action}'
@@ -36,6 +37,7 @@ class DocumentType(models.Model):
     name = models.CharField(max_length=100)
     department = models.ForeignKey(
         users_model.Department, on_delete=models.CASCADE, related_name='flow_department', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         if self.department:
@@ -66,12 +68,14 @@ class Document(models.Model):
         if len(self.ref.strip()) == 0:
             raise ValidationError("Reference cannot be blank")
 
-        if self.content:
+        if self.content != "null":
             filename = self.content.name
             check = (".pdf", ".docx", ".xls", ".xlsx",
                      ".ppt", ".pptx", ".txt", ".jpeg", ".jpg")
             if not filename.endswith(check):
                 raise ValidationError("Unsupported File format")
+        else:
+            self.filename = self.subject
 
         self.subject = self.subject.strip()
         self.ref = self.ref.strip()
@@ -170,6 +174,7 @@ class Archive(models.Model):
         Document, on_delete=models.CASCADE, related_name='archive_document')
     close_date = models.DateTimeField(auto_now_add=True)
     requested = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.document.subject
@@ -219,6 +224,7 @@ class Folder(MPTTModel):
     slug = models.SlugField()
     objects = FolderManager()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']

@@ -6,25 +6,12 @@ import * as actionTypes from "../../store/actionTypes";
 import Modal from "antd/lib/modal/Modal";
 import { CircularProgress, Text } from "@chakra-ui/react";
 import { Popover, Steps } from "antd";
+import useFetchData from "../../hooks/useFetchData";
 
 function TrackingDetail() {
   const [store, dispatch] = useStateValue();
-  const [tracking, setTracking] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const documentId = store.trackingDocId;
-
-  const _fetchTracking = async () => {
-    const res = await fetchTracking(store.token, documentId);
-    const data = res.data;
-    setTracking(data);
-    console.log(data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    _fetchTracking();
-  }, []);
+  const { loading, data: tracking } = useFetchData(fetchTracking, documentId);
 
   const handleOk = () => {
     dispatch({

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
-import Loading from "../../components/Loading/Loading";
+import React, { useState } from "react";
+import swal from "sweetalert";
 import "./CreateDocument.css";
 import {
   Form,
@@ -11,16 +10,18 @@ import {
   notification,
   Checkbox,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import {
   createDocument,
   fetchDocumentAction,
   fetchDocumentType,
 } from "../../http/document";
-import { useStateValue } from "../../store/StateProvider";
-import { departments, loadUsers } from "../../http/user";
-import swal from "sweetalert";
 import { useHistory } from "react-router-dom";
+import { UploadOutlined } from "@ant-design/icons";
+import { departments, loadUsers } from "../../http/user";
+import { useStateValue } from "../../store/StateProvider";
+import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
+import useFetchData from "../../hooks/useFetchData";
+import Loading from "../../components/Loading/Loading";
 import AttachmentModal from "../../components/AttachmentModal/AttachmentModal";
 
 const layout = {
@@ -35,13 +36,6 @@ const layout = {
 
 const validateMessages = {
   required: "This field is required!",
-};
-
-const openNotificationWithIcon = (type, description) => {
-  notification[type]({
-    message: "Error",
-    description,
-  });
 };
 
 const dummyRequest = ({ file, onSuccess }) => {
@@ -60,9 +54,7 @@ const getFile = (e) => {
 function CreateDocument() {
   const [store, dispatch] = useStateValue();
   const history = useHistory();
-  const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const [documentTypes, setDocumentTypes] = useState([]);
   const [documentAction, setDocumentAction] = useState(null);
   const [namesOfUsers, setNamesOfUsers] = useState([]);
   const [attachments, setAttachments] = useState([]);
@@ -71,16 +63,9 @@ function CreateDocument() {
   const [userDetails, setUserDetails] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  //   api state
-  const [_departments, setDepartments] = useState([]);
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    _fetchDocumentType();
-    fetchDepartments();
-    fetchUsers();
-    setLoading(false);
-  }, []);
+  const { loading, data: documentTypes } = useFetchData(fetchDocumentType);
+  const { data: _departments } = useFetchData(departments);
+  const { data: users } = useFetchData(loadUsers);
 
   const _fetchDocumentActions = async (id) => {
     try {
@@ -106,14 +91,11 @@ function CreateDocument() {
         });
       }
     } catch (error) {
-      openNotificationWithIcon("error", error.response.data.detail);
+      return notification.error({
+        message: "Error",
+        description: error.response.data.detail,
+      });
     }
-  };
-
-  const _fetchDocumentType = async () => {
-    const res = await fetchDocumentType(store.token);
-    const data = res.data;
-    setDocumentTypes(data);
   };
 
   const onDepartmentChange = (value) => {
@@ -134,34 +116,10 @@ function CreateDocument() {
     _fetchDocumentActions(value);
   };
 
-  const fetchDepartments = async () => {
-    try {
-      const res = await departments(store.token);
-      setDepartments(res.data);
-    } catch (error) {
-      return notification.error({
-        message: "Error",
-        description: error.response.data.detail,
-      });
-    }
-  };
-
   const departmentOptions = _departments.map((department) => ({
     value: department.id,
     label: department.name,
   }));
-
-  const fetchUsers = async () => {
-    try {
-      const res = await loadUsers(store.token);
-      setUsers(res.data);
-    } catch (error) {
-      return notification.error({
-        message: "Error",
-        description: error.response.data.detail,
-      });
-    }
-  };
 
   const onEncryptChange = (e) => {
     setEncrypt(e.target.checked);
@@ -204,6 +162,7 @@ function CreateDocument() {
         dangerMode: true,
       }).then(async (willSubmit) => {
         if (willSubmit) {
+          setSubmitting(true);
           try {
             const res = await createDocument(store.token, data);
             if (res.status === 201) {
@@ -213,7 +172,11 @@ function CreateDocument() {
               });
             }
           } catch (err) {
-            openNotificationWithIcon("error", err.response.data.detail);
+            setSubmitting(false);
+            return notification.error({
+              message: "Error",
+              description: err.response.data.detail,
+            });
           }
         }
       });
