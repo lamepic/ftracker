@@ -792,6 +792,17 @@ class FolderAPIView(views.APIView):
             raise exceptions.ServerError(err.args[0])
 
 
+class FolderEncryptAPIView(views.APIView):
+    def get(self, request, slug=None, format=None):
+        try:
+            folder = models.Folder.objects.get(slug=slug)
+            if folder.password:
+                data = {"data": {"encypted": "True"}}
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
+
+
 class ArchiveFileAPIView(views.APIView):
 
     def post(self, request, format=None):

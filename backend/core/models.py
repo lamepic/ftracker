@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
+from django.contrib.auth.hashers import make_password
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
@@ -225,6 +226,7 @@ class Folder(MPTTModel):
     objects = FolderManager()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    password = models.CharField(max_length=20, null=True, blank=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -235,6 +237,11 @@ class Folder(MPTTModel):
     def save(self, *args, **kwargs):
         if len(self.name.strip()) == 0:
             raise ValidationError("Name cannot be blank")
+
+        if len(self.password.strip()) > 0:
+            self.password = make_password(self.password)
+        else:
+            raise ValidationError("Please Input a valid password")
 
         unique_id = uuid.uuid4()
         if not self.slug:
