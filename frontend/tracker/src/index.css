@@ -86,7 +86,6 @@ a {
 
 thead[class*="ant-table-thead"] th {
   background-color: var(--background-color) !important;
-  /* color: var(--lighter-brown) !important; */
 }
 
 .ant-table-tbody {
