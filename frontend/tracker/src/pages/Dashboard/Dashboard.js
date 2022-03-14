@@ -18,6 +18,7 @@ import ActivateDocument from "../ActivateDocument/ActivateDocument";
 import ActivatedDocView from "../ActivateDocument/ActivatedDocView";
 import useFetchCount from "../../hooks/useFetchCount";
 import useFetchUser from "../../hooks/useFetchUser";
+import { Route } from "react-router-dom";
 
 function Dashboard() {
   useFetchCount(true, true, true, true);
@@ -37,11 +38,12 @@ function Dashboard() {
             <Sidebar onClose={onClose} isOpen={isOpen} />
           </Box>
           <Box
-            flex={{ sm: "1", lg: "0.8" }}
+            flex={{ sm: "1", lg: "0.9" }}
             minH="100%"
             marginX="auto"
             h="100vh"
             overflow="auto"
+            paddingX="5rem"
           >
             <Navbar onOpen={onOpen} />
             <main>

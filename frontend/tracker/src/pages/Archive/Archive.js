@@ -79,7 +79,7 @@ function Archive() {
       date_created: null,
       type: "Folder",
       foldername: folder.name,
-      created_at: moment(folder.created_at).toLocaleString(),
+      created_at: moment(folder.created_at).format("DD/MM/YYYY hh:mm A"),
       subject: "-",
     };
   });
@@ -103,7 +103,7 @@ function Archive() {
     return {
       name: name,
       subject: item.document.subject,
-      created_at: moment(item.created_at).toLocaleString(),
+      created_at: moment(item.created_at).format("DD/MM/YYYY hh:mm A"),
       type: "File",
       key: item.document.id,
       filename: item.document.filename,
@@ -140,8 +140,8 @@ function Archive() {
           </Toolbar>
           {archive.length + folders.length > 0 ? (
             <Box
-              maxH={{ sm: "100vh", lg: "70vh" }}
-              overflowY="auto"
+              // maxH={{ sm: "100vh", lg: "70vh" }}
+              // overflowY="auto"
               marginTop="20px"
             >
               {/* <Grid

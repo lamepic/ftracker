@@ -42,7 +42,8 @@ const searchResult = (
         <div className="search__item" key={idx}>
           <div className="item__description">
             <p className="item__title">{item.document.subject}</p>
-            <p className="item__ref">{item.document.ref}</p>
+            {/* <p className="item__ref">{item.document.ref}</p> */}
+            <p className="item__ref">{item.document.filename}</p>
           </div>
           <div className="item__action">
             {item.route === "outgoing" && (
@@ -88,8 +89,8 @@ const searchResult = (
                 </Button>
               )}
             {item.route === "archive" &&
-              !store.user.is_department &&
-              item.department === store.user.department.name && (
+              // !store.user.is_department &&
+              item.department !== store.user.department.name && (
                 <Button
                   size="middle"
                   className="search__btn"

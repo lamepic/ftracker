@@ -79,3 +79,16 @@ a {
 .swal-button.swal-button--confirm {
   background-color: var(--light-brown) !important;
 }
+
+/* .ant-table.ant-table-fixed-header {
+  background-color: var(--dark-brown);
+} */
+
+thead[class*="ant-table-thead"] th {
+  background-color: var(--background-color) !important;
+  /* color: var(--lighter-brown) !important; */
+}
+
+.ant-table-tbody {
+  background-color: var(--background-color);
+}

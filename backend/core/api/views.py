@@ -650,7 +650,8 @@ class SearchAPIView(views.APIView):
                 documents.append(archive_data)
 
         data = [doc for doc in documents if term.lower() in doc['document']
-                ['subject'].lower()]
+                ['subject'].lower() or documents if term.lower() in doc['document']
+                ['filename'].lower()]
 
         return Response(data, status=status.HTTP_200_OK)
 

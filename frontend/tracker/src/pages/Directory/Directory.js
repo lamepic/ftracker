@@ -75,7 +75,7 @@ function Directory() {
       ),
       filename: document.filename,
       subject: capitalize(document.subject),
-      created_at: moment(document.created_at).toLocaleString(),
+      created_at: moment(document.created_at).format("DD/MM/YYYY hh:mm A"),
       type: "File",
       key: document.id,
     };
@@ -94,7 +94,7 @@ function Directory() {
       date_created: null,
       type: "Folder",
       foldername: subfolder.name,
-      created_at: moment(subfolder.created_at).toLocaleString(),
+      created_at: moment(subfolder.created_at).format("DD/MM/YYYY hh:mm A"),
       subject: "-",
     };
   });

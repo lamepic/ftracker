@@ -1,6 +1,7 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import React, { useRef, useState } from "react";
+import Highlighter from "react-highlight-words";
 
 function TableData({ data }) {
   const [searchText, setSearchText] = useState("");
@@ -74,17 +75,6 @@ function TableData({ data }) {
         setTimeout(() => searchInputRef.current.focus(), 100);
       }
     },
-    // render: text =>
-    //   this.state.searchedColumn === dataIndex ? (
-    //     <Highlighter
-    //       highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-    //       searchWords={[this.state.searchText]}
-    //       autoEscape
-    //       textToHighlight={text ? text.toString() : ''}
-    //     />
-    //   ) : (
-    //     text
-    //   ),
   });
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -114,7 +104,7 @@ function TableData({ data }) {
       title: "Date Created",
       dataIndex: "created_at",
       key: "date_created",
-      width: "30%",
+      width: "20%",
     },
     {
       title: "Type",
@@ -134,7 +124,7 @@ function TableData({ data }) {
       columns={columns}
       dataSource={data}
       pagination={{ position: ["none", "none"] }}
-      scroll={{ y: 410 }}
+      // scroll={{ y: 410 }}
     />
   );
 }
