@@ -30,9 +30,11 @@ function CreateFolderModal({
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
   const [encrypt, setEncrypt] = useState(false);
+  const [submit, setSubmit] = useState(false);
 
   const handleCancel = () => {
     setOpenCreateFolderModal(false);
+    form.resetFields();
   };
 
   function onSwitchChange(checked) {
@@ -40,21 +42,28 @@ function CreateFolderModal({
   }
 
   const onFinish = async (values) => {
+    setSubmit(true);
     try {
       const res = await createFolder(store.token, {
         name: values.name,
+        password: values.password,
         folderId,
       });
-      if (addFolder) {
-        addFolder([...parentFolder, res.data]);
-      } else {
-        appendSubFolder({
-          ...parentFolder,
-          children: [...parentFolder?.children, res.data],
-        });
+
+      if (res.status === 201) {
+        setSubmit(false);
+        if (addFolder) {
+          addFolder([...parentFolder, res.data]);
+        } else {
+          appendSubFolder({
+            ...parentFolder,
+            children: [...parentFolder?.children, res.data],
+          });
+        }
       }
-      console.log(res.data);
     } catch (e) {
+      setSubmit(false);
+      form.resetFields();
       return notification.error({
         message: "Error",
         description: e.response.data.detail,
@@ -62,6 +71,7 @@ function CreateFolderModal({
     }
     setOpenCreateFolderModal(false);
   };
+
   return (
     <>
       <Modal
@@ -83,8 +93,9 @@ function CreateFolderModal({
                 display: "inline",
               }}
             />
-            <Button type="primary" onClick={form.submit}>
-              Create
+
+            <Button type="primary" onClick={form.submit} loading={submit}>
+              {submit ? "Creating..." : "Create"}
             </Button>
           </Box>,
         ]}

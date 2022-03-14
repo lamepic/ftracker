@@ -180,6 +180,9 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'core.libs.exception_handler.custom_exception_handler'
 }
 
+SALT = "CLHGCYF#@klmknlk!@#KNLKLNBUI12jn"
+
+
 # passwordless config
 PASSWORDLESS_AUTH = {
     'PASSWORDLESS_AUTH_TYPES': ['EMAIL'],

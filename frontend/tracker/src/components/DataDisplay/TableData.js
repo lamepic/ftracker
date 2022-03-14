@@ -120,12 +120,14 @@ function TableData({ data }) {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={data}
-      pagination={{ position: ["none", "none"] }}
-      // scroll={{ y: 410 }}
-    />
+    <div className="data-display-table">
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{ position: ["none", "none"] }}
+        // scroll={{ y: 410 }}
+      />
+    </div>
   );
 }
 

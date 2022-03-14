@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
-import { Box, Grid, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { Breadcrumb, notification } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
@@ -14,10 +14,10 @@ import * as actionTypes from "../../store/actionTypes";
 import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
 import Preview from "../../components/Preview/Preview";
 import Toolbar from "../../components/Navbar/Toolbar";
-import GridData from "../../components/DataDisplay/GridData";
 import TableData from "../../components/DataDisplay/TableData";
 import { capitalize } from "../../utility/helper";
 import moment from "moment";
+import PasswordModal from "../../components/CustomModals/PasswordModal";
 
 function Directory() {
   const [store, dispatch] = useStateValue();
@@ -166,47 +166,13 @@ function Directory() {
               })}
             </Breadcrumb>
           </Box>
-          {/* {folder.documents?.length + folder.children?.length > 0 ? ( */}
           <Box
-            maxH={{ sm: "100vh", lg: "80vh" }}
+            // maxH={{ sm: "100vh", lg: "80vh" }}
             overflowY="auto"
             marginTop="20px"
           >
-            {/* <GridData> */}
-            {/* if folder has documents/files in it  */}
-            {/* {folder.documents?.map((document) => {
-                  return (
-                    <DirectoryFileIcon
-                      key={document.id}
-                      setPreviewDoc={setPreviewDoc}
-                      setOpenPreview={setOpenPreview}
-                      document={document}
-                    />
-                  );
-                })} */}
-            {/* if the folder has folders in it */}
-            {/* {folder.children?.map((folder) => {
-                  return (
-                    <DirectoryIcon
-                      name={folder.name}
-                      key={folder.id}
-                      slug={folder.slug}
-                    />
-                  );
-                })} */}
-            {/* </GridData> */}
             <TableData data={[...documentData, ...subFolderData]} />
           </Box>
-          {/* ) : (
-            <Text
-              textAlign="center"
-              marginTop="20px"
-              fontWeight="500"
-              color="var(--dark-brown)"
-            >
-              Empty folder
-            </Text>
-          )} */}
         </Box>
       </Box>
       {openCreateFolderModal && (

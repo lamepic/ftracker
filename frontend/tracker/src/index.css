@@ -80,14 +80,14 @@ a {
   background-color: var(--light-brown) !important;
 }
 
-/* .ant-table.ant-table-fixed-header {
+.ant-table .ant-table-fixed-header svg {
   background-color: var(--dark-brown);
-} */
+}
 
-thead[class*="ant-table-thead"] th {
+.data-display-table thead[class*="ant-table-thead"] th {
   background-color: var(--background-color) !important;
 }
 
-.ant-table-tbody {
+.data-display-table .ant-table-tbody {
   background-color: var(--background-color);
 }

@@ -13,6 +13,7 @@ const intialState = {
   request_details: null,
   activatedDocumentDetails: null,
   breadcrumbs: [],
+  openPasswordModal: false,
 };
 
 export default intialState;

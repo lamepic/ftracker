@@ -82,10 +82,14 @@ const reducer = (state, action) => {
         breadcrumbs: state.breadcrumbs.slice(0, action.payload + 1),
       };
     case actionTypes.POP_BREADCRUMBS:
-      console.log(state.breadcrumbs);
       return {
         ...state,
         breadcrumbs: state.breadcrumbs.slice(0, state.breadcrumbs.length - 1),
+      };
+    case actionTypes.OPEN_PASSWORD_MODAL:
+      return {
+        ...state,
+        openPasswordModal: action.payload,
       };
     case actionTypes.CLEAR_BREADCRUMBS:
       return {

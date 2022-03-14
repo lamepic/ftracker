@@ -1,10 +1,13 @@
 import json
 from datetime import datetime
+from logging import exception
 from click import help_option
 from django.db.models import Q
+from django.conf import settings
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import make_password
 
 from rest_framework import views
 from rest_framework import status
@@ -16,6 +19,7 @@ from . import serializers
 from ..libs import exceptions, utils
 from users.api import serializers as user_serializers
 from mptt.templatetags.mptt_tags import cache_tree_children
+
 
 User = get_user_model()
 
@@ -782,10 +786,19 @@ class FolderAPIView(views.APIView):
     def post(self, request, format=None):
         folder_name = request.data.get("name")
         parent_folder_id = request.data.get("folderId")
+        password = request.data.get("password")
+        print(password)
 
         try:
-            new_folder = models.Folder.objects.create(
-                name=folder_name, parent_id=parent_folder_id, created_by=request.user)
+            if password is not None:
+                hash_password = make_password(password, salt=settings.SALT)
+                new_folder = models.Folder.objects.create(
+                    name=folder_name, parent_id=parent_folder_id,
+                    created_by=request.user, password=hash_password)
+            else:
+                new_folder = models.Folder.objects.create(
+                    name=folder_name, parent_id=parent_folder_id,
+                    created_by=request.user)
             serialized_data = serializers.FolderSerializer(new_folder)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
@@ -797,9 +810,24 @@ class FolderEncryptAPIView(views.APIView):
         try:
             folder = models.Folder.objects.get(slug=slug)
             if folder.password:
-                data = {"data": {"encypted": "True"}}
-            return Response(data, status=status.HTTP_200_OK)
+                data = {"encrypted": True}
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                data = {"encrypted": False}
+                return Response(data, status=status.HTTP_200_OK)
+
         except Exception as err:
+            raise exceptions.ServerError(err.args[0])
+
+    def post(self, request, slug, format=None):
+        password = request.data.get("password")
+        try:
+            folder = models.Folder.objects.get(slug=slug)
+            if folder.check_password(password):
+                data = {"success": True}
+                return Response(data, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
             raise exceptions.ServerError(err.args[0])
 
 

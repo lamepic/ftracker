@@ -11,6 +11,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.hashers import make_password
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from django.conf import settings
 
 
 from users import models as users_model
@@ -226,7 +227,7 @@ class Folder(MPTTModel):
     objects = FolderManager()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    password = models.CharField(max_length=20, null=True, blank=True)
+    password = models.CharField(max_length=100, null=True, blank=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -238,16 +239,20 @@ class Folder(MPTTModel):
         if len(self.name.strip()) == 0:
             raise ValidationError("Name cannot be blank")
 
-        if len(self.password.strip()) > 0:
-            self.password = make_password(self.password)
-        else:
-            raise ValidationError("Please Input a valid password")
-
         unique_id = uuid.uuid4()
         if not self.slug:
             self.slug = slugify(unique_id)
 
         return super().save(*args, **kwargs)
+
+    def check_password(self, user_pass):
+        hash_user_pass = make_password(user_pass, salt=settings.SALT)
+        print(self.password)
+        print(hash_user_pass)
+        if len(self.password) > 0:
+            if hash_user_pass != self.password:
+                raise ValidationError("Incorrect Password")
+            return True
 
 
 @ receiver(post_save, sender=ActivateDocument)

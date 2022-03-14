@@ -144,48 +144,6 @@ function Archive() {
               // overflowY="auto"
               marginTop="20px"
             >
-              {/* <Grid
-                templateColumns={{ sm: "repeat(4, 1fr)", lg: "repeat(6, 1fr)" }}
-                gap={6}
-              > */}
-              {/* {archive.map((item) => {
-                  if (
-                    item.document.related_document.length > 0 &&
-                    item.closed_by !== null
-                  ) {
-                    return (
-                      <Folder
-                        doc={item}
-                        key={item.document.id}
-                        type="archive"
-                      />
-                    );
-                  } else if (item.closed_by !== null) {
-                    return (
-                      <File doc={item} key={item.document.id} type="archive" />
-                    );
-                  } else {
-                    return (
-                      <DirectoryFileIcon
-                        key={item.document.id}
-                        setPreviewDoc={setPreviewDoc}
-                        setOpenPreview={setOpenPreview}
-                        document={item.document}
-                      />
-                    );
-                  }
-                })} */}
-
-              {/* {folders.map((folder) => {
-                  return (
-                    <DirectoryIcon
-                      name={folder.name}
-                      key={folder.id}
-                      slug={folder.slug}
-                    />
-                  );
-                })} */}
-              {/* </Grid> */}
               <TableData data={[...archiveData, ...folderData]} />
             </Box>
           ) : (

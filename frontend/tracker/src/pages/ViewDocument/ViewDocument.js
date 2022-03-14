@@ -229,7 +229,7 @@ function ViewDocument() {
                 h="270px"
                 w="250px"
                 marginTop="10px"
-                backgroundColor="var(--lightest-brown)"
+                // backgroundColor="var(--lightest-brown)"
                 display="flex"
                 flexDirection="column"
                 alignItems="center"

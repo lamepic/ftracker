@@ -55,3 +55,27 @@ export async function createFile(token, data) {
   const res = await axios.post("file/", formData, config);
   return res;
 }
+
+export async function checkFolderEncryption(token, slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get(`encrypt-folder/${slug}/`, config);
+  return res;
+}
+
+export async function encryptFolder(token, slug, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post(`encrypt-folder/${slug}/`, data, config);
+  return res;
+}
