@@ -1,8 +1,9 @@
-import React from "react";
-import { Input, Form, notification } from "antd";
+import React, { useState } from "react";
+import { Input, Form, notification, Switch, Button } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import { createFolder } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
+import { Box } from "@chakra-ui/react";
 
 const validateMessages = {
   required: "This field is required!",
@@ -28,10 +29,15 @@ function CreateFolderModal({
 }) {
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
+  const [encrypt, setEncrypt] = useState(false);
 
   const handleCancel = () => {
     setOpenCreateFolderModal(false);
   };
+
+  function onSwitchChange(checked) {
+    setEncrypt(!encrypt);
+  }
 
   const onFinish = async (values) => {
     try {
@@ -64,6 +70,24 @@ function CreateFolderModal({
         onOk={form.submit}
         onCancel={handleCancel}
         style={{ top: 20 }}
+        footer={[
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            key="footer"
+          >
+            <Switch
+              onChange={onSwitchChange}
+              style={{
+                display: "inline",
+              }}
+            />
+            <Button type="primary" onClick={form.submit}>
+              Create
+            </Button>
+          </Box>,
+        ]}
       >
         <Form
           {...layout}
@@ -80,6 +104,7 @@ function CreateFolderModal({
             rules={[
               {
                 required: true,
+                message: "Please input folder name!",
               },
             ]}
           >
@@ -90,6 +115,24 @@ function CreateFolderModal({
               }}
             />
           </Form.Item>
+          {encrypt && (
+            <Form.Item
+              label="Password"
+              name="password"
+              labelAlign="left"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+            >
+              <Input.Password
+                style={{
+                  borderColor: "var(--dark-brown)",
+                  outline: "none",
+                  transition: "all 0.5ms ease-in-out",
+                }}
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>
