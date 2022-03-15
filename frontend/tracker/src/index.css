@@ -91,3 +91,21 @@ a {
 .data-display-table .ant-table-tbody {
   background-color: var(--background-color);
 }
+
+.anticon.anticon-search svg {
+  fill: #000;
+}
+
+.ant-table-empty .ant-table-tbody > tr.ant-table-placeholder > td {
+  background: unset !important;
+}
+
+.ant-empty-img-simple-path,
+.ant-empty-img-simple-ellipse,
+.ant-empty-img-simple-g {
+  fill: var(--dark-brown);
+}
+
+.ant-empty-description {
+  color: var(--dark-brown);
+}
