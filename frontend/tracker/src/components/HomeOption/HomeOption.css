@@ -17,6 +17,7 @@
 .homeOption__icon img {
   width: 120px;
   height: fit-content;
+  /* height: 100px; */
 }
 
 .homeOption:hover {

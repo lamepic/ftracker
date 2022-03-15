@@ -302,7 +302,7 @@ function ViewDocument() {
                           onClick={handleMarkComplete}
                           disabled={code === undefined ? false : !code?.used}
                         >
-                          Mark Complete
+                          Archive
                         </button>
                       )
                     ) : (
@@ -311,7 +311,7 @@ function ViewDocument() {
                         onClick={handleMarkComplete}
                         disabled={code === undefined ? false : !code?.used}
                       >
-                        Mark Complete
+                        Archive
                       </button>
                     )}
                   </>
