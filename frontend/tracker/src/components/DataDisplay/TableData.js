@@ -119,6 +119,7 @@ function TableData({ data }) {
       title: "Subject",
       dataIndex: "subject",
       key: "subject",
+      width: "30%",
     },
   ];
 
@@ -127,7 +128,8 @@ function TableData({ data }) {
       <Table
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["none", "none"] }}
+        size="20"
+        pagination={{ pageSize: 20 }}
         // scroll={{ y: 410 }}
       />
     </div>

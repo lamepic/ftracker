@@ -52,6 +52,7 @@ function Archive() {
       const res = await fetchFolders(store.token);
       const data = res.data;
       setFolders(data);
+      console.log(data);
       dispatch({
         type: actionTypes.CLEAR_BREADCRUMBS,
       });
@@ -85,6 +86,7 @@ function Archive() {
   });
 
   const archiveData = archive.map((item) => {
+    console.log("item", item);
     let name = null;
     if (item.document.related_document.length > 0 && item.closed_by !== null) {
       name = <Folder doc={item} key={item.document.id} type="archive" />;
@@ -103,7 +105,9 @@ function Archive() {
     return {
       name: name,
       subject: item.document.subject,
-      created_at: moment(item.created_at).format("DD/MM/YYYY hh:mm A"),
+      created_at: moment(item.document.created_at)
+        .utc()
+        .format("DD/MM/YYYY hh:mm A"),
       type: "File",
       key: item.document.id,
       filename: item.document.filename,
