@@ -840,29 +840,30 @@ class ArchiveFileAPIView(views.APIView):
         filename = request.data.get("filename")
         password = request.data.get('password')
 
+        print(password)
+
         try:
+            hash_password = None
+            if password is not None:
+                hash_password = make_password(password, salt=settings.SALT)
+
             if parent_folder_id != "undefined":
                 parent_folder = models.Folder.objects.get_queryset().filter(
                     id=parent_folder_id)
-                if password is not None:
-                    hash_password = make_password(password, salt=settings.SALT)
-                    file = models.Document.objects.create(
-                        subject=subject, ref=reference, content=file,
-                        created_by=request.user, folder=parent_folder[0], filename=filename, password=hash_password)
-                    serialized_data = serializers.DocumentsSerializer(file)
+                document = models.Document.objects.create(
+                    subject=subject, ref=reference, content=file,
+                    created_by=request.user, folder=parent_folder[0], filename=filename, password=hash_password)
+                serialized_data = serializers.DocumentsSerializer(file)
             else:
                 try:
-                    if password is not None:
-                        hash_password = make_password(
-                            password, salt=settings.SALT)
-                        file = models.Document.objects.create(
-                            subject=subject, ref=reference, content=file, created_by=request.user, filename=filename, password=hash_password)
+                    document = models.Document.objects.create(
+                        subject=subject, ref=reference, content=file, created_by=request.user, filename=filename, password=hash_password)
                 except IntegrityError:
                     raise exceptions.ServerError(
                         "Reference exists, please provide a unique reference")
 
                 archive = models.Archive.objects.create(
-                    document=file, created_by=request.user)
+                    document=document, created_by=request.user)
                 serialized_data = serializers.ArchiveSerializer(archive)
 
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)

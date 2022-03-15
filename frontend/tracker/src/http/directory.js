@@ -51,6 +51,7 @@ export async function createFile(token, data) {
   formData.append("reference", data.reference);
   formData.append("parentFolderId", data.parentFolderId);
   formData.append("filename", data.filename);
+  formData.append("password", data.password);
 
   const res = await axios.post("file/", formData, config);
   return res;
