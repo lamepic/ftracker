@@ -80,3 +80,15 @@ export async function encryptFolder(token, slug, data) {
   const res = await axios.post(`encrypt-folder/${slug}/`, data, config);
   return res;
 }
+
+export async function encryptFile(token, id, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post(`encrypt-file/${id}/`, data, config);
+  return res;
+}
