@@ -64,10 +64,11 @@ urlpatterns = [
 
     path('folders/', views.FolderAPIView.as_view(), name='folders'),
     path('folders/<slug>/', views.FolderAPIView.as_view(), name='folders'),
+
     path('encrypt-folder/<slug>/',
-         views.FolderEncryptAPIView.as_view(), name='encrypt_folder'),
+         views.EncryptAPIView.as_view(), name='encrypt_folder'),
     path('encrypt-file/<id>/',
-         views.FolderEncryptAPIView.as_view(), name='encrypt_file'),
+         views.EncryptAPIView.as_view(), name='encrypt_file'),
 
     path('file/', views.ArchiveFileAPIView.as_view(), name='files'),
 ]

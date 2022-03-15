@@ -804,7 +804,7 @@ class FolderAPIView(views.APIView):
             raise exceptions.ServerError(err.args[0])
 
 
-class FolderEncryptAPIView(views.APIView):
+class EncryptAPIView(views.APIView):
     def get(self, request, slug=None, id=None, format=None):
         try:
             if slug is not None:
