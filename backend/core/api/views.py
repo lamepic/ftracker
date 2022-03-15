@@ -805,26 +805,40 @@ class FolderAPIView(views.APIView):
 
 
 class FolderEncryptAPIView(views.APIView):
-    def get(self, request, slug=None, format=None):
+    def get(self, request, slug=None, id=None, format=None):
         try:
-            folder = models.Folder.objects.get(slug=slug)
-            if folder.password:
-                data = {"encrypted": True}
-                return Response(data, status=status.HTTP_200_OK)
-            else:
-                data = {"encrypted": False}
-                return Response(data, status=status.HTTP_200_OK)
-
+            if slug is not None:
+                folder = models.Folder.objects.get(slug=slug)
+                if folder.password:
+                    data = {"encrypted": True}
+                    return Response(data, status=status.HTTP_200_OK)
+                else:
+                    data = {"encrypted": False}
+                    return Response(data, status=status.HTTP_200_OK)
+            if id is not None:
+                document = models.Document.objects.get(id=id)
+                if document.password:
+                    data = {"encrypted": True}
+                    return Response(data, status=status.HTTP_200_OK)
+                else:
+                    data = {"encrypted": False}
+                    return Response(data, status=status.HTTP_200_OK)
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
 
-    def post(self, request, slug, format=None):
+    def post(self, request, slug=None, id=None, format=None):
         password = request.data.get("password")
         try:
-            folder = models.Folder.objects.get(slug=slug)
-            if folder.check_password(password):
-                data = {"success": True}
-                return Response(data, status=status.HTTP_200_OK)
+            if slug is not None:
+                folder = models.Folder.objects.get(slug=slug)
+                if folder.check_password(password):
+                    data = {"success": True}
+                    return Response(data, status=status.HTTP_200_OK)
+            if id is not None:
+                document = models.Document.objects.get(id=id)
+                if document.check_password(password):
+                    data = {"success": True}
+                    return Response(data, status=status.HTTP_200_OK)
         except Exception as err:
             print(err)
             raise exceptions.ServerError(err.args[0])
