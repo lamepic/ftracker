@@ -787,7 +787,6 @@ class FolderAPIView(views.APIView):
         folder_name = request.data.get("name")
         parent_folder_id = request.data.get("folderId")
         password = request.data.get("password")
-        print(password)
 
         try:
             if password is not None:
@@ -839,19 +838,25 @@ class ArchiveFileAPIView(views.APIView):
         file = request.data.get("file")
         parent_folder_id = request.data.get("parentFolderId")
         filename = request.data.get("filename")
+        password = request.data.get('password')
 
         try:
             if parent_folder_id != "undefined":
                 parent_folder = models.Folder.objects.get_queryset().filter(
                     id=parent_folder_id)
-                file = models.Document.objects.create(
-                    subject=subject, ref=reference, content=file,
-                    created_by=request.user, folder=parent_folder[0], filename=filename)
-                serialized_data = serializers.DocumentsSerializer(file)
+                if password is not None:
+                    hash_password = make_password(password, salt=settings.SALT)
+                    file = models.Document.objects.create(
+                        subject=subject, ref=reference, content=file,
+                        created_by=request.user, folder=parent_folder[0], filename=filename, password=hash_password)
+                    serialized_data = serializers.DocumentsSerializer(file)
             else:
                 try:
-                    file = models.Document.objects.create(
-                        subject=subject, ref=reference, content=file, created_by=request.user, filename=filename)
+                    if password is not None:
+                        hash_password = make_password(
+                            password, salt=settings.SALT)
+                        file = models.Document.objects.create(
+                            subject=subject, ref=reference, content=file, created_by=request.user, filename=filename, password=hash_password)
                 except IntegrityError:
                     raise exceptions.ServerError(
                         "Reference exists, please provide a unique reference")
