@@ -85,6 +85,13 @@ class Document(models.Model):
 
         super(Document, self).save(*args, **kwargs)
 
+    def check_password(self, user_pass):
+        hash_user_pass = make_password(user_pass, salt=settings.SALT)
+        if len(self.password) > 0:
+            if hash_user_pass != self.password:
+                raise ValidationError("Incorrect Password")
+            return True
+
 
 class RelatedDocument(models.Model):
     subject = models.CharField(max_length=100)
