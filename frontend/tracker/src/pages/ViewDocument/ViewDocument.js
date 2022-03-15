@@ -18,6 +18,22 @@ import pdf from "../../assets/images/pdf-img.png";
 import Preview from "../../components/Preview/Preview";
 import { notification } from "antd";
 import ForwardModal from "../../components/ForwardModal/ForwardModal";
+import defaultFile from "../../assets/icons/default-file.svg";
+import docIcon from "../../assets/icons/doc.svg";
+import xlsIcon from "../../assets/icons/xls.svg";
+import pdfIcon from "../../assets/icons/pdf.svg";
+import pptIcon from "../../assets/icons/ppt.svg";
+import { Image } from "@chakra-ui/react";
+
+const icons = {
+  doc: docIcon,
+  docx: docIcon,
+  xls: xlsIcon,
+  xlsx: xlsIcon,
+  pptx: pptIcon,
+  ppt: pptIcon,
+  pdf: pdfIcon,
+};
 
 const openNotificationWithIcon = (type, description) => {
   notification[type]({
@@ -39,6 +55,7 @@ function ViewDocument() {
   const [nextReceiver, setNextReceiver] = useState(null);
   const [previewDoc, setPreviewDoc] = useState({});
   const [incomingDocumentTrail, setIncomingDocumentTrail] = useState({});
+  const [ext, setExt] = useState("");
 
   useEffect(() => {
     fetchPreviewCode();
@@ -57,6 +74,10 @@ function ViewDocument() {
     const incomingTrailDocData = incomingTrailDocRes.data;
     setIncomingDocumentTrail(incomingTrailDocData);
     setLoading(false);
+
+    const ext = data.filename.split(".");
+    const fileExt = ext[ext.length - 1];
+    setExt(fileExt);
   };
 
   const _fetchNextUserToForwardDoc = async () => {
@@ -238,9 +259,10 @@ function ViewDocument() {
                 borderRadius="10px"
                 onClick={() => handlePreview(document)}
               >
-                <img
-                  src={pdf}
-                  alt="logo"
+                <Image
+                  src={icons[ext] || defaultFile}
+                  alt="file"
+                  width="25px"
                   className="file-preview-box-img"
                   style={{ width: "80%", opacity: "0.7" }}
                 />
