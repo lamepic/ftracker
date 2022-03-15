@@ -48,7 +48,7 @@ const uploadRules = {
     const isPPT = file.type === "application/vnd.ms-powerpoint";
     const isPPTX =
       file.type ===
-      "applicatiapplication/vnd.openxmlformats-officedocument.presentationml.presentation";
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation";
     const isJPG = file.type === "image/jpg";
     const isJPGEG = file.type === "image/jpeg";
 

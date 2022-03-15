@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import Directory_Icon from "../../assets/icons/Directory.svg";
+import folder from "../../assets/icons/folder.svg";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 import { capitalize } from "../../utility/helper";
@@ -47,12 +47,7 @@ function DirectoryIcon({ name, slug }) {
           alignItems="center"
           transition="all 500ms ease-in-out"
         >
-          <Image
-            src={Directory_Icon}
-            alt="folder"
-            width="15px"
-            marginRight="5px"
-          />
+          <Image src={folder} alt="folder" width="25px" marginRight="10px" />
           <p className="folder__title">{capitalize(name)}</p>
         </Box>
       </Box>
