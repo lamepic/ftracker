@@ -73,9 +73,9 @@ const uploadRules = {
       return false;
     }
   },
-  onChange: (info) => {
-    console.log(info.fileList);
-  },
+  // onChange: (info) => {
+  //   console.log(info.fileList);
+  // },
 };
 
 function CreateFileModal({
