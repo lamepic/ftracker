@@ -1,9 +1,10 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, notification, Upload } from "antd";
+import { Button, Form, Input, notification, Switch, Upload } from "antd";
 import Modal from "antd/lib/modal/Modal";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { createFile } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
+import { Box } from "@chakra-ui/react";
 
 const validateMessages = {
   required: "This field is required!",
@@ -89,10 +90,15 @@ function CreateFileModal({
 }) {
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
+  const [encrypt, setEncrypt] = useState(false);
 
   const handleCancel = () => {
     setOpenCreateFileModal(false);
   };
+
+  function onSwitchChange(checked) {
+    setEncrypt(!encrypt);
+  }
 
   const onFinish = async (values) => {
     setSubmitting(true);
@@ -102,6 +108,7 @@ function CreateFileModal({
       reference: values.reference,
       parentFolderId: folderId,
       filename: values.document[0].originFileObj.name,
+      password: values.password,
     };
 
     try {
@@ -136,14 +143,27 @@ function CreateFileModal({
         style={{ top: 20 }}
         confirmLoading={submitting}
         footer={[
-          <Button
-            type="primary"
-            onClick={form.submit}
-            loading={submitting}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
             key="footer"
           >
-            {submitting ? "Uploading..." : "Upload"}
-          </Button>,
+            <Switch
+              onChange={onSwitchChange}
+              style={{
+                display: "inline",
+              }}
+            />
+            <Button
+              type="primary"
+              onClick={form.submit}
+              loading={submitting}
+              key="footer"
+            >
+              {submitting ? "Uploading..." : "Upload"}
+            </Button>
+          </Box>,
         ]}
       >
         <Form
@@ -206,6 +226,24 @@ function CreateFileModal({
               </Button>
             </Upload>
           </Form.Item>
+          {encrypt && (
+            <Form.Item
+              label="Password"
+              name="password"
+              labelAlign="left"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+            >
+              <Input.Password
+                style={{
+                  borderColor: "var(--dark-brown)",
+                  outline: "none",
+                  transition: "all 0.5ms ease-in-out",
+                }}
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>
