@@ -24,7 +24,11 @@ function TableData({ data }) {
             setSelectedKeys(e.target.value ? [e.target.value] : []);
           }}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ marginBottom: 8, display: "block" }}
+          style={{
+            marginBottom: 8,
+            display: "block",
+            borderColor: "var(--dark-brown)",
+          }}
         />
         <Space>
           <Button
@@ -43,7 +47,7 @@ function TableData({ data }) {
           >
             Reset
           </Button>
-          <Button
+          {/* <Button
             type="link"
             size="small"
             onClick={() => {
@@ -53,7 +57,7 @@ function TableData({ data }) {
             }}
           >
             Filter
-          </Button>
+          </Button> */}
         </Space>
       </div>
     ),

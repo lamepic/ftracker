@@ -96,7 +96,7 @@ a {
   fill: #000;
 }
 
-.ant-table-empty .ant-table-tbody > tr.ant-table-placeholder > td {
+.ant-table-tbody > tr.ant-table-placeholder > td {
   background: unset !important;
 }
 
@@ -108,4 +108,13 @@ a {
 
 .ant-empty-description {
   color: var(--dark-brown);
+}
+
+.ant-btn.ant-btn-primary {
+  background-color: var(--dark-brown) !important;
+  border: none;
+}
+
+.ant-btn.ant-btn-primary svg {
+  fill: var(--white) !important;
 }
