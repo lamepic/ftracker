@@ -60,6 +60,7 @@ class Document(models.Model):
     folder = models.ForeignKey(
         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    password = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.subject
@@ -247,8 +248,6 @@ class Folder(MPTTModel):
 
     def check_password(self, user_pass):
         hash_user_pass = make_password(user_pass, salt=settings.SALT)
-        print(self.password)
-        print(hash_user_pass)
         if len(self.password) > 0:
             if hash_user_pass != self.password:
                 raise ValidationError("Incorrect Password")
