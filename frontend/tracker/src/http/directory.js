@@ -81,6 +81,18 @@ export async function encryptFolder(token, slug, data) {
   return res;
 }
 
+export async function checkFileEncryption(token, id) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get(`encrypt-file/${id}/`, config);
+  return res;
+}
+
 export async function encryptFile(token, id, data) {
   const config = {
     headers: {

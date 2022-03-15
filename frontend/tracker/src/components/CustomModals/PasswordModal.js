@@ -1,7 +1,7 @@
 import { Button, Form, Input, Modal, notification } from "antd";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { encryptFolder } from "../../http/directory";
+import { encryptFile, encryptFolder } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import * as actionTypes from "../../store/actionTypes";
 
@@ -28,23 +28,43 @@ function PasswordModal({ openModal, setOpenModal, data }) {
 
   const onFinish = async (values) => {
     setSubmit(true);
-    const { slug, name } = data;
+    const { type } = data;
     try {
-      const passwordData = { password: values.password };
-      const res = await encryptFolder(store.token, slug, passwordData);
-      if (res.status === 200) {
-        dispatch({
-          type: actionTypes.SET_BREADCRUMBS,
-          payload: { name, slug },
-        });
-        history.push(`/dashboard/archive/${slug}`);
-        setSubmit(false);
+      if (type === "folder") {
+        const { name, slug } = data;
+        const passwordData = { password: values.password };
+        const res = await encryptFolder(store.token, slug, passwordData);
+        if (res.status === 200) {
+          setSubmit(false);
+          dispatch({
+            type: actionTypes.SET_BREADCRUMBS,
+            payload: { name, slug },
+          });
+          history.push(`/dashboard/archive/${slug}`);
+        } else {
+          notification.error({
+            message: "Error",
+            description: "Wrong password",
+          });
+          setSubmit(false);
+        }
       } else {
-        notification.error({
-          message: "Error",
-          description: "Wrong password",
-        });
-        setSubmit(false);
+        const { document, setOpenPreview, setPreviewDoc } = data;
+        console.log(document);
+        const passwordData = { password: values.password };
+        const res = await encryptFile(store.token, document.id, passwordData);
+        if (res.status === 200) {
+          setOpenPreview(true);
+          setPreviewDoc(document);
+          setSubmit(false);
+          handleCancel();
+        } else {
+          notification.error({
+            message: "Error",
+            description: "Wrong password",
+          });
+          setSubmit(false);
+        }
       }
     } catch (e) {
       notification.error({

@@ -59,7 +59,7 @@ function DirectoryIcon({ name, slug }) {
       <PasswordModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        data={{ name, slug }}
+        data={{ name, slug, type: "folder" }}
       />
     </>
   );
