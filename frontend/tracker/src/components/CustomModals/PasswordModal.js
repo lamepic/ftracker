@@ -78,7 +78,7 @@ function PasswordModal({ openModal, setOpenModal, data }) {
   return (
     <>
       <Modal
-        title="Enter Password to open Folder"
+        title="Enter Password"
         visible={openModal}
         onOk={form.submit}
         onCancel={handleCancel}
