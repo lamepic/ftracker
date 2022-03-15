@@ -856,8 +856,6 @@ class ArchiveFileAPIView(views.APIView):
         filename = request.data.get("filename")
         password = request.data.get('password')
 
-        print(password)
-
         try:
             hash_password = None
             if password is not None:
