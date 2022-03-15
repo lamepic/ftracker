@@ -723,6 +723,8 @@ class CreateDocument(views.APIView):
                     trail.save()
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
+            except IntegrityError:
+                raise exceptions.BadRequest("Provide a unique reference!")
             except Exception as err:
                 raise exceptions.ServerError(err.args[0])
         else:
@@ -874,7 +876,7 @@ class ArchiveFileAPIView(views.APIView):
                         subject=subject, ref=reference, content=file, created_by=request.user, filename=filename, password=hash_password)
                 except IntegrityError:
                     raise exceptions.ServerError(
-                        "Reference exists, please provide a unique reference")
+                        "File with reference already exists")
 
                 archive = models.Archive.objects.create(
                     document=document, created_by=request.user)
