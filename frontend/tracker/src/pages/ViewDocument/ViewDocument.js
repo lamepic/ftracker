@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ViewDocument.css";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 import {
   createMinute,
@@ -14,7 +14,6 @@ import {
 import swal from "sweetalert";
 import { useStateValue } from "../../store/StateProvider";
 import { useHistory, useParams } from "react-router-dom";
-import pdf from "../../assets/images/pdf-img.png";
 import Preview from "../../components/Preview/Preview";
 import { notification } from "antd";
 import ForwardModal from "../../components/ForwardModal/ForwardModal";
@@ -94,7 +93,7 @@ function ViewDocument() {
 
   const handleMarkComplete = async () => {
     swal({
-      title: "Are you sure you want to mark this document as complete?",
+      title: "Are you sure you want to Archive this document?",
       text: "This action is irreversible",
       icon: "warning",
       buttons: true,
@@ -262,9 +261,9 @@ function ViewDocument() {
                 <Image
                   src={icons[ext] || defaultFile}
                   alt="file"
-                  width="25px"
-                  className="file-preview-box-img"
-                  style={{ width: "80%", opacity: "0.7" }}
+                  width="500px"
+                  // className="file-preview-box-img"
+                  // style={{ width: "80%", opacity: "0.7" }}
                 />
               </Box>
               <Box
@@ -275,46 +274,50 @@ function ViewDocument() {
                 marginTop="20px"
               >
                 {type === "incoming" && (
-                  <>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
                     {document.document_type.name !== "Custom" ? (
                       !nextReceiver?.last_receiver && (
-                        <button
-                          className="file-btn forward disabled"
+                        <Button
+                          className="file-btn forward"
                           onClick={() => handleForwardDocument()}
-                          disabled={code === undefined ? false : !code?.used}
+                          isDisabled={code === undefined ? false : !code?.used}
                         >
                           Forward
-                        </button>
+                        </Button>
                       )
                     ) : (
-                      <button
-                        className="file-btn forward disabled"
+                      <Button
+                        className="file-btn forward"
                         onClick={() => handleForwardDocument()}
-                        disabled={code === undefined ? false : !code?.used}
+                        isDisabled={code === undefined ? false : !code?.used}
                       >
                         Forward
-                      </button>
+                      </Button>
                     )}
                     {document.document_type.name !== "Custom" ? (
                       nextReceiver?.last_receiver && (
-                        <button
-                          className="file-btn submit disabled"
+                        <Button
+                          className="file-btn submit"
                           onClick={handleMarkComplete}
-                          disabled={code === undefined ? false : !code?.used}
+                          isDisabled={code === undefined ? false : !code?.used}
                         >
                           Archive
-                        </button>
+                        </Button>
                       )
                     ) : (
-                      <button
-                        className="file-btn submit disabled"
+                      <Button
+                        className="file-btn submit"
                         onClick={handleMarkComplete}
-                        disabled={code === undefined ? false : !code?.used}
+                        isDisabled={code === undefined ? false : !code?.used}
                       >
                         Archive
-                      </button>
+                      </Button>
                     )}
-                  </>
+                  </Box>
                 )}
               </Box>
               {type === "incoming" &&
