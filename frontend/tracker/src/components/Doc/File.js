@@ -50,7 +50,7 @@ function File({ doc, type }) {
   );
 
   return (
-    <Popover content={popOverContent} title="Details" placement="rightTop">
+    <Popover content={popOverContent} title="Details" placement="top">
       <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
         <div className="file">
           <Image src={icon} alt="file" width="80px" padding="10px" />
