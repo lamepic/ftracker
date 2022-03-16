@@ -7,7 +7,7 @@ import docIcon from "../../assets/icons/doc.svg";
 import xlsIcon from "../../assets/icons/xls.svg";
 import pdfIcon from "../../assets/icons/pdf.svg";
 import pptIcon from "../../assets/icons/ppt.svg";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import { Popover } from "antd";
 
 const icons = {
@@ -24,12 +24,24 @@ function File({ doc, type }) {
   const ext = doc.document.filename.split(".");
   const fileExt = ext[ext.length - 1];
 
-  console.log(doc);
-
   const popOverContent = (
     <div>
-      {/* <p>Sent from: {doc.sender.first_name}</p> */}
-      <p>Content</p>
+      <Text fontWeight="500" color="var(--dark-brown)">
+        {type === "incoming"
+          ? `Sent from: ${doc.sender.first_name} ${doc.sender.last_name}`
+          : `Sent to: ${doc.receiver.first_name} ${doc.receiver.last_name}`}
+      </Text>
+      {doc.sender
+        ? !doc.sender.is_department && (
+            <Text fontWeight="500" color="var(--dark-brown)">
+              Department: {doc.sender.department.name}
+            </Text>
+          )
+        : !doc.receiver.is_department && (
+            <Text fontWeight="500" color="var(--dark-brown)">
+              Department: {doc.receiver.department.name}
+            </Text>
+          )}
     </div>
   );
 
