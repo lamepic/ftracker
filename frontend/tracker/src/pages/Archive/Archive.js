@@ -51,7 +51,6 @@ function Archive() {
       const res = await fetchFolders(store.token);
       const data = res.data;
       setFolders(data);
-      console.log(data);
       dispatch({
         type: actionTypes.CLEAR_BREADCRUMBS,
       });
@@ -72,7 +71,7 @@ function Archive() {
 
   const folderData = folders.map((folder) => {
     return {
-      key: folder.id,
+      key: folder.created_at,
       name: (
         <DirectoryIcon name={folder.name} key={folder.id} slug={folder.slug} />
       ),
@@ -85,7 +84,6 @@ function Archive() {
   });
 
   const archiveData = archive.map((item) => {
-    console.log("item", item);
     let name = null;
     if (item.document.related_document.length > 0 && item.closed_by !== null) {
       name = <Folder doc={item} key={item.document.id} type="archive" />;

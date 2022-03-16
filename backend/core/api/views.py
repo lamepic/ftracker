@@ -361,56 +361,15 @@ class ForwardDocumentAPIView(views.APIView):
                 prev_trail.forwarded = False
                 prev_trail.save()
 
-                # When a department is forwarding a document
-                if sender.is_department:
-                    # Department is same as that of receiver
-                    if receiver.department == sender.department:
-                        trail = models.Trail.objects.create(
-                            receiver=receiver, sender=sender, document=document)
-                        trail.send_id = sender.staff_id
-                        trail.forwarded = True
-                        trail.save()
-                        utils.send_email(receiver=receiver,
-                                         sender=sender, document=document, create_code=document.encrypt)
-                    # Department is different from that of receiver
-                    else:
-                        meta_info = f'Receipient : {receiver}'
-                        receiver_department_account = models.User.objects.get(
-                            department=receiver.department, is_department=True)
-                        trail = models.Trail.objects.create(
-                            receiver=receiver_department_account, sender=sender, document=document, meta_info=meta_info)
-                        # department_trail = models.DepartmentTrail.objects.create(
-                        #     trail=trail)
-                        trail.send_id = sender.staff_id
-                        trail.forwarded = True
-                        trail.save()
-                        utils.send_email(receiver=receiver_department_account,
-                                         sender=sender, document=document, create_code=document.encrypt)
-                # When an employee is forwarding a document
-                else:
-                    # sending employee Department is same as receiver employee department
-                    if receiver.department == sender.department:
-                        trail = models.Trail.objects.create(
-                            receiver=receiver, sender=sender, document=document)
-                        trail.send_id = sender.staff_id
-                        trail.forwarded = True
-                        trail.save()
-                        utils.send_email(receiver=receiver,
-                                         sender=sender, document=document, create_code=document.encrypt)
-                    # sending employee department is different from receiver employee department
-                    else:
-                        meta_info = f'Receipient : {receiver}'
-                        receiver_department_account = models.User.objects.get(
-                            department=receiver.department, is_department=True)
-                        trail = models.Trail.objects.create(
-                            receiver=receiver_department_account, sender=sender, document=document, meta_info=meta_info)
-                        trail.send_id = sender.staff_id
-                        trail.forwarded = True
-                        trail.save()
-                        utils.send_email(receiver=receiver_department_account,
-                                         sender=sender, document=document, create_code=document.encrypt)
+                trail = models.Trail.objects.create(
+                    receiver=receiver, sender=sender, document=document)
+                trail.send_id = sender.staff_id
+                trail.forwarded = True
+                trail.save()
+                utils.send_email(receiver=receiver,
+                                 sender=sender, document=document, create_code=document.encrypt)
             except Exception as err:
-                return Response({'error': 'Wrong Credentials'}, status=status.HTTP_400_BAD_REQUEST)
+                raise exceptions.ServerError(err.args[0])
         else:
             try:
                 prev_trail = models.Trail.objects.filter(
@@ -715,7 +674,7 @@ class CreateDocument(views.APIView):
                 #     utils.send_email(receiver=receiver_department_account,
                 #                      sender=sender, document=document, create_code=encrypt)
                 # else:
-                    # send to receiver
+                # send to receiver
                 trail = models.Trail.objects.create(
                     receiver=receiver, sender=sender, document=document, meta_info=meta_info)
                 trail.forwarded = True
