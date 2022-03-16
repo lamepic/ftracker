@@ -642,8 +642,6 @@ class CreateDocument(views.APIView):
         if document_type.name.lower() == 'custom':
             department = data.get('department')
 
-            meta_info = f'Receipient : {receiver}'
-
             # receiver_department_account = get_object_or_404(
             #     models.User, is_department=True, department__id=receiver.department.id)
 
@@ -676,7 +674,7 @@ class CreateDocument(views.APIView):
                 # else:
                 # send to receiver
                 trail = models.Trail.objects.create(
-                    receiver=receiver, sender=sender, document=document, meta_info=meta_info)
+                    receiver=receiver, sender=sender, document=document)
                 trail.forwarded = True
                 trail.send_id = sender.staff_id
                 trail.save()
