@@ -362,12 +362,13 @@ function ViewDocument() {
                     onChange={(e) => setMinute(e.target.value)}
                     value={minute}
                   ></textarea>
-                  <input
+                  <Button
                     type="submit"
-                    value="Add Minute"
                     className="minute-button"
-                    disabled={!minute}
-                  />
+                    isDisabled={!minute}
+                  >
+                    Add Minute
+                  </Button>
                 </form>
               )}
             </div>
