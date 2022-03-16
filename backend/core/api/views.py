@@ -685,8 +685,8 @@ class CreateDocument(views.APIView):
 
             meta_info = f'Receipient : {receiver}'
 
-            receiver_department_account = get_object_or_404(
-                models.User, is_department=True, department__id=receiver.department.id)
+            # receiver_department_account = get_object_or_404(
+            #     models.User, is_department=True, department__id=receiver.department.id)
 
             try:
                 # creating documents and attachments
@@ -706,23 +706,23 @@ class CreateDocument(views.APIView):
                             count += 1
 
                 # send to reciever department if sender and receiver not in the same department
-                if sender.department != receiver.department:
-                    trail = models.Trail.objects.create(
-                        receiver=receiver_department_account, sender=sender, document=document, meta_info=meta_info)
-                    trail.forwarded = True
-                    trail.send_id = sender.staff_id
-                    trail.save()
-                    utils.send_email(receiver=receiver_department_account,
-                                     sender=sender, document=document, create_code=encrypt)
-                else:
+                # if sender.department != receiver.department:
+                #     trail = models.Trail.objects.create(
+                #         receiver=receiver_department_account, sender=sender, document=document, meta_info=meta_info)
+                #     trail.forwarded = True
+                #     trail.send_id = sender.staff_id
+                #     trail.save()
+                #     utils.send_email(receiver=receiver_department_account,
+                #                      sender=sender, document=document, create_code=encrypt)
+                # else:
                     # send to receiver
-                    trail = models.Trail.objects.create(
-                        receiver=receiver, sender=sender, document=document, meta_info=meta_info)
-                    trail.forwarded = True
-                    trail.send_id = sender.staff_id
-                    trail.save()
-                    utils.send_email(receiver=receiver,
-                                     sender=sender, document=document, create_code=encrypt)
+                trail = models.Trail.objects.create(
+                    receiver=receiver, sender=sender, document=document, meta_info=meta_info)
+                trail.forwarded = True
+                trail.send_id = sender.staff_id
+                trail.save()
+                utils.send_email(receiver=receiver,
+                                 sender=sender, document=document, create_code=encrypt)
             except IntegrityError:
                 raise exceptions.BadRequest("Provide a unique reference!")
             except Exception as err:
