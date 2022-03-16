@@ -222,7 +222,6 @@ function ViewDocument() {
                 h="270px"
                 w="250px"
                 marginTop="10px"
-                // backgroundColor="var(--lightest-brown)"
                 display="flex"
                 flexDirection="column"
                 alignItems="center"
@@ -231,25 +230,18 @@ function ViewDocument() {
                 borderRadius="10px"
                 onClick={() => handlePreview(document)}
               >
-                <Image
-                  src={icon}
-                  alt="file"
-                  width="500px"
-                  // className="file-preview-box-img"
-                  // style={{ width: "80%", opacity: "0.7" }}
-                />
+                <Image src={icon} alt="file" width="500px" />
               </Box>
               <Box
                 display="flex"
                 flexDirection="column"
-                width="200px"
                 margin="auto"
                 marginTop="20px"
               >
                 {type === "incoming" && (
                   <Box
                     display="flex"
-                    justifyContent="space-between"
+                    justifyContent="center"
                     alignItems="center"
                   >
                     {document.document_type.name !== "Custom" ? (
@@ -258,6 +250,7 @@ function ViewDocument() {
                           className="file-btn forward"
                           onClick={() => handleForwardDocument()}
                           isDisabled={code === undefined ? false : !code?.used}
+                          marginRight="10px"
                         >
                           Forward
                         </Button>
@@ -267,6 +260,7 @@ function ViewDocument() {
                         className="file-btn forward"
                         onClick={() => handleForwardDocument()}
                         isDisabled={code === undefined ? false : !code?.used}
+                        marginRight="10px"
                       >
                         Forward
                       </Button>

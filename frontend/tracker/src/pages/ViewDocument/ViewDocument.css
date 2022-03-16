@@ -1,20 +1,13 @@
 .file-btn {
-  /* padding: 5px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer; */
   color: #fff;
 }
 
 .forward {
   background-color: var(--light-brown) !important;
-  /* background-color: var(--blue); */
 }
 
 .submit {
   background-color: var(--dark-brown) !important;
-  /* background: #009014; */
 }
 
 .minute-box-preview {
@@ -87,14 +80,9 @@ textarea::placeholder {
   padding: 2px 8px;
 }
 
-/* .minute-button:disabled {
-  cursor: not-allowed;
-  background-color: none !important;
-  pointer-events: all !important;
-} */
-
 .vr {
-  height: 340px;
+  /* height: 340px; */
+  height: 380px;
   width: 1px;
   opacity: 0.5;
   background-color: var(--dark-brown);
