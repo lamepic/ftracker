@@ -5,7 +5,6 @@ import Loading from "../../components/Loading/Loading";
 import {
   createMinute,
   fetchDocument,
-  fetchIncomingDocumentTrail,
   fetchNextUserToForwardDoc,
   forwardDocument,
   markComplete,
@@ -17,29 +16,8 @@ import { useHistory, useParams } from "react-router-dom";
 import Preview from "../../components/Preview/Preview";
 import { notification } from "antd";
 import ForwardModal from "../../components/ForwardModal/ForwardModal";
-import defaultFile from "../../assets/icons/default-file.svg";
-import docIcon from "../../assets/icons/doc.svg";
-import xlsIcon from "../../assets/icons/xls.svg";
-import pdfIcon from "../../assets/icons/pdf.svg";
-import pptIcon from "../../assets/icons/ppt.svg";
 import { Image } from "@chakra-ui/react";
-
-const icons = {
-  doc: docIcon,
-  docx: docIcon,
-  xls: xlsIcon,
-  xlsx: xlsIcon,
-  pptx: pptIcon,
-  ppt: pptIcon,
-  pdf: pdfIcon,
-};
-
-const openNotificationWithIcon = (type, description) => {
-  notification[type]({
-    message: "Error",
-    description,
-  });
-};
+import useIcon from "../../hooks/useIcon";
 
 function ViewDocument() {
   const [store] = useStateValue();
@@ -53,8 +31,9 @@ function ViewDocument() {
   const [openModal, setOpenModal] = useState(false);
   const [nextReceiver, setNextReceiver] = useState(null);
   const [previewDoc, setPreviewDoc] = useState({});
-  const [incomingDocumentTrail, setIncomingDocumentTrail] = useState({});
-  const [ext, setExt] = useState("");
+
+  const [filename, setFilename] = useState("");
+  const icon = useIcon(filename);
 
   useEffect(() => {
     fetchPreviewCode();
@@ -66,17 +45,8 @@ function ViewDocument() {
     const res = await fetchDocument(store.token, id);
     const data = res.data;
     setDocument(data);
-    const incomingTrailDocRes = await fetchIncomingDocumentTrail(
-      store.token,
-      data.id
-    );
-    const incomingTrailDocData = incomingTrailDocRes.data;
-    setIncomingDocumentTrail(incomingTrailDocData);
+    setFilename(data.filename);
     setLoading(false);
-
-    const ext = data.filename.split(".");
-    const fileExt = ext[ext.length - 1];
-    setExt(fileExt);
   };
 
   const _fetchNextUserToForwardDoc = async () => {
@@ -179,7 +149,10 @@ function ViewDocument() {
                 setOpenPreview(true);
               }
             } catch (error) {
-              openNotificationWithIcon("Error", "message");
+              notification.error({
+                message: "Error",
+                description: "Wrong token",
+              });
             }
           }
         });
@@ -259,7 +232,7 @@ function ViewDocument() {
                 onClick={() => handlePreview(document)}
               >
                 <Image
-                  src={icons[ext] || defaultFile}
+                  src={icon}
                   alt="file"
                   width="500px"
                   // className="file-preview-box-img"

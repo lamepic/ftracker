@@ -53,8 +53,8 @@ function PasswordModal({ openModal, setOpenModal, data }) {
         const passwordData = { password: values.password };
         const res = await encryptFile(store.token, document.id, passwordData);
         if (res.status === 200) {
-          setOpenPreview(true);
           setPreviewDoc(document);
+          setOpenPreview(true);
           setSubmit(false);
           handleCancel();
         } else {
