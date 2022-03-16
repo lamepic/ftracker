@@ -320,14 +320,8 @@ function ViewDocument() {
                   </Box>
                 )}
               </Box>
-              {type === "incoming" &&
-              store.user.is_department &&
-              incomingDocumentTrail?.meta_info ? (
-                <p className="meta_info">{incomingDocumentTrail?.meta_info}</p>
-              ) : null}
             </Box>
             <div className={`vr ${type !== "incoming" && "vr-sm"}`}></div>
-
             <div className="file-info">
               <div
                 className={`minute-box-preview ${
