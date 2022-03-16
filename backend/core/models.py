@@ -147,7 +147,6 @@ class Trail(models.Model):
     status = models.CharField(
         max_length=1, choices=STATUS_OPTIONS, default='P')
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
-    meta_info = models.CharField(max_length=100, blank=True, null=True)
     send_id = models.CharField(max_length=50)
     forwarded = models.BooleanField(default=False)
     order = models.IntegerField(null=True, blank=True)
