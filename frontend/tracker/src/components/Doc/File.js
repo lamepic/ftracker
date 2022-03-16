@@ -2,7 +2,6 @@ import React from "react";
 import "./DocIcon.css";
 import { Link } from "react-router-dom";
 import { capitalize } from "../../utility/helper";
-import defaultFile from "../../assets/icons/default-file.svg";
 import { Box, Image, Text } from "@chakra-ui/react";
 import { Popover } from "antd";
 import useIcon from "../../hooks/useIcon";
