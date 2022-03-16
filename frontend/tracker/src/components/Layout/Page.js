@@ -4,7 +4,7 @@ import Folder from "../Doc/Folder";
 import Loading from "../Loading/Loading";
 import EmptyPage from "../EmptyPage/EmptyPage";
 import { capitalize } from "../../utility/helper";
-import { Box, Grid, Image, Text } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import addIcon from "../../assets/icons/add-icon.svg";
 import { Link } from "react-router-dom";
 
@@ -32,11 +32,15 @@ function Page({ loading, data, type }) {
                 {data.map((item) => {
                   if (item.related_document.length > 0) {
                     return (
-                      <Folder doc={item} key={item.document.id} type={type} />
+                      <GridItem>
+                        <Folder doc={item} key={item.document.id} type={type} />
+                      </GridItem>
                     );
                   } else {
                     return (
-                      <File doc={item} key={item.document.id} type={type} />
+                      <GridItem>
+                        <File doc={item} key={item.document.id} type={type} />
+                      </GridItem>
                     );
                   }
                 })}

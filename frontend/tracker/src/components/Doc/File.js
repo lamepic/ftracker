@@ -50,11 +50,13 @@ function File({ doc, type }) {
   );
 
   return (
-    <Popover content={popOverContent} title="Details" placement="top">
+    <Popover content={popOverContent} title="Details" placement="rightTop">
       <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
         <div className="file">
-          <Image src={icon} alt="file" width="80px" padding="10px" />
-          <p className="file__title">{capitalize(doc.document.filename)}</p>
+          <Image src={icon} alt="file" w="80%" padding="10px" />
+          <Text className="file__title" noOfLines={2} maxW="120px">
+            {capitalize(doc.document.filename)}
+          </Text>
         </div>
       </Link>
     </Popover>

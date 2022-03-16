@@ -104,8 +104,6 @@ class RelatedDocument(models.Model):
     def save(self, *args, **kwargs):
         if len(self.subject.strip()) == 0:
             raise ValidationError("Subject cannot be blank")
-        if len(self.ref.strip()) == 0:
-            raise ValidationError("Reference cannot be blank")
 
         if self.content:
             filename = self.content.name
@@ -116,7 +114,6 @@ class RelatedDocument(models.Model):
 
         self.document.related_document = True
         self.subject = self.subject.strip()
-        self.ref = self.ref.strip()
         super(RelatedDocument, self).save(*args, **kwargs)
 
 

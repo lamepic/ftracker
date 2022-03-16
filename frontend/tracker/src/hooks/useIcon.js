@@ -3,6 +3,7 @@ import docIcon from "../assets/icons/doc.svg";
 import xlsIcon from "../assets/icons/xls.svg";
 import pdfIcon from "../assets/icons/pdf.svg";
 import pptIcon from "../assets/icons/ppt.svg";
+import folderIcon from "../assets/icons/multiple-files.svg";
 
 const icons = {
   doc: docIcon,
@@ -12,11 +13,19 @@ const icons = {
   pptx: pptIcon,
   ppt: pptIcon,
   pdf: pdfIcon,
+  folder: folderIcon,
 };
 
-function useIcon(filename) {
-  const ext = filename?.split(".");
-  const fileExt = ext[ext.length - 1];
+function useIcon(filename = null, type = null) {
+  let fileExt = null;
+  if (filename) {
+    const ext = filename?.split(".");
+    fileExt = ext[ext.length - 1];
+  }
+
+  if (type) {
+    fileExt = type;
+  }
 
   const extension = fileExt;
 
