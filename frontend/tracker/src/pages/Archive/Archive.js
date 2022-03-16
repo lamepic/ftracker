@@ -5,7 +5,7 @@ import Folder from "../../components/Doc/Folder";
 import File from "../../components/Doc/File";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
-import { Box, Grid, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
@@ -18,7 +18,6 @@ import Preview from "../../components/Preview/Preview";
 import { notification } from "antd";
 import Toolbar from "../../components/Navbar/Toolbar";
 import TableData from "../../components/DataDisplay/TableData";
-import { capitalize } from "../../utility/helper";
 import moment from "moment";
 
 function Archive() {

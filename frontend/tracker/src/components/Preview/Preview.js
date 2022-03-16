@@ -7,7 +7,9 @@ function Preview({ setOpenPreview, doc }) {
   const content = doc.content.split("/");
   const path = content[content.length - 1];
 
-  const docs = [{ uri: `http://192.168.40.8:8000${doc?.content}` }];
+  const docs = [
+    { uri: `${process.env.REACT_APP_DOCUMENT_PATH}${doc?.content}` },
+  ];
 
   const openPreview = (e) => {
     e.stopPropagation();
