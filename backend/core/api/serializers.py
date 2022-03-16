@@ -83,7 +83,7 @@ class IncomingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Trail
         fields = ['id', 'sender', 'document',
-                  'date', 'related_document', 'meta_info']
+                  'date', 'related_document']
 
     def get_related_document(self, obj):
         related_document = obj.document.relateddocument_set
@@ -100,7 +100,7 @@ class OutgoingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Trail
         fields = ['id', 'receiver', 'document',
-                  'date', 'related_document', 'meta_info']
+                  'date', 'related_document', ]
 
     def get_related_document(self, obj):
         related_document = obj.document.relateddocument_set
@@ -118,7 +118,7 @@ class TrailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Trail
         fields = ['sender', 'receiver', 'document',
-                  'related_document', 'meta_info']
+                  'related_document', ]
 
     def get_related_document(self, obj):
         related_document = obj.document.relateddocument_set
