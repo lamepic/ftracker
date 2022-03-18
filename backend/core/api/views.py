@@ -155,7 +155,7 @@ class ArchiveAPIView(views.APIView):
                     staff_id=user_id, is_department=True)
 
                 data = [archive for archive in models.Archive.objects.all().order_by(
-                    'created_by') if archive.created_by.department == employee.department]
+                    'created_by') if archive.created_by.department == employee.department and archive.folder == None]
                 serialized_data = serializers.ArchiveSerializer(
                     data, many=True)
                 return Response(serialized_data.data, status=status.HTTP_200_OK)
@@ -844,5 +844,24 @@ class ArchiveFileAPIView(views.APIView):
 
 class RenameAPIView(views.APIView):
     def post(self, request, format=None):
-        print(request.data)
-        return Response({}, status=status.HTTP_200_OK)
+        data = request.data
+        name = data.get('name')
+        _type = data.get("type")
+
+        try:
+            if _type.lower() == 'file':
+                _id = data.get('id')
+                document = models.Document.objects.get(id=_id)
+                document.filename = name
+                document.save()
+
+            if _type.lower() == 'folder':
+                slug = data.get('id')
+                folder = models.Folder.objects.get(slug=slug)
+                folder.name = name
+                folder.save()
+
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
+
+        return Response({"message": "Folder Renamed successfully!"}, status=status.HTTP_200_OK)

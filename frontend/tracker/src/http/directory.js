@@ -106,3 +106,15 @@ export async function encryptFile(token, id, data) {
   const res = await axios.post(`encrypt-file/${id}/`, data, config);
   return res;
 }
+
+export async function rename(token, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post("rename/", data, config);
+  return res;
+}

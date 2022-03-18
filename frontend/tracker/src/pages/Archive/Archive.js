@@ -24,6 +24,7 @@ import { notification } from "antd";
 import Toolbar from "../../components/Navbar/Toolbar";
 import TableData from "../../components/DataDisplay/TableData";
 import moment from "moment";
+import RenameModal from "../../components/CustomModals/RenameModal";
 
 function Archive() {
   const [store, dispatch] = useStateValue();
@@ -76,7 +77,7 @@ function Archive() {
   useEffect(() => {
     _fetchUserArchive();
     _fetchFolders();
-  }, []);
+  }, [openRenameModal]);
 
   const folderData = folders.map((folder) => {
     return {
@@ -212,6 +213,12 @@ function Archive() {
       {openPreview && (
         <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
+      <RenameModal
+        openRenameModal={openRenameModal}
+        setOpenRenameModal={setOpenRenameModal}
+        type={selectedRow[0]?.type}
+        selectedRow={selectedRow}
+      />
     </>
   );
 }
