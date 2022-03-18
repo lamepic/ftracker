@@ -6,7 +6,12 @@ import File from "../../components/Doc/File";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box, Text } from "@chakra-ui/react";
-import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  FolderAddOutlined,
+  UploadOutlined,
+  EditOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
@@ -30,6 +35,9 @@ function Archive() {
   const [submitting, setSubmitting] = useState(false);
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
+  const [openRenameModal, setOpenRenameModal] = useState(false);
+  const [openMoveModal, setOpenMoveModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState([]);
 
   const _fetchUserArchive = async () => {
     try {
@@ -138,6 +146,22 @@ function Archive() {
               Icon={UploadOutlined}
               openModal={setOpenCreateFileModal}
             />
+            {selectedRow.length === 1 && (
+              <ToolbarOption
+                text="Rename"
+                Icon={EditOutlined}
+                openModal={setOpenRenameModal}
+              />
+            )}
+            {selectedRow.length > 0 && (
+              <>
+                <ToolbarOption
+                  text="Move"
+                  Icon={SendOutlined}
+                  openModal={setOpenMoveModal}
+                />
+              </>
+            )}
           </Toolbar>
           {archive.length + folders.length > 0 ? (
             <Box
@@ -145,7 +169,10 @@ function Archive() {
               // overflowY="auto"
               marginTop="20px"
             >
-              <TableData data={[...archiveData, ...folderData]} />
+              <TableData
+                data={[...archiveData, ...folderData]}
+                setSelectedRow={setSelectedRow}
+              />
             </Box>
           ) : (
             <Box>
