@@ -37,8 +37,8 @@ function Archive() {
   const [submitting, setSubmitting] = useState(false);
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
-  const [openRenameModal, setOpenRenameModal] = useState(false);
   const [openMoveModal, setOpenMoveModal] = useState(false);
+  const [openRenameModal, setOpenRenameModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
 
   const _fetchUserArchive = async () => {

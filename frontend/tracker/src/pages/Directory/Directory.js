@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  FolderAddOutlined,
+  UploadOutlined,
+  EditOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import { Box, Text } from "@chakra-ui/react";
 import { Breadcrumb, notification } from "antd";
 import { useHistory, useParams } from "react-router-dom";
@@ -18,6 +23,7 @@ import TableData from "../../components/DataDisplay/TableData";
 import { capitalize } from "../../utility/helper";
 import moment from "moment";
 import PasswordModal from "../../components/CustomModals/PasswordModal";
+import RenameModal from "../../components/CustomModals/RenameModal";
 
 function Directory() {
   const [store, dispatch] = useStateValue();
@@ -30,11 +36,14 @@ function Directory() {
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [openMoveModal, setOpenMoveModal] = useState(false);
+  const [openRenameModal, setOpenRenameModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState([]);
 
   useEffect(() => {
     // setFolder({});
     _fetchSubFolders();
-  }, [slug]);
+  }, [slug, openRenameModal]);
 
   useEffect(() => {
     const popbreadcrumb = () => {
@@ -126,6 +135,22 @@ function Directory() {
               Icon={UploadOutlined}
               openModal={setOpenCreateFileModal}
             />
+            {selectedRow.length === 1 && (
+              <ToolbarOption
+                text="Rename"
+                Icon={EditOutlined}
+                openModal={setOpenRenameModal}
+              />
+            )}
+            {selectedRow.length > 0 && (
+              <>
+                <ToolbarOption
+                  text="Move"
+                  Icon={SendOutlined}
+                  openModal={setOpenMoveModal}
+                />
+              </>
+            )}
           </Toolbar>
           <Box marginTop="20px">
             <Breadcrumb separator=">">
@@ -171,7 +196,10 @@ function Directory() {
             overflowY="auto"
             marginTop="20px"
           >
-            <TableData data={[...documentData, ...subFolderData]} />
+            <TableData
+              data={[...documentData, ...subFolderData]}
+              setSelectedRow={setSelectedRow}
+            />
           </Box>
         </Box>
       </Box>
@@ -198,6 +226,12 @@ function Directory() {
       {openPreview && (
         <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
+      <RenameModal
+        openRenameModal={openRenameModal}
+        setOpenRenameModal={setOpenRenameModal}
+        type={selectedRow[0]?.type}
+        selectedRow={selectedRow}
+      />
     </>
   );
 }
