@@ -840,3 +840,9 @@ class ArchiveFileAPIView(views.APIView):
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
+
+
+class RenameAPIView(views.APIView):
+    def post(self, request, format=None):
+        print(request.data)
+        return Response({}, status=status.HTTP_200_OK)
