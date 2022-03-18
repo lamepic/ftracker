@@ -29,6 +29,7 @@ function Archive() {
   const [store, dispatch] = useStateValue();
   const [archive, setArchive] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [folderLoading, setFolderLoading] = useState(true);
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folders, setFolders] = useState([]);
@@ -62,9 +63,9 @@ function Archive() {
       dispatch({
         type: actionTypes.CLEAR_BREADCRUMBS,
       });
-      setLoading(false);
+      setFolderLoading(false);
     } catch (e) {
-      setLoading(false);
+      setFolderLoading(false);
       notification.error({
         message: "Error",
         description: e.response.data.detail,
@@ -119,7 +120,7 @@ function Archive() {
     };
   });
 
-  if (loading) {
+  if (folderLoading || loading) {
     return <Loading />;
   }
 
