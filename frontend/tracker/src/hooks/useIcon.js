@@ -3,7 +3,8 @@ import docIcon from "../assets/icons/doc.svg";
 import xlsIcon from "../assets/icons/xls.svg";
 import pdfIcon from "../assets/icons/pdf.svg";
 import pptIcon from "../assets/icons/ppt.svg";
-import folderIcon from "../assets/icons/multiple-files.svg";
+import folderIcon from "../assets/icons/folder.svg";
+import multipleFilesIcon from "../assets/icons/multiple-files.svg";
 
 const icons = {
   doc: docIcon,
@@ -14,6 +15,7 @@ const icons = {
   ppt: pptIcon,
   pdf: pdfIcon,
   folder: folderIcon,
+  multipleFiles: multipleFilesIcon,
 };
 
 function useIcon(filename = null, type = null) {

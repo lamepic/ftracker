@@ -71,4 +71,5 @@ urlpatterns = [
          views.EncryptAPIView.as_view(), name='encrypt_file'),
 
     path('file/', views.ArchiveFileAPIView.as_view(), name='files'),
+    path('rename/', views.RenameAPIView.as_view(), name='rename'),
 ]

@@ -6,7 +6,12 @@ import File from "../../components/Doc/File";
 import { fetchUserArchive } from "../../http/document";
 import Loading from "../../components/Loading/Loading";
 import { Box, Text } from "@chakra-ui/react";
-import { FolderAddOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  FolderAddOutlined,
+  UploadOutlined,
+  EditOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
@@ -19,17 +24,22 @@ import { notification } from "antd";
 import Toolbar from "../../components/Navbar/Toolbar";
 import TableData from "../../components/DataDisplay/TableData";
 import moment from "moment";
+import RenameModal from "../../components/CustomModals/RenameModal";
 
 function Archive() {
   const [store, dispatch] = useStateValue();
   const [archive, setArchive] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [folderLoading, setFolderLoading] = useState(true);
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [folders, setFolders] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
+  const [openRenameModal, setOpenRenameModal] = useState(false);
+  const [openMoveModal, setOpenMoveModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState([]);
 
   const _fetchUserArchive = async () => {
     try {
@@ -54,9 +64,9 @@ function Archive() {
       dispatch({
         type: actionTypes.CLEAR_BREADCRUMBS,
       });
-      setLoading(false);
+      setFolderLoading(false);
     } catch (e) {
-      setLoading(false);
+      setFolderLoading(false);
       notification.error({
         message: "Error",
         description: e.response.data.detail,
@@ -67,7 +77,7 @@ function Archive() {
   useEffect(() => {
     _fetchUserArchive();
     _fetchFolders();
-  }, []);
+  }, [openRenameModal]);
 
   const folderData = folders.map((folder) => {
     return {
@@ -111,7 +121,7 @@ function Archive() {
     };
   });
 
-  if (loading) {
+  if (folderLoading || loading) {
     return <Loading />;
   }
 
@@ -138,6 +148,22 @@ function Archive() {
               Icon={UploadOutlined}
               openModal={setOpenCreateFileModal}
             />
+            {selectedRow.length === 1 && (
+              <ToolbarOption
+                text="Rename"
+                Icon={EditOutlined}
+                openModal={setOpenRenameModal}
+              />
+            )}
+            {selectedRow.length > 0 && (
+              <>
+                <ToolbarOption
+                  text="Move"
+                  Icon={SendOutlined}
+                  openModal={setOpenMoveModal}
+                />
+              </>
+            )}
           </Toolbar>
           {archive.length + folders.length > 0 ? (
             <Box
@@ -145,7 +171,10 @@ function Archive() {
               // overflowY="auto"
               marginTop="20px"
             >
-              <TableData data={[...archiveData, ...folderData]} />
+              <TableData
+                data={[...archiveData, ...folderData]}
+                setSelectedRow={setSelectedRow}
+              />
             </Box>
           ) : (
             <Box>
@@ -184,6 +213,12 @@ function Archive() {
       {openPreview && (
         <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
+      <RenameModal
+        openRenameModal={openRenameModal}
+        setOpenRenameModal={setOpenRenameModal}
+        type={selectedRow[0]?.type}
+        selectedRow={selectedRow}
+      />
     </>
   );
 }

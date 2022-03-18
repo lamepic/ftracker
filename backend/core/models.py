@@ -181,6 +181,8 @@ class Archive(models.Model):
     close_date = models.DateTimeField(auto_now_add=True)
     requested = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    folder = models.ForeignKey(
+        "Folder", on_delete=models.SET_NULL, null=True, blank=True, related_name="archive_folder")
 
     def __str__(self):
         return self.document.subject

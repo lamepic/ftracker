@@ -2,7 +2,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import React, { useRef, useState } from "react";
 
-function TableData({ data }) {
+function TableData({ data, setSelectedRow }) {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInputRef = useRef(null);
@@ -123,6 +123,16 @@ function TableData({ data }) {
     },
   ];
 
+  let rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRow(selectedRows);
+
+      if (selectedRows.length === 0) {
+        setSelectedRow([]);
+      }
+    },
+  };
+
   return (
     <div className="data-display-table">
       <Table
@@ -131,6 +141,9 @@ function TableData({ data }) {
         size="20"
         pagination={{ pageSize: 20 }}
         // scroll={{ y: 410 }}
+        rowSelection={{
+          ...rowSelection,
+        }}
       />
     </div>
   );
