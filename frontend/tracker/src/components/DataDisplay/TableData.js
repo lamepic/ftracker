@@ -97,7 +97,7 @@ function TableData({ data, setSelectedRow }) {
       dataIndex: "name",
       key: "name",
       render: (text) => (
-        <Button type="text" size="small">
+        <Button type="text" size="small" style={{ width: "70%" }}>
           {text}
         </Button>
       ),
@@ -140,7 +140,7 @@ function TableData({ data, setSelectedRow }) {
         dataSource={data}
         size="20"
         pagination={{ pageSize: 20 }}
-        // scroll={{ y: 410 }}
+        // scroll={{ y: 340 }}
         rowSelection={{
           ...rowSelection,
         }}

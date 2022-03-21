@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import { capitalize } from "../../utility/helper";
 import { checkFileEncryption } from "../../http/directory";
 import { notification } from "antd";
@@ -39,15 +39,24 @@ function DirectoryFileIcon({ document, setPreviewDoc, setOpenPreview }) {
         <Box
           display="flex"
           flexDirection="row"
-          justifyContent="center"
+          // justifyContent="center"
           alignItems="center"
           // _hover={{ backgroundColor: "#e3bc97" }}
           transition="all 500ms ease-in-out"
         >
           <Image src={icon} alt="file" width="25px" marginRight="10px" />
-          <p className="folder__title">
+          <Text
+            isTruncated={true}
+            fontSize="14px"
+            fontWeight="600"
+            color="var(--dark-brown)"
+            textAlign="center"
+            // display="block"
+            overflowWrap="wrap"
+            maxWidth="70%"
+          >
             {capitalize(document.filename.toLowerCase())}
-          </p>
+          </Text>
         </Box>
       </Box>
       <PasswordModal

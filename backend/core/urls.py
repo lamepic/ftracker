@@ -72,4 +72,6 @@ urlpatterns = [
 
     path('file/', views.ArchiveFileAPIView.as_view(), name='files'),
     path('rename/', views.RenameAPIView.as_view(), name='rename'),
+    path('move/', views.MoveItem.as_view(), name='move'),
+
 ]

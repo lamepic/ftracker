@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import folder from "../../assets/icons/folder.svg";
 import { useStateValue } from "../../store/StateProvider";
@@ -14,7 +14,7 @@ function DirectoryIcon({ name, slug }) {
   const history = useHistory();
   const [openModal, setOpenModal] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (e) => {
     let data;
     try {
       const checkEncrypt = await checkFolderEncryption(store.token, slug);
@@ -43,12 +43,23 @@ function DirectoryIcon({ name, slug }) {
         <Box
           display="flex"
           flexDirection="row"
-          justifyContent="center"
+          // justifyContent="center"
           alignItems="center"
           transition="all 500ms ease-in-out"
         >
           <Image src={folder} alt="folder" width="25px" marginRight="10px" />
-          <p className="folder__title">{capitalize(name)}</p>
+          <Text
+            isTruncated={true}
+            fontSize="14px"
+            fontWeight="600"
+            color="var(--dark-brown)"
+            textAlign="center"
+            display="block"
+            maxWidth="fit-content"
+            overflowWrap="wrap"
+          >
+            {capitalize(name)}
+          </Text>
         </Box>
       </Box>
       <PasswordModal

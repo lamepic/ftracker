@@ -192,7 +192,7 @@ function Directory() {
             </Breadcrumb>
           </Box>
           <Box
-            // maxH={{ sm: "100vh", lg: "80vh" }}
+            maxH={{ sm: "100vh", lg: "60vh" }}
             overflowY="auto"
             marginTop="20px"
           >

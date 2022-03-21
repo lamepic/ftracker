@@ -195,7 +195,8 @@ class FolderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Folder
-        fields = ('id', 'name', "slug", "documents", 'children', 'created_at')
+        fields = ('id', 'name', "slug", "documents",
+                  'children', 'created_at')
 
     def get_documents(self, obj):
         documents = obj.document_set.all()

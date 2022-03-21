@@ -15,14 +15,23 @@ function Folder({ doc, type }) {
         <Box
           display="flex"
           flexDirection="row"
-          justifyContent="center"
+          // justifyContent="center"
           alignItems="center"
           transition="all 500ms ease-in-out"
         >
           <Image src={icon} alt="file" width="25px" marginRight="10px" />
-          <p className="folder__title">
+          <Text
+            isTruncated={true}
+            fontSize="14px"
+            fontWeight="600"
+            color="var(--dark-brown)"
+            textAlign="center"
+            display="block"
+            maxWidth="fit-content"
+            overflowWrap="wrap"
+          >
             {capitalize(doc.document.filename.toLowerCase())}
-          </p>
+          </Text>
         </Box>
       </Link>
     );
