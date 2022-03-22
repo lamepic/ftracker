@@ -25,6 +25,7 @@ import Toolbar from "../../components/Navbar/Toolbar";
 import TableData from "../../components/DataDisplay/TableData";
 import moment from "moment";
 import RenameModal from "../../components/CustomModals/RenameModal";
+import MoveModal from "../../components/CustomModals/MoveModal";
 
 function Archive() {
   const [store, dispatch] = useStateValue();
@@ -40,6 +41,8 @@ function Archive() {
   const [openMoveModal, setOpenMoveModal] = useState(false);
   const [openRenameModal, setOpenRenameModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
+  const [folderMoved, setFolderMoved] = useState(false);
+  const [folderCreated, setFolderCreated] = useState(false);
 
   const _fetchUserArchive = async () => {
     try {
@@ -65,6 +68,7 @@ function Archive() {
         type: actionTypes.CLEAR_BREADCRUMBS,
       });
       setFolderLoading(false);
+      setFolderMoved(false);
     } catch (e) {
       setFolderLoading(false);
       notification.error({
@@ -77,7 +81,7 @@ function Archive() {
   useEffect(() => {
     _fetchUserArchive();
     _fetchFolders();
-  }, [openRenameModal]);
+  }, [openRenameModal, folderMoved, folderCreated]);
 
   const folderData = folders.map((folder) => {
     return {
@@ -167,8 +171,8 @@ function Archive() {
           </Toolbar>
           {archive.length + folders.length > 0 ? (
             <Box
-              // maxH={{ sm: "100vh", lg: "70vh" }}
-              // overflowY="auto"
+              maxH={{ sm: "100vh", lg: "70vh" }}
+              overflowY="auto"
               marginTop="20px"
             >
               <TableData
@@ -198,6 +202,7 @@ function Archive() {
           openCreateFolderModal={openCreateFolderModal}
           addFolder={setFolders}
           parentFolder={folders}
+          setFolderCreated={setFolderCreated}
         />
       )}
       {openCreateFileModal && (
@@ -219,6 +224,15 @@ function Archive() {
         type={selectedRow[0]?.type}
         selectedRow={selectedRow}
       />
+      {openMoveModal && (
+        <MoveModal
+          openMoveModal={openMoveModal}
+          setOpenMoveModal={setOpenMoveModal}
+          folders={folders}
+          setFolderMoved={setFolderMoved}
+          selectedRow={selectedRow}
+        />
+      )}
     </>
   );
 }

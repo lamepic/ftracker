@@ -180,7 +180,6 @@ function Search() {
       dangerMode: true,
     }).then(async (willSubmit) => {
       if (willSubmit) {
-        console.log(willSubmit);
         const res = await requestDocument(store.token, data);
         if (res.status === 201) {
           swal("Your Request for the document has been sent", {

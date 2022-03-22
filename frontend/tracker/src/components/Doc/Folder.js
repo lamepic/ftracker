@@ -7,7 +7,7 @@ import useIcon from "../../hooks/useIcon";
 import { Popover } from "antd";
 
 function Folder({ doc, type }) {
-  const icon = useIcon("folder");
+  const icon = useIcon(null, "multipleFiles");
 
   if (type === "archive") {
     return (

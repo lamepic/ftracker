@@ -97,7 +97,7 @@ function TableData({ data, setSelectedRow }) {
       dataIndex: "name",
       key: "name",
       render: (text) => (
-        <Button type="text" size="small" style={{ width: "70%" }}>
+        <Button type="text" size="small">
           {text}
         </Button>
       ),

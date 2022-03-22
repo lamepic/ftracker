@@ -26,6 +26,7 @@ function CreateFolderModal({
   appendSubFolder,
   parentFolder,
   addFolder,
+  setFolderCreated,
 }) {
   const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
@@ -53,7 +54,8 @@ function CreateFolderModal({
       if (res.status === 201) {
         setSubmit(false);
         if (addFolder) {
-          addFolder([...parentFolder, res.data]);
+          // addFolder([...parentFolder, res.data]);
+          setFolderCreated(true);
         } else {
           appendSubFolder({
             ...parentFolder,

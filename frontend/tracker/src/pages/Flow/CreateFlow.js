@@ -29,7 +29,6 @@ function Flow() {
   };
 
   const onFinish = async (values) => {
-    console.log(values.users);
     if (values.users === 0) {
       return openNotificationWithIcon("error", "Error", "Add flow");
     }

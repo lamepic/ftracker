@@ -870,10 +870,11 @@ class RenameAPIView(views.APIView):
 class MoveItem(views.APIView):
     def post(self, request, format=None):
         data = request.data
-        print('move', data)
         opened_folder_slug = data.get('openedFolder')
         items = data.get('item')
         route = data.get('route')
+
+        print(data)
 
         try:
             parent_folder = models.Folder.objects.get(slug=opened_folder_slug)
@@ -888,7 +889,8 @@ class MoveItem(views.APIView):
                         fil = models.Archive.objects.get(
                             document__id=item.get('id'))
                     if route == 'directory':
-                        fil = models.Document.objects.get(id=item.get('id'))
+                        fil = models.Archive.objects.get(
+                            document__id=item.get('id'))
                     fil.folder = parent_folder
                     fil.save()
 
@@ -897,3 +899,19 @@ class MoveItem(views.APIView):
             raise exceptions.ServerError(err.args[0])
 
         return Response({"message": "Moved successfully"}, status=status.HTTP_201_CREATED)
+
+
+class ParentFolder(views.APIView):
+    def get(self, request, slug, format=None):
+        serialized_data = {}
+        try:
+            folder = models.Folder.objects.get(slug=slug)
+            parent = folder.get_ancestors(ascending=True)
+            serialized_data = serializers.FolderSerializer(
+                parent[0]) if len(parent) > 0 else []
+            serialized_data = serialized_data.data if len(parent) > 0 else []
+        except Exception as err:
+            print(err)
+            raise exceptions.ServerError(err.args[0])
+
+        return Response(serialized_data, status=status.HTTP_200_OK)

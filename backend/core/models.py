@@ -259,7 +259,7 @@ class Folder(MPTTModel):
             return True
 
 
-@ receiver(post_save, sender=ActivateDocument)
+@receiver(post_save, sender=ActivateDocument)
 def expire_date_handler(sender, instance, created, **kwargs):
     secret_id = random.randint(1, 9999)
     if created:
