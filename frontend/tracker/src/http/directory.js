@@ -118,3 +118,27 @@ export async function rename(token, data) {
   const res = await axios.post("rename/", data, config);
   return res;
 }
+
+export async function fetchParentFolder(token, slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get(`parent-folder/${slug}/`, config);
+  return res;
+}
+
+export async function move(token, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post("move/", data, config);
+  return res;
+}

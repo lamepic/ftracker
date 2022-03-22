@@ -31,7 +31,6 @@ function FlowList({ activeTab }) {
     <EditOutlined
       onClick={(event) => {
         event.stopPropagation();
-        console.log("clicked");
       }}
     />
   );

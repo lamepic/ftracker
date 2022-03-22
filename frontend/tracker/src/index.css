@@ -119,3 +119,7 @@ a {
 .ant-btn.ant-btn-primary svg {
   fill: var(--white) !important;
 }
+
+.swal-content__input {
+  -webkit-text-security: disc !important;
+}

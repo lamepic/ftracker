@@ -20,10 +20,11 @@ import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
 import Preview from "../../components/Preview/Preview";
 import Toolbar from "../../components/Navbar/Toolbar";
 import TableData from "../../components/DataDisplay/TableData";
-import { capitalize } from "../../utility/helper";
 import moment from "moment";
-import PasswordModal from "../../components/CustomModals/PasswordModal";
 import RenameModal from "../../components/CustomModals/RenameModal";
+import DirectoryMoveModal from "../../components/CustomModals/DirectoryMoveModal";
+import Folder from "../../components/Doc/Folder";
+import File from "../../components/Doc/File";
 
 function Directory() {
   const [store, dispatch] = useStateValue();
@@ -36,14 +37,17 @@ function Directory() {
   const [previewDoc, setPreviewDoc] = useState({});
   const [openPreview, setOpenPreview] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [openMoveModal, setOpenMoveModal] = useState(false);
+  const [openDirectoryMoveModal, setOpenDirectoryMoveModal] = useState(false);
   const [openRenameModal, setOpenRenameModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
+  const [folderMoved, setFolderMoved] = useState(false);
+  const [archive, setArchive] = useState([]);
 
   useEffect(() => {
     // setFolder({});
     _fetchSubFolders();
-  }, [slug, openRenameModal]);
+    // _fetchUserArchive();
+  }, [slug, openRenameModal, folderMoved]);
 
   useEffect(() => {
     const popbreadcrumb = () => {
@@ -57,12 +61,29 @@ function Directory() {
     return () => window.removeEventListener("popstate", popbreadcrumb);
   }, []);
 
+  // const _fetchUserArchive = async () => {
+  //   try {
+  //     const res = await fetchUserArchive(store.token, store.user.staff_id);
+  //     const data = res.data;
+  //     console.log(res.data);
+  //     setArchive(data);
+  //     setLoading(false);
+  //   } catch (e) {
+  //     setLoading(false);
+  //     notification.error({
+  //       message: "Error",
+  //       description: e.response.data.detail,
+  //     });
+  //   }
+  // };
+
   const _fetchSubFolders = async () => {
     try {
       const res = await fetchSubfolders(store.token, slug);
       const data = res.data[0];
       setFolder(data);
       setLoading(false);
+      setFolderMoved(false);
     } catch (e) {
       setLoading(false);
       return notification.error({
@@ -72,25 +93,35 @@ function Directory() {
     }
   };
 
-  const documentData = folder.documents?.map((document) => {
-    return {
-      name: (
+  const documentData = folder?.documents?.map((item) => {
+    let name = null;
+    if (item.document.related_document.length > 0 && item.closed_by !== null) {
+      name = <Folder doc={item} key={item.document.id} type="archive" />;
+    } else if (item.closed_by !== null) {
+      name = <File doc={item} key={item.document.id} type="archive" />;
+    } else {
+      name = (
         <DirectoryFileIcon
-          key={document.id}
+          key={item.document.id}
           setPreviewDoc={setPreviewDoc}
           setOpenPreview={setOpenPreview}
-          document={document}
+          document={item.document}
         />
-      ),
-      filename: document.filename,
-      subject: capitalize(document.subject),
-      created_at: moment(document.created_at).format("DD/MM/YYYY hh:mm A"),
+      );
+    }
+    return {
+      name: name,
+      subject: item.document.subject,
+      created_at: moment(item.document.created_at)
+        .utc()
+        .format("DD/MM/YYYY hh:mm A"),
       type: "File",
-      key: document.id,
+      key: item.document.id,
+      filename: item.document.filename,
     };
   });
 
-  const subFolderData = folder.children?.map((subfolder) => {
+  const subFolderData = folder?.children?.map((subfolder) => {
     return {
       key: subfolder.id,
       name: (
@@ -147,7 +178,7 @@ function Directory() {
                 <ToolbarOption
                   text="Move"
                   Icon={SendOutlined}
-                  openModal={setOpenMoveModal}
+                  openModal={setOpenDirectoryMoveModal}
                 />
               </>
             )}
@@ -192,7 +223,7 @@ function Directory() {
             </Breadcrumb>
           </Box>
           <Box
-            // maxH={{ sm: "100vh", lg: "80vh" }}
+            maxH={{ sm: "100vh", lg: "60vh" }}
             overflowY="auto"
             marginTop="20px"
           >
@@ -232,6 +263,15 @@ function Directory() {
         type={selectedRow[0]?.type}
         selectedRow={selectedRow}
       />
+      {openDirectoryMoveModal && (
+        <DirectoryMoveModal
+          openDirectoryMoveModal={openDirectoryMoveModal}
+          setOpenDirectoryMoveModal={setOpenDirectoryMoveModal}
+          folder={folder}
+          selectedRow={selectedRow}
+          setFolderMoved={setFolderMoved}
+        />
+      )}
     </>
   );
 }

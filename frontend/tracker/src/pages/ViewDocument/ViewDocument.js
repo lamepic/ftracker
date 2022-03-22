@@ -145,7 +145,6 @@ function ViewDocument() {
               );
               if (res.status === 200) {
                 setCode({ ...previewCode, used: true });
-                console.log("open preview");
                 setOpenPreview(true);
               }
             } catch (error) {
@@ -157,7 +156,6 @@ function ViewDocument() {
           }
         });
       } else {
-        console.log("open preview");
         setOpenPreview(true);
       }
     } else {

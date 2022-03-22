@@ -20,7 +20,7 @@ const layout = {
 function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
   const [store, dispatch] = useStateValue();
   const [submitting, setSubmitting] = useState(false);
-  // const [name, setName] = useState()
+  const [fileExtension, setFileExtension] = useState("");
   const [form] = Form.useForm();
 
   const handleCancel = () => {
@@ -28,28 +28,43 @@ function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
   };
 
   useEffect(() => {
+    const ext =
+      selectedRow[0]?.type.toLowerCase() === "file" &&
+      selectedRow[0]?.filename.split(".");
+    const filename = ext[0];
+    setFileExtension(ext[ext.length - 1]);
     form.setFieldsValue({
       name:
         selectedRow[0]?.type === "Folder"
           ? selectedRow[0]?.foldername
-          : selectedRow[0]?.filename,
+          : filename,
     });
   }, [selectedRow, form]);
 
   const onFinish = async (values) => {
-    setSubmitting(true);
-    const type = selectedRow[0]?.type;
-    let id;
-    if (type.toLowerCase() === "folder") {
-      id = selectedRow[0]?.name.props.slug;
-    }
-
-    if (type.toLowerCase() === "file") {
-      id = selectedRow[0]?.name.props.document.id;
-    }
-
     try {
-      const data = { name: values.name, type, id: id };
+      setSubmitting(true);
+      const type = selectedRow[0]?.type;
+      let id;
+      if (type.toLowerCase() === "folder") {
+        id = selectedRow[0]?.name.props.slug;
+      }
+
+      if (type.toLowerCase() === "file") {
+        id =
+          selectedRow[0]?.name.props.document?.id === undefined
+            ? selectedRow[0]?.name.props.doc.document.id
+            : selectedRow[0]?.name.props.document.id;
+      }
+
+      const data = {
+        name:
+          selectedRow[0]?.type.toLowerCase() === "file"
+            ? values.name + `.${fileExtension}`
+            : values.name,
+        type,
+        id: id,
+      };
       const res = await rename(store.token, data);
       if (res.status === 200) {
         notification.success({
@@ -61,12 +76,15 @@ function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
       }
     } catch (e) {
       setSubmitting(false);
-      notification.error({
-        message: "Error",
-        description: e.response.data.detail,
-      });
+      // notification.error({
+      //   message: "Error",
+      //   description: e.response.data.detail,
+      // });
+      console.log(e);
     }
   };
+
+  // console.log(selectedRow);
 
   return (
     <>

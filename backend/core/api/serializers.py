@@ -195,15 +195,20 @@ class FolderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Folder
-        fields = ('id', 'name', "slug", "documents", 'children', 'created_at')
+        fields = ('id', 'name', "slug", "documents",
+                  'children', 'created_at')
 
     def get_documents(self, obj):
-        documents = obj.document_set.all()
+        # documents = obj.document_set.all()
+        # archive_documents = obj.archive_folder.all()
+
+        # documents = list(documents)
+        # documents.extend(list(doc.document for doc in archive_documents))
+
+        # serialized_document = DocumentsSerializer(
+        #     documents, many=True)
+
         archive_documents = obj.archive_folder.all()
+        serialized_document = ArchiveSerializer(archive_documents, many=True)
 
-        documents = list(documents)
-        documents.extend(list(doc.document for doc in archive_documents))
-
-        serialized_document = DocumentsSerializer(
-            documents, many=True)
         return serialized_document.data

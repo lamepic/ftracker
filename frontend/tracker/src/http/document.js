@@ -9,8 +9,6 @@ export async function createDocument(token, data) {
     },
   };
 
-  console.log(data);
-
   const receiver = data.receiver;
   const department = data.department;
   let document = data.document;

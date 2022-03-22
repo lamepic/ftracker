@@ -115,7 +115,6 @@ function CreateFileModal({
       const res = await createFile(store.token, data);
       if (res.status === 201) {
         setSubmitting(false);
-        console.log(res.data);
         if (appendFileToArchive) {
           appendFileToArchive([...parentFolder, res.data]);
         } else {
