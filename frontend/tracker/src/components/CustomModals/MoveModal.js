@@ -38,7 +38,13 @@ function MoveModal({
 
       if (data.encrypted) {
         swal("Enter Password:", {
-          content: "input",
+          content: {
+            element: "input",
+            attributes: {
+              placeholder: "Type your password",
+              type: "password",
+            },
+          },
         }).then(async (value) => {
           if (value) {
             try {

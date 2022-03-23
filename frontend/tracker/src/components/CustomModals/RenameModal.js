@@ -27,10 +27,16 @@ function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
   const [submitting, setSubmitting] = useState(false);
   const [fileExtension, setFileExtension] = useState("");
   const [form] = Form.useForm();
+  const [encrypted, setEcrypted] = useState(true);
 
   const handleCancel = () => {
     setOpenRenameModal(false);
   };
+
+  // useEffect(() => {
+  //   checkEncryption();
+  //   console.log("working");
+  // }, [openRenameModal]);
 
   useEffect(() => {
     const ext =
@@ -45,6 +51,50 @@ function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
           : filename,
     });
   }, [selectedRow, form]);
+
+  const checkEncryption = async () => {
+    try {
+      const checkpass = await checkFolderEncryption(
+        store.token,
+        selectedRow[0].name.props.slug
+      );
+      const data = checkpass.data;
+
+      if (data.encrypted) {
+        swal("Enter Password:", {
+          content: "input",
+        }).then(async (value) => {
+          if (value) {
+            try {
+              const passRes = await encryptFolder(
+                store.token,
+                selectedRow[0].name.props.slug,
+                {
+                  password: value,
+                }
+              );
+              if (passRes.data.success) {
+                setEcrypted(false);
+              }
+            } catch (e) {
+              notification.error({
+                message: "Error",
+                description: e.response.data.detail,
+              });
+            }
+          }
+        });
+      }
+      // else {
+
+      // }
+    } catch (err) {
+      return notification.error({
+        message: "Error",
+        description: err.response.data.detail,
+      });
+    }
+  };
 
   const onFinish = async (values) => {
     try {
@@ -90,46 +140,48 @@ function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
 
   return (
     <>
-      <Modal
-        title="Rename Folder"
-        visible={openRenameModal}
-        onOk={form.submit}
-        onCancel={handleCancel}
-        style={{ top: 20 }}
-        confirmLoading={submitting}
-        footer={[
-          <Button type="primary" onClick={form.submit} key="rename">
-            {submitting ? "Renaming..." : "Rename"}
-          </Button>,
-        ]}
-      >
-        <Form
-          {...layout}
-          form={form}
-          name="complex-form"
-          onFinish={onFinish}
-          validateMessages={validateMessages}
-          requiredMark={false}
+      {!encrypted && (
+        <Modal
+          title="Rename Folder"
+          visible={openRenameModal}
+          onOk={form.submit}
+          onCancel={handleCancel}
+          style={{ top: 20 }}
+          confirmLoading={submitting}
+          footer={[
+            <Button type="primary" onClick={form.submit} key="rename">
+              {submitting ? "Renaming..." : "Rename"}
+            </Button>,
+          ]}
         >
-          <Form.Item
-            labelAlign="left"
-            name="name"
-            label="New name"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
+          <Form
+            {...layout}
+            form={form}
+            name="complex-form"
+            onFinish={onFinish}
+            validateMessages={validateMessages}
+            requiredMark={false}
           >
-            <Input
-              style={{
-                borderColor: "var(--dark-brown)",
-                outline: "none",
-              }}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item
+              labelAlign="left"
+              name="name"
+              label="New name"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input
+                style={{
+                  borderColor: "var(--dark-brown)",
+                  outline: "none",
+                }}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+      )}
     </>
   );
 }
