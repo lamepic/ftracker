@@ -1,11 +1,6 @@
 import { Button, Form, Input, Modal, notification } from "antd";
 import React, { useEffect, useState } from "react";
-import swal from "sweetalert";
-import {
-  checkFolderEncryption,
-  encryptFolder,
-  rename,
-} from "../../http/directory";
+import { rename } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 
 const validateMessages = {

@@ -294,12 +294,14 @@ function Archive() {
       {openPreview && (
         <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
-      <RenameModal
-        openRenameModal={openRenameModal}
-        setOpenRenameModal={setOpenRenameModal}
-        type={selectedRow[0]?.type}
-        selectedRow={selectedRow}
-      />
+      {openRenameModal && (
+        <RenameModal
+          openRenameModal={openRenameModal}
+          setOpenRenameModal={setOpenRenameModal}
+          type={selectedRow[0]?.type}
+          selectedRow={selectedRow}
+        />
+      )}
       {openMoveModal && (
         <MoveModal
           openMoveModal={openMoveModal}

@@ -3,15 +3,15 @@ import { Button, Modal, notification } from "antd";
 import GridData from "../DataDisplay/GridData";
 import { Box, CircularProgress, GridItem, Image, Text } from "@chakra-ui/react";
 import { capitalize } from "../../utility/helper";
+import { useStateValue } from "../../store/StateProvider";
+import swal from "sweetalert";
+import FolderIcon from "../../assets/icons/folder.svg";
 import {
   checkFolderEncryption,
   encryptFolder,
   fetchSubfolders,
   move,
 } from "../../http/directory";
-import { useStateValue } from "../../store/StateProvider";
-import swal from "sweetalert";
-import FolderIcon from "../../assets/icons/folder.svg";
 
 function MoveModal({
   openMoveModal,
