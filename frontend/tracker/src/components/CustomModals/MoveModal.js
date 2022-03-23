@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, notification } from "antd";
 import GridData from "../DataDisplay/GridData";
-import { Box, CircularProgress, Image, Text } from "@chakra-ui/react";
-import useIcon from "../../hooks/useIcon";
+import { Box, CircularProgress, GridItem, Image, Text } from "@chakra-ui/react";
 import { capitalize } from "../../utility/helper";
 import {
   checkFolderEncryption,
@@ -12,6 +11,7 @@ import {
 } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import swal from "sweetalert";
+import FolderIcon from "../../assets/icons/folder.svg";
 
 function MoveModal({
   openMoveModal,
@@ -23,7 +23,6 @@ function MoveModal({
   const [store, dispatch] = useStateValue();
   const [loading, setLoading] = useState(false);
   const [modalFolders, setModalFolders] = useState(folders);
-  const icon = useIcon(null, "folder");
   const [goBackPages, setGoBackPages] = useState([]);
   const [openedFolder, setOpenedFolder] = useState({});
 
@@ -178,23 +177,26 @@ function MoveModal({
               })
               .map((folder) => {
                 return (
-                  <Box
-                    onClick={(e) => handleItemClick(e, folder)}
-                    key={folder.id}
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Image src={icon} />
-                    <Text
-                      color="var(--dark-brown)"
-                      fontWeight="500"
-                      isTruncated
+                  <GridItem key={folder.id}>
+                    <Box
+                      onClick={(e) => handleItemClick(e, folder)}
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      justifyContent="center"
+                      _hover={{ cursor: "pointer" }}
                     >
-                      {capitalize(folder.name)}
-                    </Text>
-                  </Box>
+                      <Image src={FolderIcon} />
+                      <Text
+                        color="var(--dark-brown)"
+                        fontWeight="500"
+                        noOfLines={2}
+                        textAlign="center"
+                      >
+                        {capitalize(folder.name)}
+                      </Text>
+                    </Box>
+                  </GridItem>
                 );
               })}
         </GridData>

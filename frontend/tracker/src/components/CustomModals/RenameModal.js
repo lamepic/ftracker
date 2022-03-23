@@ -1,6 +1,11 @@
 import { Button, Form, Input, Modal, notification } from "antd";
 import React, { useEffect, useState } from "react";
-import { rename } from "../../http/directory";
+import swal from "sweetalert";
+import {
+  checkFolderEncryption,
+  encryptFolder,
+  rename,
+} from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 
 const validateMessages = {
@@ -76,15 +81,12 @@ function RenameModal({ openRenameModal, setOpenRenameModal, selectedRow }) {
       }
     } catch (e) {
       setSubmitting(false);
-      // notification.error({
-      //   message: "Error",
-      //   description: e.response.data.detail,
-      // });
-      console.log(e);
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
     }
   };
-
-  // console.log(selectedRow);
 
   return (
     <>

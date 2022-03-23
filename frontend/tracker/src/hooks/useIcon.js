@@ -14,7 +14,7 @@ const icons = {
   pdf: pdfIcon,
 };
 
-function useIcon(filename = null) {
+function useIcon(filename) {
   const ext = filename?.split(".");
   const fileExt = ext[ext.length - 1];
 
