@@ -95,7 +95,7 @@ function Directory() {
 
   const documentData = folder?.documents?.map((item) => {
     let name = null;
-    if (item.document.related_document.length > 0 && item.closed_by !== null) {
+    if (item.document?.related_document.length > 0 && item.closed_by !== null) {
       name = <Folder doc={item} key={item.document.id} type="archive" />;
     } else if (item.closed_by !== null) {
       name = <File doc={item} key={item.document.id} type="archive" />;
@@ -123,7 +123,7 @@ function Directory() {
 
   const subFolderData = folder?.children?.map((subfolder) => {
     return {
-      key: subfolder.id,
+      key: subfolder.slug,
       name: (
         <DirectoryIcon
           name={subfolder.name}

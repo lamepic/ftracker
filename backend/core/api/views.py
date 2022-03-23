@@ -813,6 +813,8 @@ class ArchiveFileAPIView(views.APIView):
         filename = request.data.get("filename")
         password = request.data.get('password')
 
+        print(request.data)
+
         try:
             hash_password = None
             if password is not None:
@@ -823,22 +825,29 @@ class ArchiveFileAPIView(views.APIView):
                     id=parent_folder_id)
                 document = models.Document.objects.create(
                     subject=subject, ref=reference, content=file,
-                    created_by=request.user, folder=parent_folder[0], filename=filename, password=hash_password)
-                serialized_data = serializers.DocumentsSerializer(file)
+                    created_by=request.user, filename=filename, password=hash_password)
+                archive = models.Archive.objects.create(
+                    document=document, folder=parent_folder[0], created_by=request.user)
+                serialized_data = serializers.ArchiveSerializer(archive)
+                return Response(serialized_data.data, status=status.HTTP_201_CREATED)
             else:
                 try:
                     document = models.Document.objects.create(
                         subject=subject, ref=reference, content=file, created_by=request.user, filename=filename, password=hash_password)
+                    archive = models.Archive.objects.create(
+                        document=document,  created_by=request.user)
+                    serialized_data = serializers.ArchiveSerializer(archive)
+                    return Response(serialized_data.data, status=status.HTTP_201_CREATED)
                 except IntegrityError:
                     raise exceptions.ServerError(
                         "File with reference already exists")
+            # archive = models.Archive.objects.create(
+            #     document=document, folder=parent_folder[0], created_by=request.user)
+            # serialized_data = serializers.ArchiveSerializer(archive)
 
-                archive = models.Archive.objects.create(
-                    document=document, created_by=request.user)
-                serialized_data = serializers.ArchiveSerializer(archive)
-
-            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+            # return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
+            print(err)
             raise exceptions.ServerError(err.args[0])
 
 
@@ -878,7 +887,7 @@ class MoveItem(views.APIView):
 
         try:
             parent_folder = models.Folder.objects.get(slug=opened_folder_slug)
-
+            print(items)
             for item in items:
                 if item['type'] == "folder":
                     fol = models.Folder.objects.get(slug=item.get('id'))
@@ -898,7 +907,7 @@ class MoveItem(views.APIView):
             print(err)
             raise exceptions.ServerError(err.args[0])
 
-        return Response({"message": "Moved successfully"}, status=status.HTTP_201_CREATED)
+        return Response({"message": f"{len(items)} item(s) moved successfully"}, status=status.HTTP_201_CREATED)
 
 
 class ParentFolder(views.APIView):

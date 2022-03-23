@@ -32,14 +32,14 @@ function Page({ loading, data, type }) {
                 {data.map((item) => {
                   if (item.related_document.length > 0) {
                     return (
-                      <GridItem>
-                        <Folder doc={item} key={item.document.id} type={type} />
+                      <GridItem key={item.document.id}>
+                        <Folder doc={item} type={type} />
                       </GridItem>
                     );
                   } else {
                     return (
-                      <GridItem>
-                        <File doc={item} key={item.document.id} type={type} />
+                      <GridItem key={item.document.id}>
+                        <File doc={item} type={type} />
                       </GridItem>
                     );
                   }

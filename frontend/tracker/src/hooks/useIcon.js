@@ -14,20 +14,11 @@ const icons = {
   pptx: pptIcon,
   ppt: pptIcon,
   pdf: pdfIcon,
-  folder: folderIcon,
-  multipleFiles: multipleFilesIcon,
 };
 
-function useIcon(filename = null, type = null) {
-  let fileExt = null;
-  if (filename) {
-    const ext = filename?.split(".");
-    fileExt = ext[ext.length - 1];
-  }
-
-  if (type) {
-    fileExt = type;
-  }
+function useIcon(filename = null) {
+  const ext = filename?.split(".");
+  const fileExt = ext[ext.length - 1];
 
   const extension = fileExt;
 

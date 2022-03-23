@@ -3,12 +3,10 @@ import "./DocIcon.css";
 import { Link } from "react-router-dom";
 import { Box, Image, Text } from "@chakra-ui/react";
 import { capitalize } from "../../utility/helper";
-import useIcon from "../../hooks/useIcon";
 import { Popover } from "antd";
+import MultipleFileIcon from "../../assets/icons/multiple-files.svg";
 
 function Folder({ doc, type }) {
-  const icon = useIcon(null, "multipleFiles");
-
   if (type === "archive") {
     return (
       <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
@@ -19,7 +17,12 @@ function Folder({ doc, type }) {
           alignItems="center"
           transition="all 500ms ease-in-out"
         >
-          <Image src={icon} alt="file" width="25px" marginRight="10px" />
+          <Image
+            src={MultipleFileIcon}
+            alt="file"
+            width="25px"
+            marginRight="10px"
+          />
           <Text
             isTruncated={true}
             fontSize="14px"
@@ -62,8 +65,10 @@ function Folder({ doc, type }) {
     <Popover content={popOverContent} title="Details" placement="rightTop">
       <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
         <div className="folder">
-          <Image src={icon} alt="folder" w="80%" padding="10px" />
-          <p className="folder__title">{capitalize(doc.document.filename)}</p>
+          <Image src={MultipleFileIcon} alt="folder" w="80%" padding="10px" />
+          <Text className="folder__title" noOfLines={2} maxW="120px">
+            {capitalize(doc.document.filename)}
+          </Text>
         </div>
       </Link>
     </Popover>

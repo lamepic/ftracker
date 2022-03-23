@@ -120,7 +120,7 @@ function MoveModal({
         setFolderMoved(true);
         notification.success({
           message: "Success",
-          description: "Item Moved successfully",
+          description: res.data.message,
         });
       }
       setGoBackPages([]);
@@ -172,7 +172,10 @@ function MoveModal({
         <GridData>
           {!loading &&
             modalFolders
-              .filter((item) => item.slug !== selectedRow[0]?.name.props.slug)
+              .filter((item, idx) => {
+                const row = selectedRow.map((row) => row.name.props.slug);
+                return item.slug !== row[idx];
+              })
               .map((folder) => {
                 return (
                   <Box
