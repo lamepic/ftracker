@@ -30,8 +30,6 @@ function Folder({ doc, type }) {
             color="var(--dark-brown)"
             textAlign="center"
             display="block"
-            maxWidth="fit-content"
-            overflowWrap="wrap"
           >
             {capitalize(doc.document.filename.toLowerCase())}
           </Text>

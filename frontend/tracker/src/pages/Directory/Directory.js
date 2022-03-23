@@ -10,7 +10,7 @@ import { Breadcrumb, notification } from "antd";
 import { useHistory, useParams } from "react-router-dom";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
-import DirectoryIcon from "../../components/Doc/DirectoryIcon";
+import DirectoryFolderIcon from "../../components/Doc/DirectoryFolderIcon";
 import Loading from "../../components/Loading/Loading";
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import { fetchSubfolders } from "../../http/directory";
@@ -41,7 +41,6 @@ function Directory() {
   const [openRenameModal, setOpenRenameModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
   const [folderMoved, setFolderMoved] = useState(false);
-  const [archive, setArchive] = useState([]);
 
   useEffect(() => {
     // setFolder({});
@@ -60,22 +59,6 @@ function Directory() {
 
     return () => window.removeEventListener("popstate", popbreadcrumb);
   }, []);
-
-  // const _fetchUserArchive = async () => {
-  //   try {
-  //     const res = await fetchUserArchive(store.token, store.user.staff_id);
-  //     const data = res.data;
-  //     console.log(res.data);
-  //     setArchive(data);
-  //     setLoading(false);
-  //   } catch (e) {
-  //     setLoading(false);
-  //     notification.error({
-  //       message: "Error",
-  //       description: e.response.data.detail,
-  //     });
-  //   }
-  // };
 
   const _fetchSubFolders = async () => {
     try {
@@ -125,7 +108,7 @@ function Directory() {
     return {
       key: subfolder.slug,
       name: (
-        <DirectoryIcon
+        <DirectoryFolderIcon
           name={subfolder.name}
           key={subfolder.id}
           slug={subfolder.slug}

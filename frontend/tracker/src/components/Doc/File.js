@@ -21,14 +21,12 @@ function File({ doc, type }) {
         >
           <Image src={icon} alt="file" width="25px" marginRight="10px" />
           <Text
-            isTruncated={true}
             fontSize="14px"
             fontWeight="600"
             color="var(--dark-brown)"
             textAlign="center"
             display="block"
-            maxWidth="fit-content"
-            overflowWrap="wrap"
+            isTruncated={true}
           >
             {capitalize(doc.document.filename.toLowerCase())}
           </Text>

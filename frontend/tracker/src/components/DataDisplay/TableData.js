@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, Tooltip } from "antd";
 import React, { useRef, useState } from "react";
 
 function TableData({ data, setSelectedRow }) {
@@ -96,11 +96,10 @@ function TableData({ data, setSelectedRow }) {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => (
-        <Button type="text" size="small">
-          {text}
-        </Button>
-      ),
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (text) => <>{text}</>,
       ...getColumnSearchProps("name"),
     },
     {
@@ -138,7 +137,7 @@ function TableData({ data, setSelectedRow }) {
       <Table
         columns={columns}
         dataSource={data}
-        size="20"
+        // size="20"
         pagination={{ pageSize: 20 }}
         // scroll={{ y: 340 }}
         rowSelection={{

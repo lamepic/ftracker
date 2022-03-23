@@ -16,7 +16,7 @@ import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
 import { fetchFolders } from "../../http/directory";
-import DirectoryIcon from "../../components/Doc/DirectoryIcon";
+import DirectoryFolderIcon from "../../components/Doc/DirectoryFolderIcon";
 import * as actionTypes from "../../store/actionTypes";
 import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
 import Preview from "../../components/Preview/Preview";
@@ -87,7 +87,11 @@ function Archive() {
     return {
       key: folder.created_at,
       name: (
-        <DirectoryIcon name={folder.name} key={folder.id} slug={folder.slug} />
+        <DirectoryFolderIcon
+          name={folder.name}
+          key={folder.id}
+          slug={folder.slug}
+        />
       ),
       date_created: null,
       type: "Folder",

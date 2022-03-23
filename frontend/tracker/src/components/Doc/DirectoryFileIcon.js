@@ -35,7 +35,7 @@ function DirectoryFileIcon({ document, setPreviewDoc, setOpenPreview }) {
 
   return (
     <>
-      <Box onClick={handleClick}>
+      <Box onClick={() => handleClick()} _hover={{ cursor: "pointer" }}>
         <Box
           display="flex"
           flexDirection="row"
@@ -51,9 +51,6 @@ function DirectoryFileIcon({ document, setPreviewDoc, setOpenPreview }) {
             fontWeight="600"
             color="var(--dark-brown)"
             textAlign="center"
-            // display="block"
-            overflowWrap="wrap"
-            maxWidth="70%"
           >
             {capitalize(document.filename.toLowerCase())}
           </Text>
