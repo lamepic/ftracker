@@ -119,6 +119,14 @@ function TableData({ data, setSelectedRow }) {
       dataIndex: "subject",
       key: "subject",
       width: "30%",
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (text) => (
+        <Tooltip placement="topLeft" title={text}>
+          {text}
+        </Tooltip>
+      ),
     },
   ];
 

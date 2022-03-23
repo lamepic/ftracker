@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal, notification } from "antd";
 import GridData from "../DataDisplay/GridData";
 import { Box, CircularProgress, Image, Text } from "@chakra-ui/react";
-import useIcon from "../../hooks/useIcon";
 import { capitalize } from "../../utility/helper";
 import {
   checkFolderEncryption,
@@ -13,6 +12,7 @@ import {
 } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import swal from "sweetalert";
+import folderIcon from "../../assets/icons/folder.svg";
 
 function DirectoryMoveModal({
   openDirectoryMoveModal,
@@ -21,7 +21,6 @@ function DirectoryMoveModal({
   selectedRow,
   setFolderMoved,
 }) {
-  const icon = useIcon(null, "folder");
   const [store, dispatch] = useStateValue();
   const [loading, setLoading] = useState(false);
   const [modalFolders, setModalFolders] = useState(folder);
@@ -214,7 +213,7 @@ function DirectoryMoveModal({
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Image src={icon} />
+                    <Image src={folderIcon} />
                     <Text
                       color="var(--dark-brown)"
                       fontWeight="500"
