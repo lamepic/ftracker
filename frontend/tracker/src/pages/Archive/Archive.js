@@ -15,7 +15,11 @@ import {
 import ToolbarOption from "../../components/Navbar/ToolbarOption";
 import CreateFolderModal from "../../components/CustomModals/CreateFolderModal";
 import CreateFileModal from "../../components/CustomModals/CreateFileModal";
-import { fetchFolders } from "../../http/directory";
+import {
+  checkFolderEncryption,
+  encryptFolder,
+  fetchFolders,
+} from "../../http/directory";
 import DirectoryFolderIcon from "../../components/Doc/DirectoryFolderIcon";
 import * as actionTypes from "../../store/actionTypes";
 import DirectoryFileIcon from "../../components/Doc/DirectoryFileIcon";
@@ -26,6 +30,7 @@ import TableData from "../../components/DataDisplay/TableData";
 import moment from "moment";
 import RenameModal from "../../components/CustomModals/RenameModal";
 import MoveModal from "../../components/CustomModals/MoveModal";
+import swal from "sweetalert";
 
 function Archive() {
   const [store, dispatch] = useStateValue();
@@ -129,6 +134,55 @@ function Archive() {
     };
   });
 
+  const handleRenameModal = async () => {
+    try {
+      const checkpass = await checkFolderEncryption(
+        store.token,
+        selectedRow[0].name.props.slug
+      );
+      const data = checkpass.data;
+
+      if (data.encrypted) {
+        swal("Enter Password:", {
+          content: {
+            element: "input",
+            attributes: {
+              placeholder: "Type your password",
+              type: "password",
+            },
+          },
+        }).then(async (value) => {
+          if (value) {
+            try {
+              const passRes = await encryptFolder(
+                store.token,
+                selectedRow[0].name.props.slug,
+                {
+                  password: value,
+                }
+              );
+              if (passRes.data.success) {
+                setOpenRenameModal(true);
+              }
+            } catch (e) {
+              notification.error({
+                message: "Error",
+                description: e.response.data.detail,
+              });
+            }
+          }
+        });
+      } else {
+        setOpenRenameModal(true);
+      }
+    } catch (err) {
+      return notification.error({
+        message: "Error",
+        description: err.response.data.detail,
+      });
+    }
+  };
+
   if (folderLoading || loading) {
     return <Loading />;
   }
@@ -157,11 +211,29 @@ function Archive() {
               openModal={setOpenCreateFileModal}
             />
             {selectedRow.length === 1 && (
-              <ToolbarOption
-                text="Rename"
-                Icon={EditOutlined}
-                openModal={setOpenRenameModal}
-              />
+              <Box
+                display="flex"
+                alignItems="center"
+                _hover={{
+                  cursor: "pointer",
+                  backgroundColor: "var(--lightest-brown)",
+                }}
+                marginRight="10px"
+                transition="all 0.3s ease-in-out"
+                padding="8px"
+                onClick={() => handleRenameModal()}
+              >
+                <EditOutlined
+                  style={{
+                    fontSize: "25px",
+                    marginRight: "5px",
+                    color: "var(--dark-brown)",
+                  }}
+                />
+                <Text color="var(--dark-brown)" fontWeight="500">
+                  Rename
+                </Text>
+              </Box>
             )}
             {selectedRow.length > 0 && (
               <>
