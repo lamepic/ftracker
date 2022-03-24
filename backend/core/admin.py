@@ -88,6 +88,11 @@ class DocumentActionAdmin(admin.ModelAdmin):
     list_filter = ['document_type']
 
 
+@admin.register(models.CarbonCopy)
+class CarbonCopyAdmin(admin.ModelAdmin):
+    list_display = ['sender', 'document', 'created_at']
+
+
 class CustomMPTTModelAdmin(DraggableMPTTAdmin):
     # specify pixel amount for this ModelAdmin only:
     mptt_level_indent = 20

@@ -259,6 +259,18 @@ class Folder(MPTTModel):
             return True
 
 
+class CarbonCopy(models.Model):
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='carboncopy_sender')
+    receiver = models.ManyToManyField(
+        User, related_name='carboncopy_receiver')
+    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.document.subject}'
+
+
 @receiver(post_save, sender=ActivateDocument)
 def expire_date_handler(sender, instance, created, **kwargs):
     secret_id = random.randint(1, 9999)
