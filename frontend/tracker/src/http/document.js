@@ -11,8 +11,11 @@ export async function createDocument(token, data) {
 
   const receiver = data.receiver;
   const department = data.department;
+  const carbonCopy = JSON.stringify(data.carbonCopy);
   let document = data.document;
   let filename = null;
+
+  console.log(carbonCopy);
 
   if (document !== null) {
     document = document[0].originFileObj;
@@ -28,6 +31,7 @@ export async function createDocument(token, data) {
   formData.append("documentType", data.documentType);
   formData.append("encrypt", data.encrypt);
   formData.append("filename", filename);
+  if (carbonCopy !== undefined) formData.append("carbonCopy", carbonCopy);
 
   for (let count = 0; count < data.attachments.length; count++) {
     formData.append(`attachment_${count}`, data.attachments[count].file);
@@ -366,5 +370,17 @@ export async function fetchFlow(token) {
   };
 
   const res = await axios.get("create-flow/", config);
+  return res;
+}
+
+export async function documentCopy(token) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get("copy/", config);
   return res;
 }

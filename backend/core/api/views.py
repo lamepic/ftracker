@@ -632,6 +632,7 @@ class CreateDocument(views.APIView):
         subject = data.get('subject')
         filename = data.get('filename')
         encrypt = json.loads(data.get('encrypt'))
+        carbon_copy = data.get('carbonCopy')
 
         receiver = get_object_or_404(
             models.User, staff_id=data.get("receiver"))
@@ -643,14 +644,33 @@ class CreateDocument(views.APIView):
         if document_type.name.lower() == 'custom':
             department = data.get('department')
 
-            # receiver_department_account = get_object_or_404(
-            #     models.User, is_department=True, department__id=receiver.department.id)
-
             try:
                 # creating documents and attachments
                 document = models.Document.objects.create(
                     content=document, subject=subject, created_by=sender,
                     ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
+
+                if carbon_copy:
+                    carbon_copy = json.loads(carbon_copy)
+                    user_receiver = models.DocumentCopyReceiver()
+                    user_receiver.save()
+
+                    for copy in carbon_copy:
+                        copy = json.loads(copy)
+                        print(copy['name'])
+                        if copy['type'].lower() == "user":
+                            user = User.objects.get(staff_id=copy['id'])
+                            user_receiver.user.add(user)
+                        if copy['type'].lower() == "group":
+                            group = user_models.UserGroup.objects.get(
+                                id=int(copy['id']))
+                            user_receiver.group.add(group)
+                    user_receiver.save()
+
+                    document_copy = models.DocumentCopy(
+                        sender=sender, document=document, document_copy_receiver=user_receiver)
+                    document_copy.save()
+
                 if document:
                     count = 0
                     for item in data_lst:
@@ -663,17 +683,6 @@ class CreateDocument(views.APIView):
                                 subject=sub, content=doc, document=document)
                             count += 1
 
-                # send to reciever department if sender and receiver not in the same department
-                # if sender.department != receiver.department:
-                #     trail = models.Trail.objects.create(
-                #         receiver=receiver_department_account, sender=sender, document=document, meta_info=meta_info)
-                #     trail.forwarded = True
-                #     trail.send_id = sender.staff_id
-                #     trail.save()
-                #     utils.send_email(receiver=receiver_department_account,
-                #                      sender=sender, document=document, create_code=encrypt)
-                # else:
-                # send to receiver
                 trail = models.Trail.objects.create(
                     receiver=receiver, sender=sender, document=document)
                 trail.forwarded = True
@@ -722,6 +731,7 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
+                user_receiver.delete()
                 raise exceptions.ServerError(err.args[0])
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)
@@ -931,10 +941,11 @@ class DocumentCopy(views.APIView):
     def get(self, request, format=None):
         try:
             groups = user_models.UserGroup.objects.all()
-            serialized_groups = user_serializers.UserGroupSerializer(groups, many=True)
-            users = User.objects.all()
-            serialized_users = user_serializers.UserSerializer(users, many=True)
-            data = serialized_groups.data + serialized_users.data
+            serialized_groups = user_serializers.UserGroupSerializer(
+                groups, many=True)
+            # users = User.objects.exclude(is_staff=True)
+            # serialized_users = user_serializers.UserSerializer(users, many=True)
+            data = serialized_groups.data
         except Exception as err:
             print(err)
             raise exceptions.ServerError(err)

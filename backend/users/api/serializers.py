@@ -30,4 +30,4 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserGroup
-        fields = ['name', 'members']
+        fields = ['id', 'name', 'members']

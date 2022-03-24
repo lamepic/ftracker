@@ -12,6 +12,7 @@ import {
 } from "antd";
 import {
   createDocument,
+  documentCopy,
   fetchDocumentAction,
   fetchDocumentType,
 } from "../../http/document";
@@ -52,6 +53,7 @@ const getFile = (e) => {
 };
 
 function CreateDocument() {
+  const [form] = Form.useForm();
   const [store, dispatch] = useStateValue();
   const history = useHistory();
   const [openModal, setOpenModal] = useState(false);
@@ -62,8 +64,8 @@ function CreateDocument() {
   const [selectedDocumentType, setSelectedDocumentType] = useState({});
   const [userDetails, setUserDetails] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [form] = Form.useForm();
-  const [carbonCopy, setCarbonCopy] = useState([]);
+  const [carbonCopyGroups, setCarbonCopyGroups] = useState([]);
+  const [carbonCopyUsers, setCarbonCopyUsers] = useState([]);
 
   const { loading, data: documentTypes } = useFetchData(fetchDocumentType);
   const { data: _departments } = useFetchData(departments);
@@ -114,8 +116,71 @@ function CreateDocument() {
     setNamesOfUsers(_namesOfUsers);
   };
 
+  const fetchCarbonCopyUserGroups = async () => {
+    try {
+      const res = await documentCopy(store.token);
+      const data = res.data;
+
+      const carbonCopyGroupData = data.map((group) => {
+        const { name, id } = group;
+        return { name, id, type: "group" };
+      });
+
+      const carbonCopyUserdata = users.map((user) => {
+        const { first_name, last_name, staff_id } = user;
+        return {
+          name: `${first_name} ${last_name}`,
+          id: staff_id,
+          type: "user",
+        };
+      });
+
+      setCarbonCopyGroups(
+        carbonCopyGroupData.map((item) => {
+          const value = JSON.stringify(item);
+          return (
+            <Select.Option key={item.id} value={value}>
+              {item.name}
+            </Select.Option>
+          );
+        })
+      );
+
+      setCarbonCopyUsers(
+        carbonCopyUserdata.map((item) => {
+          const value = JSON.stringify(item);
+          return (
+            <Select.Option key={item.id} value={value}>
+              {item.name}
+            </Select.Option>
+          );
+        })
+      );
+
+      // setCarbonCopyUsers(
+      //   [...carbonCopyGroupData, ...carbonCopyUserdata].map((item) => {
+      //     const value = JSON.stringify(item);
+      //     return (
+      //       <Select.Option key={item.id} value={value}>
+      //         {item.name}
+      //       </Select.Option>
+      //     );
+      //   })
+      // );
+    } catch (e) {
+      console.log(e.response.message);
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
+    }
+  };
+
   const onDocumentTypeChange = async (value) => {
     _fetchDocumentActions(value);
+    if (value === 1) {
+      fetchCarbonCopyUserGroups();
+    }
   };
 
   const departmentOptions = _departments.map((department) => ({
@@ -128,7 +193,8 @@ function CreateDocument() {
   };
 
   const handleCarbonCopyChange = (value) => {
-    console.log(`selected ${value}`);
+    const item = JSON.stringify(value);
+    console.log(JSON.parse(item));
   };
 
   const onFinish = (values) => {
@@ -153,6 +219,7 @@ function CreateDocument() {
         document: values.document || null,
         attachments: attachments,
         encrypt: encrypt,
+        carbonCopy: values.carbonCopy,
         documentType: values.document_type,
       };
     }
@@ -171,6 +238,7 @@ function CreateDocument() {
             const res = await createDocument(store.token, data);
             if (res.status === 201) {
               history.replace("/dashboard/outgoing");
+              setSubmitting(false);
               swal("Document has been sent succesfully", {
                 icon: "success",
               });
@@ -398,15 +466,20 @@ function CreateDocument() {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item labelAlign="left" name="copy" label="CC">
+                  <Form.Item labelAlign="left" name="carbonCopy" label="CC">
                     <Select
                       mode="multiple"
                       allowClear
                       style={{ width: "100%" }}
-                      placeholder="Please select"
+                      placeholder="Please select users to copy"
                       onChange={handleCarbonCopyChange}
                     >
-                      {carbonCopy}
+                      <Select.OptGroup label="Groups">
+                        {carbonCopyGroups}
+                      </Select.OptGroup>
+                      <Select.OptGroup label="Users">
+                        {carbonCopyUsers}
+                      </Select.OptGroup>
                     </Select>
                   </Form.Item>
                 </>

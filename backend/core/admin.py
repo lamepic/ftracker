@@ -88,9 +88,15 @@ class DocumentActionAdmin(admin.ModelAdmin):
     list_filter = ['document_type']
 
 
-@admin.register(models.CarbonCopy)
-class CarbonCopyAdmin(admin.ModelAdmin):
-    list_display = ['sender', 'document', 'created_at']
+@admin.register(models.DocumentCopy)
+class DocumentCopy(admin.ModelAdmin):
+    list_display = ['sender', 'document',
+                    'created_at', 'document_copy_receiver']
+
+
+@admin.register(models.DocumentCopyReceiver)
+class DocumentCopyReceiver(admin.ModelAdmin):
+    list_display = ["id", 'user_receivers', 'group_receivers']
 
 
 class CustomMPTTModelAdmin(DraggableMPTTAdmin):

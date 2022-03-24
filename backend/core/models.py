@@ -259,13 +259,37 @@ class Folder(MPTTModel):
             return True
 
 
-class CarbonCopy(models.Model):
+class DocumentCopyReceiver(models.Model):
+    group = models.ManyToManyField(users_model.UserGroup,
+                                   related_name='group_receiver', blank=True)
+    user = models.ManyToManyField(users_model.User,
+                                  related_name='user_receiver', blank=True)
+
+    def __str__(self):
+        if len(self.user.all()) > 0:
+            return "\n".join([f'{u.first_name} {u.last_name}' for u in self.user.all()[:3]])
+        elif len(self.group.all()) > 0:
+            return "\n".join([g.name for g in self.group.all()[:3]])
+
+    def user_receivers(self):
+        if len(self.user.all()) > 0:
+            return ",\n".join([f'{u.first_name} {u.last_name}' for u in self.user.all()[:3]])
+        return None
+
+    def group_receivers(self):
+        if len(self.group.all()) > 0:
+            return "\n".join([g.name for g in self.group.all()[:3]])
+        return None
+
+
+class DocumentCopy(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='carboncopy_sender')
-    receiver = models.ManyToManyField(
-        User, related_name='carboncopy_receiver')
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    document = models.ForeignKey(
+        Document, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    document_copy_receiver = models.ForeignKey(
+        DocumentCopyReceiver, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.document.subject}'
