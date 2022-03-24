@@ -26,7 +26,7 @@ function EmptyPage({ type }) {
           color="var(--dark-brown)"
           fontWeight="600"
         >
-          {header}
+          {type !== "tracking" && header}
         </Text>
         <Box minH="80vh" display="flex" justifyContent="center">
           <Text
