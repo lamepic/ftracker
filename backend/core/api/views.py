@@ -924,3 +924,11 @@ class ParentFolder(views.APIView):
             raise exceptions.ServerError(err.args[0])
 
         return Response(serialized_data, status=status.HTTP_200_OK)
+
+
+# class DocumentCopy(views.APIView):
+#     def get(self, request, format=None):
+#         return Response({}, status=status.HTTP_200_OK)
+
+#     def post(self, request, format=None):
+#         return Response({}, status=status.HTTP_200_OK)
