@@ -54,8 +54,8 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
-@admin.register(models.Groups)
-class GroupsAdmin(admin.ModelAdmin):
+@admin.register(models.UserGroup)
+class UserGroupAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 

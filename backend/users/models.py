@@ -100,7 +100,7 @@ class Department(models.Model):
         super(Department, self).save(*args, **kwargs)
 
 
-class Groups(models.Model):
+class UserGroup(models.Model):
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField(User)
 
