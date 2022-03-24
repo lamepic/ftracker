@@ -54,4 +54,9 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
+@admin.register(models.Groups)
+class GroupsAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+
 admin.site.unregister(Group)

@@ -172,7 +172,7 @@ function MoveModal({
             )}
           </Box>,
         ]}
-        width={700}
+        width={900}
       >
         <GridData>
           {!loading &&
@@ -198,6 +198,7 @@ function MoveModal({
                         fontWeight="500"
                         noOfLines={2}
                         textAlign="center"
+                        // fontSize="0.7rem"
                       >
                         {capitalize(folder.name)}
                       </Text>

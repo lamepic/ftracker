@@ -98,3 +98,11 @@ class Department(models.Model):
     def save(self, *args, **kwargs):
         self.name = self.name.capitalize()
         super(Department, self).save(*args, **kwargs)
+
+
+class Groups(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    members = models.ManyToManyField(User)
+
+    def __str__(self):
+        return self.name
