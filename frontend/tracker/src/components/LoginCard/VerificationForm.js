@@ -5,13 +5,6 @@ import { Form, Input } from "antd";
 import { userEmail, verificationToken } from "../../http/auth";
 import { notification } from "antd";
 
-const openNotificationWithIcon = (type, description) => {
-  notification[type]({
-    message: "Login Error",
-    description,
-  });
-};
-
 function VerificationForm({
   setSentVerificationToken,
   setVerifiedEmail,
@@ -36,7 +29,15 @@ function VerificationForm({
       }
       setLoading(false);
     } catch (e) {
-      openNotificationWithIcon("error", e.response.data.detail);
+      const errorMessage =
+        e.message.toLowerCase() === "network error"
+          ? e.message
+          : e.response.data.detail;
+      notification.error({
+        message: errorMessage,
+        description: "Login failed check internet connection.",
+      });
+    } finally {
       setLoading(false);
     }
   };
