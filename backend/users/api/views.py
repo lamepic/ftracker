@@ -33,3 +33,8 @@ class UsersAPIView(generics.ListAPIView):
 class DepartmentAPIView(generics.ListAPIView):
     serializer_class = serializers.DepartmentSerializer
     queryset = models.Department.objects.all()
+
+
+class UserGroupAPIView(generics.ListAPIView):
+    serializer_class = serializers.UserGroupSerializer
+    queryset = models.UserGroup.objects.all()

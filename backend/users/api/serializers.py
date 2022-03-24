@@ -23,3 +23,11 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "url": {"view_name": "api:user-detail", "lookup_field": "staff_id"}
         }
+
+
+class UserGroupSerializer(serializers.ModelSerializer):
+    members = UserSerializer(many=True)
+
+    class Meta:
+        model = models.UserGroup
+        fields = ['name', 'members']

@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/v1/user/', views.UserAPIView.as_view(), name='user'),
     path('api/v1/users/', views.UsersAPIView.as_view(), name='users'),
     path('api/v1/departments/', views.DepartmentAPIView.as_view(), name='departments'),
+    path('api/v1/groups/', views.UserGroupAPIView.as_view(), name='user_groups'),
 
     # Core App urls
     path('api/v1/', include('core.urls'))
