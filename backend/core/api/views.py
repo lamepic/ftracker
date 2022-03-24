@@ -18,6 +18,7 @@ from .. import models
 from . import serializers
 from ..libs import exceptions, utils
 from users.api import serializers as user_serializers
+from users import models as user_models
 from mptt.templatetags.mptt_tags import cache_tree_children
 
 
@@ -926,9 +927,15 @@ class ParentFolder(views.APIView):
         return Response(serialized_data, status=status.HTTP_200_OK)
 
 
-# class DocumentCopy(views.APIView):
-#     def get(self, request, format=None):
-#         return Response({}, status=status.HTTP_200_OK)
-
-#     def post(self, request, format=None):
-#         return Response({}, status=status.HTTP_200_OK)
+class DocumentCopy(views.APIView):
+    def get(self, request, format=None):
+        try:
+            groups = user_models.UserGroup.objects.all()
+            serialized_groups = user_serializers.UserGroupSerializer(groups, many=True)
+            users = User.objects.all()
+            serialized_users = user_serializers.UserSerializer(users, many=True)
+            data = serialized_groups.data + serialized_users.data
+        except Exception as err:
+            print(err)
+            raise exceptions.ServerError(err)
+        return Response(data, status=status.HTTP_200_OK)

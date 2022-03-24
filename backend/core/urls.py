@@ -74,4 +74,5 @@ urlpatterns = [
     path('rename/', views.RenameAPIView.as_view(), name='rename'),
     path('move/', views.MoveItem.as_view(), name='move'),
     path('parent-folder/<slug>/', views.ParentFolder.as_view(), name='parent_folder'),
+    path('copy/', views.DocumentCopy.as_view(), name="copy")
 ]
