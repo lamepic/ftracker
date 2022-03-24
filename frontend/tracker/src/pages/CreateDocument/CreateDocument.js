@@ -62,6 +62,8 @@ function CreateDocument() {
   const [selectedDocumentType, setSelectedDocumentType] = useState({});
   const [userDetails, setUserDetails] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [form] = Form.useForm();
+  const [carbonCopy, setCarbonCopy] = useState([]);
 
   const { loading, data: documentTypes } = useFetchData(fetchDocumentType);
   const { data: _departments } = useFetchData(departments);
@@ -125,7 +127,9 @@ function CreateDocument() {
     setEncrypt(e.target.checked);
   };
 
-  const [form] = Form.useForm();
+  const handleCarbonCopyChange = (value) => {
+    console.log(`selected ${value}`);
+  };
 
   const onFinish = (values) => {
     let data = {};
@@ -370,28 +374,42 @@ function CreateDocument() {
                   />
                 </Form.Item>
               ) : (
-                <Form.Item
-                  labelAlign="left"
-                  name="receiver"
-                  label="To"
-                  rules={[{ required: true }]}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Select Employee"
-                    optionFilterProp="children"
+                <>
+                  <Form.Item
+                    labelAlign="left"
+                    name="receiver"
+                    label="To"
+                    rules={[{ required: true }]}
                   >
-                    {namesOfUsers &&
-                      namesOfUsers.map((receiver) => (
-                        <Select.Option
-                          value={receiver.staff_id}
-                          key={receiver.staff_id}
-                        >
-                          {receiver.name}
-                        </Select.Option>
-                      ))}
-                  </Select>
-                </Form.Item>
+                    <Select
+                      showSearch
+                      placeholder="Select Employee"
+                      optionFilterProp="children"
+                    >
+                      {namesOfUsers &&
+                        namesOfUsers.map((receiver) => (
+                          <Select.Option
+                            value={receiver.staff_id}
+                            key={receiver.staff_id}
+                          >
+                            {receiver.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+
+                  <Form.Item labelAlign="left" name="copy" label="CC">
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      style={{ width: "100%" }}
+                      placeholder="Please select"
+                      onChange={handleCarbonCopyChange}
+                    >
+                      {carbonCopy}
+                    </Select>
+                  </Form.Item>
+                </>
               )}
               <Form.Item
                 labelAlign="left"
