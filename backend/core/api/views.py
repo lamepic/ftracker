@@ -92,7 +92,9 @@ class IncomingCountAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
-            data = utils.Count(len(incoming))
+            document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
+                document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
+            data = utils.Count(len(incoming) + len(document_copy))
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
         serialized_data = serializers.CountSerializer(data)
@@ -223,12 +225,13 @@ class TrackingAPIView(views.APIView):
                 other_users_detail = {
                     "name": f'{trail.receiver.first_name} {trail.receiver.last_name}',
                     "department": trail.receiver.department.name,
-                    "date": trail.date
+                    "date": trail.created_at
                 }
                 data = utils.Tracking(
                     other_users_detail["name"], other_users_detail["department"], other_users_detail["date"])
                 trackingStep.append(data)
-        except:
+        except Exception as err:
+            print(err)
             raise exceptions.TrackingNotFound
 
         serialized_data = serializers.TrackingSerializer(
