@@ -14,7 +14,16 @@ function Page({ loading, data, type }) {
   }
 
   if (type.toLowerCase() === "incoming") {
-    const incoming_data = [...data?.incoming, ...data?.copy];
+    const copy = data?.copy.map((item) => {
+      item.type = "copy";
+      return item;
+    });
+    const incoming = data?.incoming.map((item) => {
+      item.type = "incoming";
+      return item;
+    });
+
+    const incoming_data = [...incoming, ...copy];
 
     return (
       <>
@@ -36,13 +45,13 @@ function Page({ loading, data, type }) {
                     if (item.related_document.length > 0) {
                       return (
                         <GridItem key={item.document.id}>
-                          <Folder doc={item} type={type} />
+                          <Folder doc={item} type={item.type} />
                         </GridItem>
                       );
                     } else {
                       return (
                         <GridItem key={item.document.id}>
-                          <File doc={item} type={type} />
+                          <File doc={item} type={item.type} />
                         </GridItem>
                       );
                     }

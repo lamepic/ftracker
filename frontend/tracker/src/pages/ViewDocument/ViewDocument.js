@@ -286,51 +286,55 @@ function ViewDocument() {
                 )}
               </Box>
             </Box>
-            <div className={`vr ${type !== "incoming" && "vr-sm"}`}></div>
-            <div className="file-info">
-              <div
-                className={`minute-box-preview ${
-                  type !== "incoming" && "minute-box-preview-lg"
-                }`}
-              >
-                <div>
-                  {document?.minute?.map((item) => {
-                    return (
-                      <div className="minute" key={item?.id}>
-                        <p>{item?.content}</p>
-                        <p className="employee">{item?.user}</p>
-                        <p className="date">
-                          Date: {new Date(item?.date).toDateString()}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              {type === "incoming" && (
-                <form
-                  onSubmit={(e) => {
-                    handleMinute(e);
-                  }}
-                >
-                  <textarea
-                    name="minutes"
-                    cols="35"
-                    rows="7"
-                    placeholder="Please add minutes here..."
-                    onChange={(e) => setMinute(e.target.value)}
-                    value={minute}
-                  ></textarea>
-                  <Button
-                    type="submit"
-                    className="minute-button"
-                    isDisabled={!minute}
+            {type !== "copy" && (
+              <>
+                <div className={`vr ${type !== "incoming" && "vr-sm"}`}></div>
+                <div className="file-info">
+                  <div
+                    className={`minute-box-preview ${
+                      type !== "incoming" && "minute-box-preview-lg"
+                    }`}
                   >
-                    Add Minute
-                  </Button>
-                </form>
-              )}
-            </div>
+                    <div>
+                      {document?.minute?.map((item) => {
+                        return (
+                          <div className="minute" key={item?.id}>
+                            <p>{item?.content}</p>
+                            <p className="employee">{item?.user}</p>
+                            <p className="date">
+                              Date: {new Date(item?.date).toDateString()}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {type === "incoming" && (
+                    <form
+                      onSubmit={(e) => {
+                        handleMinute(e);
+                      }}
+                    >
+                      <textarea
+                        name="minutes"
+                        cols="35"
+                        rows="7"
+                        placeholder="Please add minutes here..."
+                        onChange={(e) => setMinute(e.target.value)}
+                        value={minute}
+                      ></textarea>
+                      <Button
+                        type="submit"
+                        className="minute-button"
+                        isDisabled={!minute}
+                      >
+                        Add Minute
+                      </Button>
+                    </form>
+                  )}
+                </div>
+              </>
+            )}
           </Box>
         </Box>
       ) : (
