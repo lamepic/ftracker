@@ -1,4 +1,5 @@
 import json
+from itertools import chain
 from datetime import datetime
 from logging import exception
 from click import help_option
@@ -68,11 +69,20 @@ class IncomingAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
+            document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
+                document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
 
-        serialized_data = serializers.IncomingSerializer(incoming, many=True)
-        return Response(serialized_data.data, status=status.HTTP_200_OK)
+        incoming_serialized_data = serializers.IncomingSerializer(
+            incoming, many=True)
+        document_copy_serialized_data = serializers.IncomingSerializer(
+            document_copy, many=True)
+
+        data = {"incoming": incoming_serialized_data.data,
+                "copy": document_copy_serialized_data.data}
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class IncomingCountAPIView(views.APIView):

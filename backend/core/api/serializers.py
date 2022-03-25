@@ -212,3 +212,8 @@ class FolderSerializer(serializers.ModelSerializer):
         serialized_document = ArchiveSerializer(archive_documents, many=True)
 
         return serialized_document.data
+
+
+# class DocumentCopySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.DocumentCopy
