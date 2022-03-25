@@ -32,7 +32,7 @@ class RelatedDocumentAdmin(admin.ModelAdmin):
 
 @admin.register(models.Trail)
 class TrailAdmin(admin.ModelAdmin):
-    list_display = ['sender', 'receiver', 'date',
+    list_display = ['sender', 'receiver', 'created_at',
                     'document', 'document_type', 'status']
     search_fields = (
         "document__subject",

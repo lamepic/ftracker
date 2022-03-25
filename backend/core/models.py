@@ -140,7 +140,7 @@ class Trail(models.Model):
         User, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='receiver')
-    date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=1, choices=STATUS_OPTIONS, default='P')
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
@@ -149,7 +149,7 @@ class Trail(models.Model):
     order = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        ordering = ('-date', 'status')
+        ordering = ('-created_at', 'status')
 
     def __str__(self):
         return f'{self.sender} ==> {self.receiver}'
