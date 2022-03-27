@@ -56,6 +56,7 @@ function Directory() {
     };
 
     window.addEventListener("popstate", popbreadcrumb);
+    // window.addEventListener("pushstate", () => console.log("onpopstate"));
 
     return () => window.removeEventListener("popstate", popbreadcrumb);
   }, []);

@@ -1,6 +1,6 @@
-const intialState = {
+const initialState = {
   token: localStorage.getItem("token"),
-  breadcrumbs: JSON.parse(localStorage.getItem("breadcrumbs")) || [],
+  breadcrumbs: JSON.parse(localStorage.getItem("breadcrumbs")),
   isAuthenticated: false,
   isLoading: true,
   user: null,
@@ -16,4 +16,4 @@ const intialState = {
   openPasswordModal: false,
 };
 
-export default intialState;
+export default initialState;
