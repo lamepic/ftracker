@@ -1,5 +1,6 @@
 const intialState = {
   token: localStorage.getItem("token"),
+  breadcrumbs: JSON.parse(localStorage.getItem("breadcrumbs")) || [],
   isAuthenticated: false,
   isLoading: true,
   user: null,
@@ -12,7 +13,6 @@ const intialState = {
   notificationsCount: 0,
   request_details: null,
   activatedDocumentDetails: null,
-  breadcrumbs: [],
   openPasswordModal: false,
 };
 

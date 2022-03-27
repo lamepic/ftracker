@@ -69,6 +69,7 @@ function Directory() {
       setFolderMoved(false);
     } catch (e) {
       setLoading(false);
+      console.log(e);
       return notification.error({
         message: "Error",
         description: e.response.data.detail,
