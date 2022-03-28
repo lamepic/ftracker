@@ -102,12 +102,18 @@ WSGI_APPLICATION = 'tracker.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ftracker',
-        'USER': 'postgres',
-        'PASSWORD': 'admin123',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        "ENGINE": get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": get("SQL_USER", "user"),
+        "PASSWORD": get("SQL_PASSWORD", "password"),
+        "HOST": get("SQL_HOST", "localhost"),
+        "PORT": get("SQL_PORT", "5432"),
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'ftracker',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'admin123',
+        # 'HOST': '127.0.0.1',
+        # 'PORT': '5432',
     }
 }
 
@@ -198,13 +204,15 @@ CORS_ALLOW_ALL_ORIGINS = True
 # X_FRAME_OPTIONS = 'ALLOWALL'
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = get("CELERY_BROKER", "redis://127.0.0.1:6379/0")
+CELERY_RESULT_BACKEND = get("CELERY_BACKEND", "redis://127.0.0.1:6379/0")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+# CELERY_RESULT_BACKEND = 'django-db'
 
-CELERY_RESULT_BACKEND = 'django-db'
 
 # CELERY BEAT
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
