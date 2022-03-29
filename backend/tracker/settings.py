@@ -102,18 +102,18 @@ WSGI_APPLICATION = 'tracker.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-        "USER": get("SQL_USER", "user"),
-        "PASSWORD": get("SQL_PASSWORD", "password"),
-        "HOST": get("SQL_HOST", "localhost"),
-        "PORT": get("SQL_PORT", "5432"),
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'ftracker',
-        # 'USER': 'postgres',
-        # 'PASSWORD': 'admin123',
-        # 'HOST': '127.0.0.1',
-        # 'PORT': '5432',
+        # "ENGINE": get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        # "NAME": get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        # "USER": get("SQL_USER", "user"),
+        # "PASSWORD": get("SQL_PASSWORD", "password"),
+        # "HOST": get("SQL_HOST", "localhost"),
+        # "PORT": get("SQL_PORT", "5432"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ftracker',
+        'USER': 'postgres',
+        'PASSWORD': 'admin123',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

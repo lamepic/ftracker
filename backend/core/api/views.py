@@ -670,7 +670,6 @@ class CreateDocument(views.APIView):
 
                     for copy in carbon_copy:
                         copy = json.loads(copy)
-                        print(copy['name'])
                         if copy['type'].lower() == "user":
                             user = User.objects.get(staff_id=copy['id'])
                             user_receiver.user.add(user)

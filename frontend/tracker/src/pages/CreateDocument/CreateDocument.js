@@ -126,14 +126,16 @@ function CreateDocument() {
         return { name, id, type: "group" };
       });
 
-      const carbonCopyUserdata = users.map((user) => {
-        const { first_name, last_name, staff_id } = user;
-        return {
-          name: `${first_name} ${last_name}`,
-          id: staff_id,
-          type: "user",
-        };
-      });
+      const carbonCopyUserdata = users
+        .filter((user) => store.user.staff_id !== user.staff_id)
+        .map((user) => {
+          const { first_name, last_name, staff_id } = user;
+          return {
+            name: `${first_name} ${last_name}`,
+            id: staff_id,
+            type: "user",
+          };
+        });
 
       setCarbonCopyGroups(
         carbonCopyGroupData.map((item) => {
@@ -156,17 +158,6 @@ function CreateDocument() {
           );
         })
       );
-
-      // setCarbonCopyUsers(
-      //   [...carbonCopyGroupData, ...carbonCopyUserdata].map((item) => {
-      //     const value = JSON.stringify(item);
-      //     return (
-      //       <Select.Option key={item.id} value={value}>
-      //         {item.name}
-      //       </Select.Option>
-      //     );
-      //   })
-      // );
     } catch (e) {
       console.log(e.response.message);
       notification.error({
