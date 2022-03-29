@@ -36,6 +36,8 @@ const searchResult = (
       });
   }
 
+  console.log(query);
+
   return query.map((item, idx) => {
     return {
       label: (
@@ -88,18 +90,18 @@ const searchResult = (
                   View
                 </Button>
               )}
-            {item.route === "archive" &&
+            {item.route === "archive" && (
               // !store.user.is_department &&
-              item.department !== store.user.department.name && (
-                <Button
-                  size="middle"
-                  className="search__btn"
-                  onClick={() => handleRequest(item.document.id)}
-                  type="text"
-                >
-                  Request
-                </Button>
-              )}
+              // item.department !== store.user.department.name &&
+              <Button
+                size="middle"
+                className="search__btn"
+                onClick={() => handleRequest(item.document.id)}
+                type="text"
+              >
+                Request
+              </Button>
+            )}
             {item.route === "pending" && (
               <Button size="middle" className="search__btn" disabled>
                 Pending

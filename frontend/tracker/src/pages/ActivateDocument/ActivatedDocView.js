@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import { Redirect } from "react-router-dom";
 import Loading from "../../components/Loading/Loading";
 import { fetchDocument } from "../../http/document";
 import pdf from "../../assets/images/pdf-img.png";
 import { useStateValue } from "../../store/StateProvider";
 import Preview from "../../components/Preview/Preview";
+import useIcon from "../../hooks/useIcon";
 
 function ActivateDocView() {
   const [store, dispatch] = useStateValue();
   const [openPreview, setOpenPreview] = useState(false);
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [filename, setFilename] = useState("");
+  const Icon = useIcon(filename);
 
   const activatedDoc = store.activatedDocumentDetails;
 
@@ -23,6 +26,7 @@ function ActivateDocView() {
     const res = await fetchDocument(store.token, activatedDoc?.document.id);
     const data = res.data;
     setDocument(data);
+    setFilename(data.filename);
     setLoading(false);
   };
 
@@ -86,7 +90,6 @@ function ActivateDocView() {
                 h="270px"
                 w="250px"
                 marginTop="10px"
-                backgroundColor="var(--lightest-brown)"
                 display="flex"
                 flexDirection="column"
                 alignItems="center"
@@ -95,12 +98,7 @@ function ActivateDocView() {
                 borderRadius="10px"
                 onClick={() => handlePreview(document)}
               >
-                <img
-                  src={pdf}
-                  alt="logo"
-                  className="file-preview-box-img"
-                  style={{ width: "80%", opacity: "0.7" }}
-                />
+                <Image src={Icon} alt="file" width="500px" />
               </Box>
               <Box
                 display="flex"

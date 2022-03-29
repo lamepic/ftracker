@@ -630,6 +630,8 @@ class SearchAPIView(views.APIView):
                 ['subject'].lower() or documents if term.lower() in doc['document']
                 ['filename'].lower()]
 
+        print(data)
+
         return Response(data, status=status.HTTP_200_OK)
 
 
