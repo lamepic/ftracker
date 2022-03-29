@@ -81,6 +81,10 @@ const reducer = (state, action) => {
         breadcrumbs: state.breadcrumbs.slice(0, action.payload + 1),
       };
     case actionTypes.POP_BREADCRUMBS:
+      localStorage.setItem(
+        "breadcrumbs",
+        JSON.stringify(state.breadcrumbs.slice(0, state.breadcrumbs.length - 1))
+      );
       return {
         ...state,
         breadcrumbs: state.breadcrumbs.slice(0, state.breadcrumbs.length - 1),
@@ -91,7 +95,7 @@ const reducer = (state, action) => {
         openPasswordModal: action.payload,
       };
     case actionTypes.CLEAR_BREADCRUMBS:
-      localStorage.setItem("breadcrumbs", []);
+      localStorage.setItem("breadcrumbs", JSON.stringify([]));
       return {
         ...state,
         breadcrumbs: [],
