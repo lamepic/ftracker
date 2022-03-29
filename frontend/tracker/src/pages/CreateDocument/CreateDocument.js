@@ -158,17 +158,6 @@ function CreateDocument() {
           );
         })
       );
-
-      // setCarbonCopyUsers(
-      //   [...carbonCopyGroupData, ...carbonCopyUserdata].map((item) => {
-      //     const value = JSON.stringify(item);
-      //     return (
-      //       <Select.Option key={item.id} value={value}>
-      //         {item.name}
-      //       </Select.Option>
-      //     );
-      //   })
-      // );
     } catch (e) {
       console.log(e.response.message);
       notification.error({
