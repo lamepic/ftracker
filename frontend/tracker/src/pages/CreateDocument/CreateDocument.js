@@ -465,25 +465,24 @@ function CreateDocument() {
                         ))}
                     </Select>
                   </Form.Item>
-
-                  <Form.Item labelAlign="left" name="carbonCopy" label="CC">
-                    <Select
-                      mode="multiple"
-                      allowClear
-                      style={{ width: "100%" }}
-                      placeholder="Please select users to copy"
-                      onChange={handleCarbonCopyChange}
-                    >
-                      <Select.OptGroup label="Groups">
-                        {carbonCopyGroups}
-                      </Select.OptGroup>
-                      <Select.OptGroup label="Users">
-                        {carbonCopyUsers}
-                      </Select.OptGroup>
-                    </Select>
-                  </Form.Item>
                 </>
               )}
+              <Form.Item labelAlign="left" name="carbonCopy" label="CC">
+                <Select
+                  mode="multiple"
+                  allowClear
+                  style={{ width: "100%" }}
+                  placeholder="Please select users to copy"
+                  onChange={handleCarbonCopyChange}
+                >
+                  <Select.OptGroup label="Groups">
+                    {carbonCopyGroups}
+                  </Select.OptGroup>
+                  <Select.OptGroup label="Users">
+                    {carbonCopyUsers}
+                  </Select.OptGroup>
+                </Select>
+              </Form.Item>
               <Form.Item
                 labelAlign="left"
                 name="document"

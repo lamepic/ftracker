@@ -709,6 +709,27 @@ class CreateDocument(views.APIView):
                 raise exceptions.ServerError(err.args[0])
         else:
             try:
+                if carbon_copy:
+                    carbon_copy = json.loads(carbon_copy)
+                    user_receiver = models.DocumentCopyReceiver()
+                    user_receiver.save()
+
+                    for copy in carbon_copy:
+                        copy = json.loads(copy)
+                        print(copy['name'])
+                        if copy['type'].lower() == "user":
+                            user = User.objects.get(staff_id=copy['id'])
+                            user_receiver.user.add(user)
+                        if copy['type'].lower() == "group":
+                            group = user_models.UserGroup.objects.get(
+                                id=int(copy['id']))
+                            user_receiver.group.add(group)
+                    user_receiver.save()
+
+                    document_copy = models.DocumentCopy(
+                        sender=sender, document=document, document_copy_receiver=user_receiver)
+                    document_copy.save()
+
                 document_type = models.DocumentType.objects.get(
                     id=data_document_type)
                 document = models.Document.objects.create(
