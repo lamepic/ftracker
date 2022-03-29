@@ -127,7 +127,7 @@ function CreateDocument() {
       });
 
       const carbonCopyUserdata = users
-        .filter((user) => store.user.staff_id !== user.staff_id)
+        .filter((user) => user.staff_id !== store.user.staff_id)
         .map((user) => {
           const { first_name, last_name, staff_id } = user;
           return {
@@ -169,9 +169,7 @@ function CreateDocument() {
 
   const onDocumentTypeChange = async (value) => {
     _fetchDocumentActions(value);
-    if (value === 1) {
-      fetchCarbonCopyUserGroups();
-    }
+    fetchCarbonCopyUserGroups();
   };
 
   const departmentOptions = _departments.map((department) => ({
@@ -200,6 +198,7 @@ function CreateDocument() {
         attachments: attachments,
         encrypt: encrypt,
         documentType: values.document_type,
+        carbonCopy: values.carbonCopy,
       };
     } else {
       data = {

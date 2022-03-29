@@ -708,7 +708,14 @@ class CreateDocument(views.APIView):
                 raise exceptions.ServerError(err.args[0])
         else:
             try:
+                document_type = models.DocumentType.objects.get(
+                    id=data_document_type)
+                document = models.Document.objects.create(
+                    content=document, subject=subject, created_by=sender,
+                    ref=reference, document_type=document_type, filename=filename)
+
                 if carbon_copy:
+                    print(carbon_copy)
                     carbon_copy = json.loads(carbon_copy)
                     user_receiver = models.DocumentCopyReceiver()
                     user_receiver.save()
@@ -729,11 +736,6 @@ class CreateDocument(views.APIView):
                         sender=sender, document=document, document_copy_receiver=user_receiver)
                     document_copy.save()
 
-                document_type = models.DocumentType.objects.get(
-                    id=data_document_type)
-                document = models.Document.objects.create(
-                    content=document, subject=subject, created_by=sender,
-                    ref=reference, document_type=document_type, filename=filename)
                 if document:
                     count = 0
                     for item in data_lst:
