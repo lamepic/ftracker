@@ -4,7 +4,7 @@
 
 # remove folder being moved from move folder modal
 
-# timestamp on incoming and outgoing view
+# timestamp on incoming and outgoing view - done
 
 # archive copy of document to user department.
 

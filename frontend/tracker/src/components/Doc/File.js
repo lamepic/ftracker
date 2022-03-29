@@ -39,8 +39,26 @@ function File({ doc, type }) {
     const popOverContent = (
       <div>
         <Text fontWeight="500" color="var(--dark-brown)">
-          Document Copy
+          {type === "copy" &&
+            `Sent from: ${doc?.sender?.first_name} ${doc?.sender?.last_name}`}
         </Text>
+        {doc.sender
+          ? !doc.sender.is_department && (
+              <Text fontWeight="500" color="var(--dark-brown)">
+                Department: {doc?.sender?.department.name}
+              </Text>
+            )
+          : !doc.receiver.is_department && (
+              <Text fontWeight="500" color="var(--dark-brown)">
+                Department: {doc?.receiver?.department.name}
+              </Text>
+            )}
+        <Text fontWeight="500" color="var(--dark-brown)">{`Date: ${new Date(
+          doc.created_at
+        ).toDateString()}`}</Text>
+        <Text fontWeight="500" color="var(--dark-brown)">{`Time: ${new Date(
+          doc.created_at
+        ).toLocaleTimeString()}`}</Text>
       </div>
     );
 
@@ -76,6 +94,12 @@ function File({ doc, type }) {
               Department: {doc?.receiver?.department.name}
             </Text>
           )}
+      <Text fontWeight="500" color="var(--dark-brown)">{`Date: ${new Date(
+        doc.created_at
+      ).toDateString()}`}</Text>
+      <Text fontWeight="500" color="var(--dark-brown)">{`Time: ${new Date(
+        doc.created_at
+      ).toLocaleTimeString()}`}</Text>
     </div>
   );
 

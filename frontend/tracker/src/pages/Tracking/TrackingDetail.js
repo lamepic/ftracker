@@ -13,8 +13,6 @@ function TrackingDetail() {
   const documentId = store.trackingDocId;
   const { loading, data: tracking } = useFetchData(fetchTracking, documentId);
 
-  console.log(tracking);
-
   const handleOk = () => {
     dispatch({
       type: actionTypes.SET_OPEN_TRACKING_MODAL,
