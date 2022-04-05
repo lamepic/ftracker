@@ -6,6 +6,7 @@ import { capitalize } from "../../utility/helper";
 import {
   checkFolderEncryption,
   encryptFolder,
+  fetchFolders,
   fetchParentFolder,
   fetchSubfolders,
   move,
@@ -23,7 +24,7 @@ function DirectoryMoveModal({
 }) {
   const [store, dispatch] = useStateValue();
   const [loading, setLoading] = useState(false);
-  const [modalFolders, setModalFolders] = useState(folder);
+  const [modalFolders, setModalFolders] = useState([...folder.children]);
   const [openedFolder, setOpenedFolder] = useState(folder);
   const [parentFolder, setParentFolder] = useState({});
 
@@ -38,8 +39,16 @@ function DirectoryMoveModal({
   const getParentFolder = async () => {
     const slug = openedFolder.slug;
     try {
-      const res = await fetchParentFolder(store.token, slug);
-      setParentFolder(res.data);
+      if (slug !== undefined) {
+        const res = await fetchParentFolder(store.token, slug);
+        if (res.data.length === 0) {
+          setParentFolder({
+            name: "archive",
+          });
+        } else {
+          setParentFolder(res.data);
+        }
+      }
     } catch (e) {
       notification.error({
         message: "Error",
@@ -91,7 +100,7 @@ function DirectoryMoveModal({
       const res = await fetchSubfolders(store.token, item.slug);
       const data = res.data[0];
       setOpenedFolder(item);
-      setModalFolders(data);
+      setModalFolders([...data.children]);
     } catch (e) {
       setLoading(false);
       return notification.error({
@@ -104,9 +113,15 @@ function DirectoryMoveModal({
   const handleGoBack = async () => {
     try {
       setOpenedFolder(parentFolder);
-      const res = await fetchSubfolders(store.token, parentFolder.slug);
-      const data = res.data[0];
-      setModalFolders(data);
+      if (parentFolder.name.toLowerCase() !== "archive") {
+        const res = await fetchSubfolders(store.token, parentFolder.slug);
+        const data = res.data[0];
+        setModalFolders([...data?.children]);
+      } else {
+        const res = await fetchFolders(store.token);
+        const data = res.data;
+        setModalFolders(data);
+      }
     } catch (e) {
       notification.error({
         message: "Error",
@@ -157,6 +172,8 @@ function DirectoryMoveModal({
     }
   };
 
+  console.log(openedFolder);
+
   return (
     <>
       <Modal
@@ -170,27 +187,31 @@ function DirectoryMoveModal({
             alignItems="center"
             key="footer"
           >
-            {Object.keys(parentFolder).length > 0 ? (
+            {openedFolder.name.toLowerCase() !== "archive" && (
               <>
-                <Button type="primary" onClick={handleGoBack}>
-                  Back
-                </Button>{" "}
-                <Button
-                  type="primary"
-                  style={{ marginLeft: "auto" }}
-                  onClick={handleMoveHere}
-                >
-                  Move here
-                </Button>
+                {Object.keys(parentFolder).length > 0 ? (
+                  <>
+                    <Button type="primary" onClick={handleGoBack}>
+                      Back
+                    </Button>{" "}
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: "auto" }}
+                      onClick={handleMoveHere}
+                    >
+                      Move here
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    type="primary"
+                    style={{ marginLeft: "auto" }}
+                    onClick={handleMoveHere}
+                  >
+                    Move here
+                  </Button>
+                )}
               </>
-            ) : (
-              <Button
-                type="primary"
-                style={{ marginLeft: "auto" }}
-                onClick={handleMoveHere}
-              >
-                Move here
-              </Button>
             )}
           </Box>,
         ]}
@@ -198,7 +219,7 @@ function DirectoryMoveModal({
       >
         {!loading ? (
           <GridData>
-            {modalFolders.children
+            {modalFolders
               .filter((item, idx) => {
                 const row = selectedRow.map((row) => row.name.props.slug);
                 return item.slug !== row[idx];
