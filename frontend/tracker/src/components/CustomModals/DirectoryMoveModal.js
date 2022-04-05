@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal, notification } from "antd";
 import GridData from "../DataDisplay/GridData";
 import { Box, CircularProgress, Image, Text } from "@chakra-ui/react";
-import { capitalize } from "../../utility/helper";
+import { capitalize, getFolderDifference } from "../../utility/helper";
 import {
   checkFolderEncryption,
   encryptFolder,
@@ -178,8 +178,6 @@ function DirectoryMoveModal({
     }
   };
 
-  console.log(openedFolder);
-
   return (
     <>
       <Modal
@@ -225,7 +223,7 @@ function DirectoryMoveModal({
       >
         {!loading ? (
           <GridData>
-            {modalFolders
+            {getFolderDifference(modalFolders, selectedRow)
               .filter((item, idx) => {
                 const row = selectedRow.map((row) => row.name.props.slug);
                 return item.slug !== row[idx];
