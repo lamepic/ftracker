@@ -38,7 +38,7 @@ function ViewDocument() {
   useEffect(() => {
     fetchPreviewCode();
     _fetchDocument();
-    _fetchNextUserToForwardDoc();
+    if (type.toLowerCase() !== "copy") _fetchNextUserToForwardDoc();
   }, []);
 
   const _fetchDocument = async () => {
