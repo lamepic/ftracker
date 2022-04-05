@@ -146,7 +146,7 @@ function MoveModal({
   return (
     <>
       <Modal
-        title="Move Item"
+        title={capitalize(openedFolder.name || "archive")}
         visible={openMoveModal}
         onCancel={handleCancel}
         footer={[
