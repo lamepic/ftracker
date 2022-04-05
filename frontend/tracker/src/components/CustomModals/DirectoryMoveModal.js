@@ -223,32 +223,23 @@ function DirectoryMoveModal({
       >
         {!loading ? (
           <GridData>
-            {getFolderDifference(modalFolders, selectedRow)
-              .filter((item, idx) => {
-                const row = selectedRow.map((row) => row.name.props.slug);
-                return item.slug !== row[idx];
-              })
-              .map((folder) => {
-                return (
-                  <Box
-                    onClick={(e) => handleItemClick(e, folder)}
-                    key={folder.id}
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Image src={folderIcon} />
-                    <Text
-                      color="var(--dark-brown)"
-                      fontWeight="500"
-                      isTruncated
-                    >
-                      {capitalize(folder.name)}
-                    </Text>
-                  </Box>
-                );
-              })}
+            {getFolderDifference(modalFolders, selectedRow).map((folder) => {
+              return (
+                <Box
+                  onClick={(e) => handleItemClick(e, folder)}
+                  key={folder.id}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Image src={folderIcon} />
+                  <Text color="var(--dark-brown)" fontWeight="500" isTruncated>
+                    {capitalize(folder.name)}
+                  </Text>
+                </Box>
+              );
+            })}
           </GridData>
         ) : (
           <CircularProgress />
