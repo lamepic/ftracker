@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, notification } from "antd";
 import GridData from "../DataDisplay/GridData";
 import { Box, CircularProgress, GridItem, Image, Text } from "@chakra-ui/react";
-import { capitalize } from "../../utility/helper";
+import { capitalize, getFolderDifference } from "../../utility/helper";
 import { useStateValue } from "../../store/StateProvider";
 import swal from "sweetalert";
 import FolderIcon from "../../assets/icons/folder.svg";
@@ -176,36 +176,31 @@ function MoveModal({
       >
         <GridData>
           {!loading &&
-            modalFolders
-              .filter((item, idx) => {
-                const row = selectedRow.map((row) => row.name.props.slug);
-                return item.slug !== row[idx];
-              })
-              .map((folder) => {
-                return (
-                  <GridItem key={folder.id}>
-                    <Box
-                      onClick={(e) => handleItemClick(e, folder)}
-                      display="flex"
-                      flexDirection="column"
-                      alignItems="center"
-                      justifyContent="center"
-                      _hover={{ cursor: "pointer" }}
+            getFolderDifference(modalFolders, selectedRow).map((folder) => {
+              return (
+                <GridItem key={folder.id}>
+                  <Box
+                    onClick={(e) => handleItemClick(e, folder)}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    _hover={{ cursor: "pointer" }}
+                  >
+                    <Image src={FolderIcon} />
+                    <Text
+                      color="var(--dark-brown)"
+                      fontWeight="500"
+                      noOfLines={2}
+                      textAlign="center"
+                      // fontSize="0.7rem"
                     >
-                      <Image src={FolderIcon} />
-                      <Text
-                        color="var(--dark-brown)"
-                        fontWeight="500"
-                        noOfLines={2}
-                        textAlign="center"
-                        // fontSize="0.7rem"
-                      >
-                        {capitalize(folder.name)}
-                      </Text>
-                    </Box>
-                  </GridItem>
-                );
-              })}
+                      {capitalize(folder.name)}
+                    </Text>
+                  </Box>
+                </GridItem>
+              );
+            })}
         </GridData>
       </Modal>
     </>
