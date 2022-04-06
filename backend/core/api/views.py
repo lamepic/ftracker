@@ -192,7 +192,7 @@ class MarkCompleteAPIView(views.APIView):
             trail.save()
 
         completed_documents = models.Trail.objects.filter(
-            document__id=id, status='C').order_by('date')
+            document__id=id, status='C').order_by('created_at')
         last_trail = completed_documents.last()
 
         create_archive = models.Archive.objects.create(
@@ -765,6 +765,7 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
+                print(err)
                 user_receiver.delete()
                 raise exceptions.ServerError(err.args[0])
 

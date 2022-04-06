@@ -17,21 +17,20 @@ export async function createDocument(token, data) {
 
   console.log(carbonCopy);
 
-  if (document !== null) {
-    document = document[0].originFileObj;
-    filename = document.name;
-  }
-
   const formData = new FormData();
   formData.append("receiver", receiver);
   formData.append("department", department);
-  formData.append("document", document);
   formData.append("subject", data.subject);
   formData.append("reference", data.reference);
   formData.append("documentType", data.documentType);
   formData.append("encrypt", data.encrypt);
-  formData.append("filename", filename);
   if (carbonCopy !== undefined) formData.append("carbonCopy", carbonCopy);
+  if (document !== null) {
+    document = document[0].originFileObj;
+    filename = document.name;
+    formData.append("document", document);
+    formData.append("filename", filename);
+  }
 
   for (let count = 0; count < data.attachments.length; count++) {
     formData.append(`attachment_${count}`, data.attachments[count].file);
