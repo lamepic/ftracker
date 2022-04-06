@@ -44,6 +44,7 @@ function Directory() {
 
   useEffect(() => {
     // setFolder({});
+    setLoading(true);
     _fetchSubFolders();
     // _fetchUserArchive();
   }, [slug, openRenameModal, folderMoved]);
@@ -69,7 +70,6 @@ function Directory() {
       setFolderMoved(false);
     } catch (e) {
       setLoading(false);
-      console.log(e);
       return notification.error({
         message: "Error",
         description: e.response.data.detail,
