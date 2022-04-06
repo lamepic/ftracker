@@ -62,23 +62,30 @@ function ViewDocument() {
   };
 
   const handleMarkComplete = async () => {
-    swal({
-      title: "Are you sure you want to Archive this document?",
-      text: "This action is irreversible",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then(async (willSubmit) => {
-      if (willSubmit) {
-        const res = await markComplete(store.token, id);
-        if (res.status === 200) {
-          swal("Document has been marked as complete", {
-            icon: "success",
-          });
-          history.push("/");
+    try {
+      swal({
+        title: "Are you sure you want to Archive this document?",
+        text: "This action is irreversible",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then(async (willSubmit) => {
+        if (willSubmit) {
+          const res = await markComplete(store.token, id);
+          if (res.status === 200) {
+            swal("Document has been marked as complete", {
+              icon: "success",
+            });
+            history.push("/");
+          }
         }
-      }
-    });
+      });
+    } catch (e) {
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
+    }
   };
 
   const handleMinute = async (e) => {
