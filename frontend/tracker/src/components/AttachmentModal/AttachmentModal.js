@@ -3,6 +3,7 @@ import "./AttachmentModal.css";
 
 import { Button, Form, Input, Modal, notification, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { uploadRules } from "../../utility/helper";
 
 const layout = {
   labelCol: {
@@ -104,7 +105,7 @@ function AttachmentModal({
               },
             ]}
           >
-            <Upload maxCount={1} customRequest={dummyRequest}>
+            <Upload maxCount={1} customRequest={dummyRequest} {...uploadRules}>
               <Button icon={<UploadOutlined />} style={{ width: "275px" }}>
                 Upload
               </Button>

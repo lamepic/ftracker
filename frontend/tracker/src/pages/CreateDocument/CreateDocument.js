@@ -24,6 +24,7 @@ import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
 import useFetchData from "../../hooks/useFetchData";
 import Loading from "../../components/Loading/Loading";
 import AttachmentModal from "../../components/AttachmentModal/AttachmentModal";
+import { uploadRules } from "../../utility/helper";
 
 const layout = {
   labelCol: {
@@ -159,7 +160,6 @@ function CreateDocument() {
         })
       );
     } catch (e) {
-      console.log(e.response.message);
       notification.error({
         message: "Error",
         description: e.response.data.detail,
@@ -480,7 +480,11 @@ function CreateDocument() {
                 wrapperCol={{ ...layout.wrapperCol }}
                 getValueFromEvent={getFile}
               >
-                <Upload maxCount={1} customRequest={dummyRequest}>
+                <Upload
+                  maxCount={1}
+                  customRequest={dummyRequest}
+                  {...uploadRules}
+                >
                   <Button icon={<UploadOutlined />} style={{ width: "285px" }}>
                     Upload
                   </Button>
