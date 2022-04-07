@@ -10,6 +10,8 @@ backend/core/libs/__pycache__
 backend/core/migrations
 backend/tracker/__pycache__
 backend/media
+backend/signature
+backend/stamp
 /.pnp
 .pnp.js
 .env

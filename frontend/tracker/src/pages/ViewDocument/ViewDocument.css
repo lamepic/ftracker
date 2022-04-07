@@ -2,7 +2,9 @@
   color: #fff;
 }
 
-.forward {
+.forward,
+.signature,
+.stamp {
   background-color: var(--light-brown) !important;
 }
 
@@ -17,6 +19,14 @@
   margin-top: 10px;
   border-radius: 10px;
   overflow-y: scroll;
+}
+
+.stamp-box-preview {
+  width: 50% !important;
+}
+
+.stamp-box-preview:first-child {
+  margin-right: 10px;
 }
 
 .minute-box-preview-lg {
@@ -54,8 +64,8 @@ textarea::placeholder {
 }
 
 .minute-button {
-  margin-left: auto;
-  margin-top: 15px;
+  /* margin-left: auto;
+  margin-top: 15px; */
   padding: 10px;
   background-color: var(--light-brown) !important;
   border: none;

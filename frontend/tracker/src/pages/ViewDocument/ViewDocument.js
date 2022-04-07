@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ViewDocument.css";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Text, Image, Grid } from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 import {
   createMinute,
@@ -16,8 +16,8 @@ import { useHistory, useParams } from "react-router-dom";
 import Preview from "../../components/Preview/Preview";
 import { notification } from "antd";
 import ForwardModal from "../../components/ForwardModal/ForwardModal";
-import { Image } from "@chakra-ui/react";
 import useIcon from "../../hooks/useIcon";
+import SignatureStampModal from "../../components/CustomModals/SignatureStampModal";
 
 function ViewDocument() {
   const [store] = useStateValue();
@@ -31,6 +31,10 @@ function ViewDocument() {
   const [openModal, setOpenModal] = useState(false);
   const [nextReceiver, setNextReceiver] = useState(null);
   const [previewDoc, setPreviewDoc] = useState({});
+  const [openSignatureStampModal, setOpenSignatureStampModal] = useState(false);
+  const [signatureStampType, setSignatureStampType] = useState("");
+  const [signatures, setSignatures] = useState([]);
+  const [stamps, setStamps] = useState([]);
 
   const [filename, setFilename] = useState("");
   const icon = useIcon(filename);
@@ -42,11 +46,21 @@ function ViewDocument() {
   }, []);
 
   const _fetchDocument = async () => {
-    const res = await fetchDocument(store.token, id);
-    const data = res.data;
-    setDocument(data);
-    setFilename(data.filename);
-    setLoading(false);
+    try {
+      const res = await fetchDocument(store.token, id);
+      const data = res.data;
+      setDocument(data);
+      setFilename(data.filename);
+      setSignatures(data.signature);
+      setStamps(data.stamp);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      return notification.error({
+        message: "Error",
+        description: e.repsonse.data.detail,
+      });
+    }
   };
 
   const _fetchNextUserToForwardDoc = async () => {
@@ -231,8 +245,8 @@ function ViewDocument() {
                 <Image src={icon} alt="file" width="500px" />
               </Box>
               <Box
-                display="flex"
-                flexDirection="column"
+                // display="flex"
+                // flexDirection="column"
                 margin="auto"
                 marginTop="20px"
               >
@@ -242,8 +256,25 @@ function ViewDocument() {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    {document.document_type.name !== "Custom" ? (
-                      !nextReceiver?.last_receiver && (
+                    <Grid
+                      templateColumns="repeat(2, 1fr)"
+                      gap={2}
+                      alignItems="center"
+                    >
+                      {document.document_type.name !== "Custom" ? (
+                        !nextReceiver?.last_receiver && (
+                          <Button
+                            className="file-btn forward"
+                            onClick={() => handleForwardDocument()}
+                            isDisabled={
+                              code === undefined ? false : !code?.used
+                            }
+                            marginRight="10px"
+                          >
+                            Forward
+                          </Button>
+                        )
+                      ) : (
                         <Button
                           className="file-btn forward"
                           onClick={() => handleForwardDocument()}
@@ -252,19 +283,20 @@ function ViewDocument() {
                         >
                           Forward
                         </Button>
-                      )
-                    ) : (
-                      <Button
-                        className="file-btn forward"
-                        onClick={() => handleForwardDocument()}
-                        isDisabled={code === undefined ? false : !code?.used}
-                        marginRight="10px"
-                      >
-                        Forward
-                      </Button>
-                    )}
-                    {document.document_type.name !== "Custom" ? (
-                      nextReceiver?.last_receiver && (
+                      )}
+                      {document.document_type.name !== "Custom" ? (
+                        nextReceiver?.last_receiver && (
+                          <Button
+                            className="file-btn submit"
+                            onClick={handleMarkComplete}
+                            isDisabled={
+                              code === undefined ? false : !code?.used
+                            }
+                          >
+                            Archive
+                          </Button>
+                        )
+                      ) : (
                         <Button
                           className="file-btn submit"
                           onClick={handleMarkComplete}
@@ -272,16 +304,8 @@ function ViewDocument() {
                         >
                           Archive
                         </Button>
-                      )
-                    ) : (
-                      <Button
-                        className="file-btn submit"
-                        onClick={handleMarkComplete}
-                        isDisabled={code === undefined ? false : !code?.used}
-                      >
-                        Archive
-                      </Button>
-                    )}
+                      )}
+                    </Grid>
                   </Box>
                 )}
               </Box>
@@ -290,25 +314,71 @@ function ViewDocument() {
               <>
                 <div className={`vr ${type !== "incoming" && "vr-sm"}`}></div>
                 <div className="file-info">
-                  <div
-                    className={`minute-box-preview ${
-                      type !== "incoming" && "minute-box-preview-lg"
-                    }`}
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
                   >
-                    <div>
-                      {document?.minute?.map((item) => {
-                        return (
-                          <div className="minute" key={item?.id}>
-                            <p>{item?.content}</p>
-                            <p className="employee">{item?.user}</p>
-                            <p className="date">
-                              Date: {new Date(item?.date).toDateString()}
-                            </p>
-                          </div>
-                        );
-                      })}
+                    <div
+                      className={`minute-box-preview ${
+                        type !== "incoming" && "minute-box-preview-lg"
+                      } ${stamps?.length > 0 && "stamp-box-preview"}`}
+                    >
+                      <div>
+                        {document?.minute?.map((item) => {
+                          return (
+                            <div className="minute" key={item?.id}>
+                              <p>{item?.content}</p>
+                              <p className="employee">{item?.user}</p>
+                              <p className="date">
+                                Date: {new Date(item?.date).toDateString()}
+                              </p>
+                            </div>
+                          );
+                        })}
+                        {signatures?.map((signature) => {
+                          return (
+                            <div className="minute" key={signature.id}>
+                              <Image
+                                src={`http://127.0.0.1:8000${signature.signature}`}
+                                width="50%"
+                              />
+                              <p className="employee">{signature?.user}</p>
+                              <p className="date">
+                                Date:{" "}
+                                {new Date(signature?.created_at).toDateString()}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
+                    {stamps.length > 0 && (
+                      <div
+                        className={`minute-box-preview ${
+                          type !== "incoming" && "minute-box-preview-lg"
+                        } ${stamps?.length > 0 && "stamp-box-preview"}`}
+                      >
+                        <div>
+                          {stamps.map((stamp) => {
+                            return (
+                              <div className="minute" key={stamp.id}>
+                                <Image
+                                  src={`http://127.0.0.1:8000${stamp.stamp}`}
+                                  width="50%"
+                                />
+                                <p className="employee">{stamp.user}</p>
+                                <p className="date">
+                                  Date:{" "}
+                                  {new Date(stamp.created_at).toDateString()}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </Box>
                   {type === "incoming" && (
                     <form
                       onSubmit={(e) => {
@@ -323,13 +393,45 @@ function ViewDocument() {
                         onChange={(e) => setMinute(e.target.value)}
                         value={minute}
                       ></textarea>
-                      <Button
-                        type="submit"
-                        className="minute-button"
-                        isDisabled={!minute}
+                      <Box
+                        w="100%"
+                        marginTop="5px"
+                        display="flex"
+                        justifyContent="space-between"
                       >
-                        Add Minute
-                      </Button>
+                        {store.user.is_department ? (
+                          <Button
+                            className="file-btn stamp"
+                            marginLeft="auto"
+                            marginRight="10px"
+                            onClick={() => {
+                              setOpenSignatureStampModal(true);
+                              setSignatureStampType("stamp");
+                            }}
+                          >
+                            Add stamp
+                          </Button>
+                        ) : (
+                          <Button
+                            className="file-btn signature"
+                            marginLeft="auto"
+                            marginRight="10px"
+                            onClick={() => {
+                              setOpenSignatureStampModal(true);
+                              setSignatureStampType("signature");
+                            }}
+                          >
+                            Add signature
+                          </Button>
+                        )}
+                        <Button
+                          type="submit"
+                          className="minute-button"
+                          isDisabled={!minute}
+                        >
+                          Add Minute
+                        </Button>
+                      </Box>
                     </form>
                   )}
                 </div>
@@ -343,11 +445,23 @@ function ViewDocument() {
       {openPreview && (
         <Preview setOpenPreview={setOpenPreview} doc={previewDoc} />
       )}
-      <ForwardModal
-        document={document}
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-      />
+      {openModal && (
+        <ForwardModal
+          document={document}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
+      {openSignatureStampModal && (
+        <SignatureStampModal
+          setOpenSignatureStampModal={setOpenSignatureStampModal}
+          openSignatureStampModal={openSignatureStampModal}
+          type={signatureStampType}
+          document_id={document.id}
+          setStamps={setStamps}
+          setSignatures={setSignatures}
+        />
+      )}
     </>
   );
 }

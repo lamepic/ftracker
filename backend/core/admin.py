@@ -99,6 +99,16 @@ class DocumentCopyReceiver(admin.ModelAdmin):
     list_display = ["id", 'user_receivers', 'group_receivers']
 
 
+@admin.register(models.Stamp)
+class StampAdmin(admin.ModelAdmin):
+    list_display = ["user", 'stamp', 'created_at']
+
+
+@admin.register(models.Signature)
+class SignatureAdmin(admin.ModelAdmin):
+    list_display = ["user", 'signature', 'created_at']
+
+
 class CustomMPTTModelAdmin(DraggableMPTTAdmin):
     # specify pixel amount for this ModelAdmin only:
     mptt_level_indent = 20

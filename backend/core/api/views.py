@@ -89,6 +89,7 @@ class IncomingCountAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
+            print(incoming)
             document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
                 document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
             data = utils.Count(len(incoming) + len(document_copy))
@@ -982,5 +983,41 @@ class DocumentCopy(views.APIView):
             data = serialized_groups.data
         except Exception as err:
             print(err)
-            raise exceptions.ServerError(err)
+            raise exceptions.ServerError(err.args[0])
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class SignatureStamp(views.APIView):
+    def post(self, request, document_id, format=None):
+        data = request.data
+        type = data.get('type')
+
+        print(data)
+
+        try:
+            document = get_object_or_404(models.Document, id=document_id)
+            creator = get_object_or_404(models.User, id=request.user.id)
+
+            if type.lower() == "signature":
+                signature = models.Signature(
+                    user=request.user, document=document, signature=data.get('signature'))
+                signature.save()
+                queryset = models.Signature.objects.all()
+                serialized_data = serializers.SignatureSerializer(
+                    queryset, many=True)
+                data = {"type": type, "data": serialized_data.data}
+
+            if type.lower() == "stamp":
+                stamp = models.Stamp(
+                    user=request.user, document=document, stamp=data.get('stamp'))
+                stamp.save()
+                queryset = models.Stamp.objects.all()
+                serialized_data = serializers.StampSerializer(
+                    queryset, many=True)
+                data = {"type": type, "data": serialized_data.data}
+
+        except Exception as err:
+            print(err)
+            raise exceptions.ServerError(err.args[0])
+
         return Response(data, status=status.HTTP_200_OK)
