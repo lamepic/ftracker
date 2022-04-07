@@ -193,7 +193,7 @@ class MarkCompleteAPIView(views.APIView):
             trail.save()
 
         completed_documents = models.Trail.objects.filter(
-            document__id=id, status='C').order_by('date')
+            document__id=id, status='C').order_by('created_at')
         last_trail = completed_documents.last()
 
         create_archive = models.Archive.objects.create(
@@ -369,7 +369,9 @@ class ForwardDocumentAPIView(views.APIView):
         if document.document_type.name.lower() == 'custom':
             try:
                 prev_trail = models.Trail.objects.filter(
-                    document=document).latest('document')
+                    document=document)[0]
+                print('prev_trail', prev_trail)
+                print(models.Trail.objects.all())
                 prev_trail.forwarded = False
                 prev_trail.save()
 
@@ -1002,7 +1004,8 @@ class SignatureStamp(views.APIView):
                 signature = models.Signature(
                     user=request.user, document=document, signature=data.get('signature'))
                 signature.save()
-                queryset = models.Signature.objects.all()
+                queryset = models.Signature.objects.filter(
+                    document=document.id)
                 serialized_data = serializers.SignatureSerializer(
                     queryset, many=True)
                 data = {"type": type, "data": serialized_data.data}
@@ -1011,7 +1014,7 @@ class SignatureStamp(views.APIView):
                 stamp = models.Stamp(
                     user=request.user, document=document, stamp=data.get('stamp'))
                 stamp.save()
-                queryset = models.Stamp.objects.all()
+                queryset = models.Stamp.objects.filter(document=document.id)
                 serialized_data = serializers.StampSerializer(
                     queryset, many=True)
                 data = {"type": type, "data": serialized_data.data}
