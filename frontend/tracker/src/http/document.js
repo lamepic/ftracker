@@ -15,7 +15,10 @@ export async function createDocument(token, data) {
   let document = data.document;
   let filename = null;
 
-  console.log(carbonCopy);
+  if (document !== null) {
+    document = document[0].originFileObj;
+    filename = document.name;
+  }
 
   const formData = new FormData();
   formData.append("receiver", receiver);
@@ -41,6 +44,29 @@ export async function createDocument(token, data) {
   }
 
   const res = await axios.post("create-document/", formData, config);
+  return res;
+}
+
+export async function addSignatureStamp(token, data) {
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const formData = new FormData();
+
+  console.log(data);
+
+  formData.append(`${data.type}`, data.content);
+  formData.append("type", data.type);
+
+  const res = await axios.post(
+    `signature-stamp/${data.document_id}/`,
+    formData,
+    config
+  );
   return res;
 }
 

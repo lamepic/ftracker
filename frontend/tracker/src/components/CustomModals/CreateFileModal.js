@@ -5,6 +5,7 @@ import React, { useRef, useState } from "react";
 import { createFile } from "../../http/directory";
 import { useStateValue } from "../../store/StateProvider";
 import { Box } from "@chakra-ui/react";
+import { uploadRules } from "../../utility/helper";
 
 const validateMessages = {
   required: "This field is required!",
@@ -31,51 +32,6 @@ const getFile = (e) => {
     return e;
   }
   return e && e.fileList;
-};
-
-const uploadRules = {
-  beforeUpload: (file) => {
-    const isPDF = file.type === "application/pdf";
-    const isDOC = file.type === "application/msword";
-    const isDOCX =
-      file.type ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    const isXLS = file.type === "application/vnd.ms-excel";
-    const isXLSX =
-      file.type ===
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    const isTXT = file.type === "text/plain";
-    const isPPT = file.type === "application/vnd.ms-powerpoint";
-    const isPPTX =
-      file.type ===
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-    const isJPG = file.type === "image/jpg";
-    const isJPGEG = file.type === "image/jpeg";
-
-    if (
-      isPDF ||
-      isDOC ||
-      isDOCX ||
-      isXLS ||
-      isXLSX ||
-      isTXT ||
-      isPPT ||
-      isPPTX ||
-      isJPG ||
-      isJPGEG
-    ) {
-      return true || Upload.LIST_IGNORE;
-    } else {
-      notification.error({
-        message: "Error",
-        description: "Unsupported File format",
-      });
-      return false;
-    }
-  },
-  // onChange: (info) => {
-  //   console.log(info.fileList);
-  // },
 };
 
 function CreateFileModal({

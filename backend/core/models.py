@@ -294,6 +294,41 @@ class DocumentCopy(models.Model):
     def __str__(self):
         return f'{self.document.subject}'
 
+# class CarbonCopyDocument(models.Model):
+#     content = models.CharField(max_length=200, blank=True, null=True)
+#     subject = models.CharField(max_length=100)
+#     filename = models.CharField(max_length=100)
+#     ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
+#     created_by = models.ForeignKey(
+#         User, on_delete=models.CASCADE)
+#     document_type = models.ForeignKey(
+#         DocumentType, on_delete=models.CASCADE, null=True, blank=True)
+#     folder = models.ForeignKey(
+#         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+
+
+class Signature(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    signature = models.FileField(
+        upload_to='signature/', null=True, blank=True)
+    document = models.ForeignKey(
+        Document, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.first_name
+
+
+class Stamp(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    stamp = models.FileField(upload_to='stamps/', null=True, blank=True)
+    document = models.ForeignKey(
+        Document, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.first_name
+
 
 @receiver(post_save, sender=ActivateDocument)
 def expire_date_handler(sender, instance, created, **kwargs):
