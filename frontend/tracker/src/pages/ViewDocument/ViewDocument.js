@@ -363,7 +363,7 @@ function ViewDocument() {
                           return (
                             <div className="minute" key={signature.id}>
                               <Image
-                                src={`http://127.0.0.1:8000${signature.signature}`}
+                                src={`${process.env.REACT_APP_DOCUMENT_PATH}${signature.signature}`}
                                 width="50%"
                               />
                               <p className="employee">{signature?.user}</p>
@@ -387,7 +387,7 @@ function ViewDocument() {
                             return (
                               <div className="minute" key={stamp.id}>
                                 <Image
-                                  src={`http://127.0.0.1:8000${stamp.stamp}`}
+                                  src={`${process.env.REACT_APP_DOCUMENT_PATH}${stamp.stamp}`}
                                   width="50%"
                                 />
                                 <p className="employee">{stamp.user}</p>
