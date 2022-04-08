@@ -135,8 +135,8 @@ class DocumentAPIView(views.APIView):
         try:
             document = get_object_or_404(models.Document, id=id)
             serialized_data = serializers.DocumentsSerializer(document)
-        except:
-            raise exceptions.DocumentNotFound
+        except Exception as err:
+            raise exceptions.DocumentNotFound(err.args[0])
 
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 

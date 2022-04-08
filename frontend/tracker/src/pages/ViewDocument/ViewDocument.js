@@ -42,7 +42,8 @@ function ViewDocument() {
   useEffect(() => {
     fetchPreviewCode();
     _fetchDocument();
-    if (type.toLowerCase() !== "copy") _fetchNextUserToForwardDoc();
+    if (type.toLowerCase() !== "copy" && document !== null)
+      _fetchNextUserToForwardDoc();
   }, []);
 
   const _fetchDocument = async () => {
@@ -53,13 +54,13 @@ function ViewDocument() {
       setFilename(data.filename);
       setSignatures(data.signature);
       setStamps(data.stamp);
-      setLoading(false);
     } catch (e) {
-      setLoading(false);
-      return notification.error({
+      notification.error({
         message: "Error",
-        description: e.repsonse.data.detail,
+        description: e.response.data.detail,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -211,6 +212,10 @@ function ViewDocument() {
       setOpenPreview(true);
     }
   };
+
+  if (!loading && document === null) {
+    return <div>404</div>;
+  }
 
   return (
     <>
