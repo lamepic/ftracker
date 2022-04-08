@@ -4,6 +4,7 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
+  viewDocument: null,
   incomingCount: 0,
   outgoingCount: 0,
   archiveCount: 0,

@@ -52,6 +52,11 @@ const reducer = (state, action) => {
         ...state,
         documentType: action.payload,
       };
+    case actionTypes.SET_VIEW_DOCUMENT:
+      return {
+        ...state,
+        viewDocument: action.payload,
+      };
     case actionTypes.SET_REQUEST_DETAILS:
       return {
         ...state,
