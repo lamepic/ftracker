@@ -279,59 +279,39 @@ function ViewDocument() {
               >
                 <Image src={icon} alt="file" width="500px" />
               </Box>
-              <Box
-                // display="flex"
-                // flexDirection="column"
-                margin="auto"
-                marginTop="20px"
-              >
+              <Box margin="auto" marginTop="20px">
                 {type === "incoming" && (
                   <Box
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Grid
-                      templateColumns="repeat(2, 1fr)"
-                      gap={2}
-                      alignItems="center"
-                    >
-                      {document.document_type.name !== "Custom" ? (
-                        !nextReceiver?.last_receiver && (
+                    {document.document_type.name !== "Custom" ? (
+                      !nextReceiver?.last_receiver && (
+                        <Grid placeItems="center" border="1px solid blue">
                           <Button
                             className="file-btn forward"
                             onClick={() => handleForwardDocument()}
                             isDisabled={
                               code === undefined ? false : !code?.used
                             }
-                            marginRight="10px"
                           >
                             Forward
                           </Button>
-                        )
-                      ) : (
-                        <Button
-                          className="file-btn forward"
-                          onClick={() => handleForwardDocument()}
-                          isDisabled={code === undefined ? false : !code?.used}
-                          marginRight="10px"
-                        >
-                          Forward
-                        </Button>
-                      )}
-                      {document.document_type.name !== "Custom" ? (
-                        nextReceiver?.last_receiver && (
-                          <Button
-                            className="file-btn submit"
-                            onClick={handleMarkComplete}
-                            isDisabled={
-                              code === undefined ? false : !code?.used
-                            }
-                          >
-                            Archive
-                          </Button>
-                        )
-                      ) : (
+                        </Grid>
+                      )
+                    ) : (
+                      <Button
+                        className="file-btn forward"
+                        onClick={() => handleForwardDocument()}
+                        isDisabled={code === undefined ? false : !code?.used}
+                        marginRight="10px"
+                      >
+                        Forward
+                      </Button>
+                    )}
+                    {document.document_type.name !== "Custom" ? (
+                      nextReceiver?.last_receiver && (
                         <Button
                           className="file-btn submit"
                           onClick={handleMarkComplete}
@@ -339,8 +319,16 @@ function ViewDocument() {
                         >
                           Archive
                         </Button>
-                      )}
-                    </Grid>
+                      )
+                    ) : (
+                      <Button
+                        className="file-btn submit"
+                        onClick={handleMarkComplete}
+                        isDisabled={code === undefined ? false : !code?.used}
+                      >
+                        Archive
+                      </Button>
+                    )}
                   </Box>
                 )}
               </Box>
