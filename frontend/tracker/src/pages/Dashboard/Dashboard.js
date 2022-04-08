@@ -48,14 +48,14 @@ function Dashboard() {
             <Navbar onOpen={onOpen} />
             <main>
               <Route exact path="/dashboard" component={Home} />
-              <Route path="/dashboard/incoming" component={Incoming} />
-              <Route path="/dashboard/outgoing" component={Outgoing} />
+              <Route exact path="/dashboard/incoming" component={Incoming} />
+              <Route exact path="/dashboard/outgoing" component={Outgoing} />
               <Route
                 path="/dashboard/add-document"
                 component={CreateDocument}
               />
               <Route
-                path={`/dashboard/document/:type/:id/`}
+                path={`/dashboard/:type/document/:id/`}
                 component={ViewDocument}
               />
               <ProtectedPage

@@ -11,7 +11,7 @@ function File({ doc, type }) {
 
   if (type === "archive") {
     return (
-      <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
+      <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
         <Box
           display="flex"
           flexDirection="row"
@@ -64,7 +64,7 @@ function File({ doc, type }) {
 
     return (
       <Popover content={popOverContent} title="Details" placement="rightTop">
-        <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
+        <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
           <div className="folder">
             <Image src={icon} alt="folder" w="80%" padding="10px" />
             <Text className="folder__title" noOfLines={2} maxW="120px">
@@ -105,7 +105,7 @@ function File({ doc, type }) {
 
   return (
     <Popover content={popOverContent} title="Details" placement="rightTop">
-      <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
+      <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
         <div className="file">
           <Image src={icon} alt="file" w="80%" padding="10px" />
           <Text className="file__title" noOfLines={2} maxW="120px">

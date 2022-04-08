@@ -9,7 +9,7 @@ import MultipleFileIcon from "../../assets/icons/multiple-files.svg";
 function Folder({ doc, type }) {
   if (type === "archive") {
     return (
-      <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
+      <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
         <Box
           display="flex"
           flexDirection="row"
@@ -67,7 +67,7 @@ function Folder({ doc, type }) {
 
     return (
       <Popover content={popOverContent} title="Details" placement="rightTop">
-        <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
+        <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
           <div className="folder">
             <Image src={MultipleFileIcon} alt="folder" w="80%" padding="10px" />
             <Text className="folder__title" noOfLines={2} maxW="120px">
@@ -108,7 +108,7 @@ function Folder({ doc, type }) {
 
   return (
     <Popover content={popOverContent} title="Details" placement="rightTop">
-      <Link to={`/dashboard/document/${type}/${doc.document.id}/`}>
+      <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
         <div className="folder">
           <Image src={MultipleFileIcon} alt="folder" w="80%" padding="10px" />
           <Text className="folder__title" noOfLines={2} maxW="120px">
