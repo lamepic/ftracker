@@ -64,15 +64,29 @@ function ViewDocument() {
   };
 
   const _fetchNextUserToForwardDoc = async () => {
-    const res = await fetchNextUserToForwardDoc(store.token, id);
-    const data = res.data;
-    setNextReceiver(data);
+    try {
+      const res = await fetchNextUserToForwardDoc(store.token, id);
+      const data = res.data;
+      setNextReceiver(data);
+    } catch (e) {
+      return notification.error({
+        message: "Error",
+        description: e.repsonse.data.detail,
+      });
+    }
   };
 
   const fetchPreviewCode = async () => {
-    const res = await previewCode(store.token, store.user.staff_id, id);
-    const data = res.data;
-    setCode(data[0]);
+    try {
+      const res = await previewCode(store.token, store.user.staff_id, id);
+      const data = res.data;
+      setCode(data[0]);
+    } catch (e) {
+      return notification.error({
+        message: "Error",
+        description: e.repsonse.data.detail,
+      });
+    }
   };
 
   const handleMarkComplete = async () => {
@@ -103,43 +117,57 @@ function ViewDocument() {
   };
 
   const handleMinute = async (e) => {
-    e.preventDefault();
-    const res = await createMinute(store.token, id, minute);
-    const data = res.data;
-    if (res.status === 201) {
-      setDocument({ ...document, minute: [data, ...document.minute] });
-      setMinute("");
+    try {
+      e.preventDefault();
+      const res = await createMinute(store.token, id, minute);
+      const data = res.data;
+      if (res.status === 201) {
+        setDocument({ ...document, minute: [data, ...document.minute] });
+        setMinute("");
+      }
+    } catch (e) {
+      return notification.error({
+        message: "Error",
+        description: e.repsonse.data.detail,
+      });
     }
   };
 
   const handleForwardDocument = async () => {
-    if (
-      document.document_type === null ||
-      document.document_type.name === "Custom"
-    ) {
-      setOpenModal(true);
-    } else {
-      swal({
-        title: `Are you sure you want to Forward this Document to ${nextReceiver.receiver.first_name} ${nextReceiver.receiver.last_name}?`,
-        text: "Forwarding of this Document is irreversible",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then(async (willSubmit) => {
-        if (willSubmit) {
-          const data = {
-            receiver: nextReceiver.receiver.staff_id,
-            document,
-          };
-          const res = await forwardDocument(store.token, data);
-          if (res.status === 201) {
-            setOpenModal(false);
-            history.replace("/dashboard/outgoing");
-            swal("Document has been sent succesfully", {
-              icon: "success",
-            });
+    try {
+      if (
+        document.document_type === null ||
+        document.document_type.name === "Custom"
+      ) {
+        setOpenModal(true);
+      } else {
+        swal({
+          title: `Are you sure you want to Forward this Document to ${nextReceiver.receiver.first_name} ${nextReceiver.receiver.last_name}?`,
+          text: "Forwarding of this Document is irreversible",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then(async (willSubmit) => {
+          if (willSubmit) {
+            const data = {
+              receiver: nextReceiver.receiver.staff_id,
+              document,
+            };
+            const res = await forwardDocument(store.token, data);
+            if (res.status === 201) {
+              setOpenModal(false);
+              history.replace("/dashboard/outgoing");
+              swal("Document has been sent succesfully", {
+                icon: "success",
+              });
+            }
           }
-        }
+        });
+      }
+    } catch (e) {
+      return notification.error({
+        message: "Error",
+        description: e.repsonse.data.detail,
       });
     }
   };
