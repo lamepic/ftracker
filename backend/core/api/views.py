@@ -89,7 +89,6 @@ class IncomingCountAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
-            print(incoming)
             document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
                 document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
             data = utils.Count(len(incoming) + len(document_copy))
@@ -229,12 +228,10 @@ class TrackingAPIView(views.APIView):
                     other_users_detail["name"], other_users_detail["department"], other_users_detail["date"])
                 trackingStep.append(data)
         except Exception as err:
-            print(err)
             raise exceptions.TrackingNotFound
 
         serialized_data = serializers.TrackingSerializer(
             trackingStep, many=True)
-        print(serialized_data.data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
@@ -370,8 +367,6 @@ class ForwardDocumentAPIView(views.APIView):
             try:
                 prev_trail = models.Trail.objects.filter(
                     document=document)[0]
-                print('prev_trail', prev_trail)
-                print(models.Trail.objects.all())
                 prev_trail.forwarded = False
                 prev_trail.save()
 
@@ -413,7 +408,6 @@ class RequestDocumentAPIView(views.APIView):
 
     def post(self, request, format=None):
         data = request.data
-        print(data)
 
         try:
             document = get_object_or_404(
@@ -630,8 +624,6 @@ class SearchAPIView(views.APIView):
                 ['subject'].lower() or documents if term.lower() in doc['document']
                 ['filename'].lower()]
 
-        print(data)
-
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -717,14 +709,12 @@ class CreateDocument(views.APIView):
                     ref=reference, document_type=document_type, filename=filename)
 
                 if carbon_copy:
-                    print(carbon_copy)
                     carbon_copy = json.loads(carbon_copy)
                     user_receiver = models.DocumentCopyReceiver()
                     user_receiver.save()
 
                     for copy in carbon_copy:
                         copy = json.loads(copy)
-                        print(copy['name'])
                         if copy['type'].lower() == "user":
                             user = User.objects.get(staff_id=copy['id'])
                             user_receiver.user.add(user)
@@ -768,7 +758,6 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
-                print(err)
                 user_receiver.delete()
                 raise exceptions.ServerError(err.args[0])
 
@@ -848,7 +837,6 @@ class EncryptAPIView(views.APIView):
                     data = {"success": True}
                     return Response(data, status=status.HTTP_200_OK)
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
 
 
@@ -861,8 +849,6 @@ class ArchiveFileAPIView(views.APIView):
         parent_folder_id = request.data.get("parentFolderId")
         filename = request.data.get("filename")
         password = request.data.get('password')
-
-        print(request.data)
 
         try:
             hash_password = None
@@ -896,7 +882,6 @@ class ArchiveFileAPIView(views.APIView):
 
             # return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
 
 
@@ -932,11 +917,8 @@ class MoveItem(views.APIView):
         items = data.get('item')
         route = data.get('route')
 
-        print(data)
-
         try:
             parent_folder = models.Folder.objects.get(slug=opened_folder_slug)
-            print(items)
             for item in items:
                 if item['type'] == "folder":
                     fol = models.Folder.objects.get(slug=item.get('id'))
@@ -953,7 +935,6 @@ class MoveItem(views.APIView):
                     fil.save()
 
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
 
         return Response({"message": f"{len(items)} item(s) moved successfully"}, status=status.HTTP_201_CREATED)
@@ -969,7 +950,6 @@ class ParentFolder(views.APIView):
                 parent[0]) if len(parent) > 0 else []
             serialized_data = serialized_data.data if len(parent) > 0 else []
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
 
         return Response(serialized_data, status=status.HTTP_200_OK)
@@ -985,7 +965,6 @@ class DocumentCopy(views.APIView):
             # serialized_users = user_serializers.UserSerializer(users, many=True)
             data = serialized_groups.data
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
         return Response(data, status=status.HTTP_200_OK)
 
@@ -994,8 +973,6 @@ class SignatureStamp(views.APIView):
     def post(self, request, document_id, format=None):
         data = request.data
         type = data.get('type')
-
-        print(data)
 
         try:
             document = get_object_or_404(models.Document, id=document_id)
@@ -1021,7 +998,6 @@ class SignatureStamp(views.APIView):
                 data = {"type": type, "data": serialized_data.data}
 
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
 
         return Response(data, status=status.HTTP_200_OK)
