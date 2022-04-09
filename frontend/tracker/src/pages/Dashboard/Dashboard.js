@@ -79,7 +79,6 @@ function Dashboard() {
                 path="/dashboard/archive/:slug"
                 component={Directory}
               />
-              {/* <Route path="*" component={() => <p>404</p>} /> */}
               <ProtectedPage path="/dashboard/create-flow" component={Flow} />
               {store.openTrackingModal && <TrackingDetail />}
             </main>
