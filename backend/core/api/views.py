@@ -100,32 +100,41 @@ class IncomingCountAPIView(views.APIView):
 
 class OutgoingAPIView(views.APIView):
     def get(self, request, format=None):
-        user = models.User.objects.get(staff_id=request.user.staff_id)
-        outgoing = models.Trail.objects.filter(
-            send_id=user.staff_id,
-            sender=user, status='P').order_by('-document__id').distinct('document__id')
+        try:
+            user = models.User.objects.get(staff_id=request.user.staff_id)
+            outgoing = models.Trail.objects.filter(
+                send_id=user.staff_id,
+                sender=user, status='P').order_by('-document__id').distinct('document__id')
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
         serialized_data = serializers.OutgoingSerializer(outgoing, many=True)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
 class OutgoingCountAPIView(views.APIView):
     def get(self, request, format=None):
-        user = models.User.objects.get(staff_id=request.user.staff_id)
-        outgoing = models.Trail.objects.filter(
-            send_id=user.staff_id,
-            sender=user, status='P').order_by('-document__id').distinct('document__id')
-        data = utils.Count(len(outgoing))
+        try:
+            user = models.User.objects.get(staff_id=request.user.staff_id)
+            outgoing = models.Trail.objects.filter(
+                send_id=user.staff_id,
+                sender=user, status='P').order_by('-document__id').distinct('document__id')
+            data = utils.Count(len(outgoing))
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
         serialized_data = serializers.CountSerializer(data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
 class ArchiveCountAPIView(views.APIView):
     def get(self, request, format=None):
-        user = models.User.objects.get(staff_id=request.user.staff_id)
-        archive = [archive for archive in models.Archive.objects.all().order_by(
-            'created_by') if archive.created_by.department == user.department]
-        folder_archive = models.Folder.objects.viewable(request.user)
-        data = utils.Count(len(archive) + len(folder_archive))
+        try:
+            user = models.User.objects.get(staff_id=request.user.staff_id)
+            archive = [archive for archive in models.Archive.objects.all().order_by(
+                'created_by') if archive.created_by.department == user.department]
+            folder_archive = models.Folder.objects.viewable(request.user)
+            data = utils.Count(len(archive) + len(folder_archive))
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
         serialized_data = serializers.CountSerializer(data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
@@ -184,19 +193,19 @@ class MarkCompleteAPIView(views.APIView):
         try:
             document = models.Document.objects.get(id=id)
             trails = models.Trail.objects.filter(document__id=id)
+
+            for trail in trails:
+                trail.status = 'C'
+                trail.save()
+
+            completed_documents = models.Trail.objects.filter(
+                document__id=id, status='C').order_by('created_at')
+            last_trail = completed_documents.last()
+
+            create_archive = models.Archive.objects.create(
+                created_by=document.created_by, closed_by=last_trail.receiver, document=document)
         except:
             raise exceptions.DocumentNotFound
-
-        for trail in trails:
-            trail.status = 'C'
-            trail.save()
-
-        completed_documents = models.Trail.objects.filter(
-            document__id=id, status='C').order_by('created_at')
-        last_trail = completed_documents.last()
-
-        create_archive = models.Archive.objects.create(
-            created_by=document.created_by, closed_by=last_trail.receiver, document=document)
 
         return Response({'message': 'marked as complete'}, status=status.HTTP_200_OK)
 
@@ -561,64 +570,68 @@ class CreateFlow(views.APIView):
 
 class SearchAPIView(views.APIView):
     def get(self, request, term, format=None):
-        documents = []
-        active_requested_document = models.RequestDocument.objects.filter(
-            requested_by=request.user, active=True)
-        active_requested_document_lst = [
-            doc.document for doc in active_requested_document]
+        try:
+            documents = []
+            active_requested_document = models.RequestDocument.objects.filter(
+                requested_by=request.user, active=True)
+            active_requested_document_lst = [
+                doc.document for doc in active_requested_document]
 
-        # activated documents
-        activated_documents = models.ActivateDocument.objects.filter(
-            document_receiver=request.user, expired=False)
-        activated_document_lst = [doc.document for doc in activated_documents]
-        for item in activated_documents:
-            document_serializer = serializers.DocumentsSerializer(
-                item.document)
-            activated_data = {
-                "document": document_serializer.data, "route": "activated"}
-            documents.append(activated_data)
-
-        # pending documents
-        for item in active_requested_document:
-            document_serializer = serializers.DocumentsSerializer(
-                item.document)
-            pending_data = {
-                "document": document_serializer.data, "route": "pending"}
-            documents.append(pending_data)
-
-        # incoming documents
-        incoming = models.Trail.objects.filter(
-            forwarded=True,
-            receiver=request.user, status='P')
-        for item in incoming:
-            document_serializer = serializers.DocumentsSerializer(
-                item.document)
-            incoming_data = {
-                "document": document_serializer.data, "route": "incoming"}
-            documents.append(incoming_data)
-
-        # outgoing documents
-        outgoing = models.Trail.objects.filter(
-            send_id=request.user.staff_id,
-            sender=request.user, status='P').order_by('-document__id').distinct('document__id')
-        for item in outgoing:
-            document_serializer = serializers.DocumentsSerializer(
-                item.document)
-            outgoing_data = {
-                "document": document_serializer.data, "route": "outgoing"}
-            documents.append(outgoing_data)
-
-        # created archived documents
-        archive = [archive for archive in models.Archive.objects.all()]
-        for item in archive:
-            if item.document not in active_requested_document_lst and item.document not in activated_document_lst:
+            # activated documents
+            activated_documents = models.ActivateDocument.objects.filter(
+                document_receiver=request.user, expired=False)
+            activated_document_lst = [
+                doc.document for doc in activated_documents]
+            for item in activated_documents:
                 document_serializer = serializers.DocumentsSerializer(
                     item.document)
-                archive_data = {
-                    "document": document_serializer.data,
-                    "route": "archive",
-                    "department": item.created_by.department.name if item.closed_by == None else item.closed_by.department.name}
-                documents.append(archive_data)
+                activated_data = {
+                    "document": document_serializer.data, "route": "activated"}
+                documents.append(activated_data)
+
+            # pending documents
+            for item in active_requested_document:
+                document_serializer = serializers.DocumentsSerializer(
+                    item.document)
+                pending_data = {
+                    "document": document_serializer.data, "route": "pending"}
+                documents.append(pending_data)
+
+            # incoming documents
+            incoming = models.Trail.objects.filter(
+                forwarded=True,
+                receiver=request.user, status='P')
+            for item in incoming:
+                document_serializer = serializers.DocumentsSerializer(
+                    item.document)
+                incoming_data = {
+                    "document": document_serializer.data, "route": "incoming"}
+                documents.append(incoming_data)
+
+            # outgoing documents
+            outgoing = models.Trail.objects.filter(
+                send_id=request.user.staff_id,
+                sender=request.user, status='P').order_by('-document__id').distinct('document__id')
+            for item in outgoing:
+                document_serializer = serializers.DocumentsSerializer(
+                    item.document)
+                outgoing_data = {
+                    "document": document_serializer.data, "route": "outgoing"}
+                documents.append(outgoing_data)
+
+            # created archived documents
+            archive = [archive for archive in models.Archive.objects.all()]
+            for item in archive:
+                if item.document not in active_requested_document_lst and item.document not in activated_document_lst:
+                    document_serializer = serializers.DocumentsSerializer(
+                        item.document)
+                    archive_data = {
+                        "document": document_serializer.data,
+                        "route": "archive",
+                        "department": item.created_by.department.name if item.closed_by == None else item.closed_by.department.name}
+                    documents.append(archive_data)
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
 
         data = [doc for doc in documents if term.lower() in doc['document']
                 ['subject'].lower() or documents if term.lower() in doc['document']
