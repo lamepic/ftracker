@@ -35,6 +35,7 @@ function ViewDocument() {
   const [signatureStampType, setSignatureStampType] = useState("");
   const [signatures, setSignatures] = useState([]);
   const [stamps, setStamps] = useState([]);
+  const [submittingMinute, setSubmittingMinute] = useState(false);
 
   const [filename, setFilename] = useState("");
   const icon = useIcon(filename);
@@ -120,6 +121,7 @@ function ViewDocument() {
   const handleMinute = async (e) => {
     try {
       e.preventDefault();
+      setSubmittingMinute(true);
       const res = await createMinute(store.token, id, minute);
       const data = res.data;
       if (res.status === 201) {
@@ -131,6 +133,8 @@ function ViewDocument() {
         message: "Error",
         description: e.repsonse.data.detail,
       });
+    } finally {
+      setSubmittingMinute(false);
     }
   };
 
@@ -456,6 +460,7 @@ function ViewDocument() {
                           type="submit"
                           className="minute-button"
                           isDisabled={!minute}
+                          isLoading={submittingMinute}
                         >
                           Add Minute
                         </Button>
