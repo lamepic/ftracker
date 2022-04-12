@@ -17,19 +17,18 @@ function useFetchData(callback, arg = null) {
         const res = await callback(store.token, arg);
         const data = res.data;
         setData(data);
-        setLoading(false);
       } else {
         const res = await callback(store.token);
         const data = res.data;
         setData(data);
-        setLoading(false);
       }
     } catch (e) {
-      setLoading(false);
       notification.error({
         message: "Error",
         description: e.response.data.detail,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
