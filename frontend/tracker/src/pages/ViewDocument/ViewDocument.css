@@ -64,7 +64,7 @@ textarea::placeholder {
 }
 
 .minute-button {
-  margin-left: auto;
+  /* margin-left: auto; */
   /* margin-top: 15px; */
   padding: 10px;
   background-color: var(--light-brown) !important;
