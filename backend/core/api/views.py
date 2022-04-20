@@ -990,28 +990,21 @@ class SignatureStamp(views.APIView):
 
         try:
             document = get_object_or_404(models.Document, id=document_id)
-            creator = get_object_or_404(models.User, id=request.user.id)
+            user = get_object_or_404(
+                models.User, staff_id=request.user.staff_id)
 
             if type.lower() == "signature":
-                signature = models.Signature(
-                    user=request.user, document=document, signature=data.get('signature'))
-                signature.save()
-                queryset = models.Signature.objects.filter(
-                    document=document.id)
-                serialized_data = serializers.SignatureSerializer(
-                    queryset, many=True)
-                data = {"type": type, "data": serialized_data.data}
+                signature = models.Signature.objects.get(user=user)
+                document.signature.add(signature)
+                document.save()
 
             if type.lower() == "stamp":
-                stamp = models.Stamp(
-                    user=request.user, document=document, stamp=data.get('stamp'))
-                stamp.save()
-                queryset = models.Stamp.objects.filter(document=document.id)
-                serialized_data = serializers.StampSerializer(
-                    queryset, many=True)
-                data = {"type": type, "data": serialized_data.data}
+                stamp = models.Stamp.objects.get(user=user)
+                document.stamp.add(stamp)
+                document.save()
 
         except Exception as err:
+            print(err)
             raise exceptions.ServerError(err.args[0])
 
-        return Response(data, status=status.HTTP_200_OK)
+        return Response({"message": "Signature added Successfully"}, status=status.HTTP_200_OK)

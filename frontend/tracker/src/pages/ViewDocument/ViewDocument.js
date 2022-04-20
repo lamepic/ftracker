@@ -3,6 +3,7 @@ import "./ViewDocument.css";
 import { Box, Button, Text, Image, Grid } from "@chakra-ui/react";
 import Loading from "../../components/Loading/Loading";
 import {
+  addSignatureStamp,
   createMinute,
   fetchDocument,
   fetchNextUserToForwardDoc,
@@ -214,6 +215,28 @@ function ViewDocument() {
       }
     } else {
       setOpenPreview(true);
+    }
+  };
+
+  const handleSignatureStamp = async (type) => {
+    const data = {
+      type,
+      document_id: document.id,
+    };
+    try {
+      const res = await addSignatureStamp(store.token, data);
+      if (res.status === 200) {
+        _fetchDocument();
+        notification.success({
+          message: "Success",
+          description: res.data.message,
+        });
+      }
+    } catch (e) {
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
     }
   };
 
@@ -443,8 +466,7 @@ function ViewDocument() {
                             marginLeft="auto"
                             marginRight="10px"
                             onClick={() => {
-                              setOpenSignatureStampModal(true);
-                              setSignatureStampType("stamp");
+                              handleSignatureStamp("stamp");
                             }}
                           >
                             Add stamp
@@ -455,8 +477,7 @@ function ViewDocument() {
                             marginLeft="auto"
                             marginRight="10px"
                             onClick={() => {
-                              setOpenSignatureStampModal(true);
-                              setSignatureStampType("signature");
+                              handleSignatureStamp("signature");
                             }}
                           >
                             Add signature

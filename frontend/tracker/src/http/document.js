@@ -50,21 +50,21 @@ export async function createDocument(token, data) {
 export async function addSignatureStamp(token, data) {
   const config = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Token ${token}`,
     },
   };
 
-  const formData = new FormData();
+  // const formData = new FormData();
 
-  console.log(data);
+  // console.log(data);
 
-  formData.append(`${data.type}`, data.content);
-  formData.append("type", data.type);
+  // formData.append(`${data.type}`, data.content);
+  // formData.append("type", data.type);
 
   const res = await axios.post(
     `signature-stamp/${data.document_id}/`,
-    formData,
+    data,
     config
   );
   return res;
