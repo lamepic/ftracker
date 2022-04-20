@@ -18,7 +18,6 @@ import Preview from "../../components/Preview/Preview";
 import { notification } from "antd";
 import ForwardModal from "../../components/ForwardModal/ForwardModal";
 import useIcon from "../../hooks/useIcon";
-import SignatureStampModal from "../../components/CustomModals/SignatureStampModal";
 
 function ViewDocument() {
   const [store] = useStateValue();
@@ -32,8 +31,6 @@ function ViewDocument() {
   const [openModal, setOpenModal] = useState(false);
   const [nextReceiver, setNextReceiver] = useState(null);
   const [previewDoc, setPreviewDoc] = useState({});
-  const [openSignatureStampModal, setOpenSignatureStampModal] = useState(false);
-  const [signatureStampType, setSignatureStampType] = useState("");
   const [signatures, setSignatures] = useState([]);
   const [stamps, setStamps] = useState([]);
   const [submittingMinute, setSubmittingMinute] = useState(false);
@@ -510,16 +507,6 @@ function ViewDocument() {
           document={document}
           openModal={openModal}
           setOpenModal={setOpenModal}
-        />
-      )}
-      {openSignatureStampModal && (
-        <SignatureStampModal
-          setOpenSignatureStampModal={setOpenSignatureStampModal}
-          openSignatureStampModal={openSignatureStampModal}
-          type={signatureStampType}
-          document_id={document.id}
-          setStamps={setStamps}
-          setSignatures={setSignatures}
         />
       )}
     </>

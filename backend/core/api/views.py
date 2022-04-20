@@ -1004,7 +1004,6 @@ class SignatureStamp(views.APIView):
                 document.save()
 
         except Exception as err:
-            print(err)
             raise exceptions.ServerError(err.args[0])
 
-        return Response({"message": "Signature added Successfully"}, status=status.HTTP_200_OK)
+        return Response({"message": f"{type.capitalize()} added Successfully"}, status=status.HTTP_200_OK)
