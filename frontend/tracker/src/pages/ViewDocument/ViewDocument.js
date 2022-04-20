@@ -375,7 +375,10 @@ function ViewDocument() {
                                 src={`${process.env.REACT_APP_DOCUMENT_PATH}${signature.signature}`}
                                 width="50%"
                               />
-                              <p className="employee">{signature?.user}</p>
+                              <p className="employee">
+                                {signature?.user.first_name}{" "}
+                                {signature?.user.last_name}
+                              </p>
                               <p className="date">
                                 Date:{" "}
                                 {new Date(signature?.created_at).toDateString()}
@@ -399,7 +402,10 @@ function ViewDocument() {
                                   src={`${process.env.REACT_APP_DOCUMENT_PATH}${stamp.stamp}`}
                                   width="50%"
                                 />
-                                <p className="employee">{stamp.user}</p>
+                                <p className="employee">
+                                  {stamp?.user.first_name}{" "}
+                                  {stamp?.user.last_name}
+                                </p>
                                 <p className="date">
                                   Date:{" "}
                                   {new Date(stamp.created_at).toDateString()}

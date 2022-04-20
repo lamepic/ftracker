@@ -48,25 +48,29 @@ class DocumentActionSerializer(serializers.ModelSerializer):
 
 
 class StampSerializer(serializers.ModelSerializer):
+    user = users_serializers.UserSerializer()
+
     class Meta:
         model = models.Stamp
         fields = ["id", "user", "stamp", "created_at"]
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['user'] = f'{instance.user.first_name} {instance.user.last_name}'
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['user'] = f'{instance.user.first_name} {instance.user.last_name}'
+    #     return representation
 
 
 class SignatureSerializer(serializers.ModelSerializer):
+    user = users_serializers.UserSerializer()
+
     class Meta:
         model = models.Signature
         fields = ["id", "user", "signature", "created_at"]
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['user'] = f'{instance.user.first_name} {instance.user.last_name}'
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['user'] = f'{instance.user.first_name} {instance.user.last_name}'
+    #     return representation
 
 
 class DocumentsSerializer(serializers.ModelSerializer):
@@ -74,8 +78,8 @@ class DocumentsSerializer(serializers.ModelSerializer):
     related_document = serializers.SerializerMethodField()
     preview_code = serializers.SerializerMethodField()
     document_type = DocumentTypeSerializer()
-    signature = serializers.SerializerMethodField()
-    stamp = serializers.SerializerMethodField()
+    signature = SignatureSerializer(many=True)
+    stamp = StampSerializer(many=True)
 
     class Meta:
         model = models.Document
@@ -100,15 +104,15 @@ class DocumentsSerializer(serializers.ModelSerializer):
         serialized_data = PreviewCodeSerializer(code, many=True)
         return serialized_data.data
 
-    def get_signature(self, obj):
-        signature = models.Signature.objects.filter(document=obj)
-        serialized_data = SignatureSerializer(signature, many=True)
-        return serialized_data.data
+    # def get_signature(self, obj):
+    #     signature = models.Signature.objects.filter(document=obj)
+    #     serialized_data = SignatureSerializer(signature, many=True)
+    #     return serialized_data.data
 
-    def get_stamp(self, obj):
-        stamp = models.Stamp.objects.filter(document=obj)
-        serialized_data = StampSerializer(stamp, many=True)
-        return serialized_data.data
+    # def get_stamp(self, obj):
+    #     stamp = models.Stamp.objects.filter(document=obj)
+    #     serialized_data = StampSerializer(stamp, many=True)
+    #     return serialized_data.data
 
 
 class IncomingSerializer(serializers.ModelSerializer):
