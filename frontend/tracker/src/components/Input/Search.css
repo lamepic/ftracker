@@ -39,6 +39,7 @@
   margin-left: 5px;
   display: flex;
   flex-direction: column;
+  max-width: 50%;
 }
 
 .item__title {

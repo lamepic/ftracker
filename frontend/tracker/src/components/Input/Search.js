@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./Search.css";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { AutoComplete, Button, Input } from "antd";
 import { useStateValue } from "../../store/StateProvider";
 import { SearchDocument, requestDocument } from "../../http/document";
@@ -45,7 +45,9 @@ const searchResult = (
           <div className="item__description">
             <p className="item__title">{item.document.subject}</p>
             {/* <p className="item__ref">{item.document.ref}</p> */}
-            <p className="item__ref">{item.document.filename}</p>
+            <Text className="item__ref" isTruncated={true}>
+              {item.document.filename}
+            </Text>
           </div>
           <div className="item__action">
             {item.route === "outgoing" && (
@@ -90,18 +92,18 @@ const searchResult = (
                   View
                 </Button>
               )}
-            {item.route === "archive" && (
+            {item.route === "archive" &&
               // !store.user.is_department &&
-              // item.department !== store.user.department.name &&
-              <Button
-                size="middle"
-                className="search__btn"
-                onClick={() => handleRequest(item.document.id)}
-                type="text"
-              >
-                Request
-              </Button>
-            )}
+              item.department !== store.user.department.name && (
+                <Button
+                  size="middle"
+                  className="search__btn"
+                  onClick={() => handleRequest(item.document.id)}
+                  type="text"
+                >
+                  Request
+                </Button>
+              )}
             {item.route === "pending" && (
               <Button size="middle" className="search__btn" disabled>
                 Pending
@@ -166,7 +168,7 @@ function Search() {
   };
 
   const handleView = (route, id) => {
-    history.push(`/dashboard/document/${route}/${id}/`);
+    history.push(`/dashboard/${route}/document/${id}/`);
     setTerm("");
   };
 

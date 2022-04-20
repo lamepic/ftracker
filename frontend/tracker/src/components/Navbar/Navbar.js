@@ -114,7 +114,11 @@ function NotificationDropDown() {
       <Menu.Item key="0101">
         <div className="request__header" key="00">
           <BellFilled
-            style={{ fontSize: "22px", color: "var(--dark-brown)" }}
+            style={{
+              fontSize: "22px",
+              color: "var(--dark-brown)",
+              pointerEvents: "none",
+            }}
           />
           <p>Notifications</p>
         </div>

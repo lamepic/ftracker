@@ -628,7 +628,8 @@ class SearchAPIView(views.APIView):
                     archive_data = {
                         "document": document_serializer.data,
                         "route": "archive",
-                        "department": item.created_by.department.name if item.closed_by == None else item.closed_by.department.name}
+                        "department": item.created_by.department.name
+                    }
                     documents.append(archive_data)
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
