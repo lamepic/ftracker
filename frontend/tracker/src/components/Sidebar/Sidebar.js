@@ -25,7 +25,9 @@ function Sidebar({ onClose, isOpen }) {
         display={{ sm: "none", lg: "block" }}
       >
         <Box display="flex" flexDirection="column" alignItems="center">
-          <Image src={logo} alt="logo" w="90px" objectFit="contain" />
+          <Link to="/dashboard">
+            <Image src={logo} alt="logo" w="90px" objectFit="contain" />
+          </Link>
         </Box>
         <Box marginTop="5rem">
           <Link to="/dashboard">
