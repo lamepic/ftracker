@@ -61,6 +61,8 @@ class Document(models.Model):
         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     password = models.CharField(max_length=100, null=True, blank=True)
+    signature = models.ManyToManyField("Signature", blank=True)
+    stamp = models.ManyToManyField("Stamp", blank=True)
 
     def __str__(self):
         return self.subject
@@ -311,8 +313,8 @@ class Signature(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     signature = models.FileField(
         upload_to='signature/', null=True, blank=True)
-    document = models.ForeignKey(
-        Document, on_delete=models.SET_NULL, null=True)
+    # document = models.ForeignKey(
+    #     Document, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -322,8 +324,8 @@ class Signature(models.Model):
 class Stamp(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     stamp = models.FileField(upload_to='stamps/', null=True, blank=True)
-    document = models.ForeignKey(
-        Document, on_delete=models.SET_NULL, null=True)
+    # document = models.ForeignKey(
+    #     Document, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
