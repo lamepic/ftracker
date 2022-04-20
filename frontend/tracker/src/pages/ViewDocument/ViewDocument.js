@@ -297,7 +297,7 @@ function ViewDocument() {
                   >
                     {document.document_type.name !== "Custom" ? (
                       !nextReceiver?.last_receiver && (
-                        <Grid placeItems="center" border="1px solid blue">
+                        <Grid placeItems="center">
                           <Button
                             className="file-btn forward"
                             onClick={() => handleForwardDocument()}
