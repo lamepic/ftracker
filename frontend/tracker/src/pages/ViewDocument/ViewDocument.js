@@ -50,6 +50,7 @@ function ViewDocument() {
       const res = await fetchDocument(store.token, id);
       const data = res.data;
       setDocument(data);
+      console.log(data);
       setFilename(data.filename);
       setSignatures(data.signature);
       setStamps(data.stamp);
@@ -456,29 +457,44 @@ function ViewDocument() {
                         marginTop="5px"
                         display="flex"
                         justifyContent="space-between"
+                        justifyItems="flex-end"
                       >
                         {store.user.is_department ? (
-                          <Button
-                            className="file-btn stamp"
-                            marginLeft="auto"
-                            marginRight="10px"
-                            onClick={() => {
-                              handleSignatureStamp("stamp");
-                            }}
-                          >
-                            Add stamp
-                          </Button>
+                          <>
+                            {!stamps.find(
+                              (stamp) =>
+                                stamp.user.staff_id === store.user.staff_id
+                            ) && (
+                              <Button
+                                className="file-btn stamp"
+                                marginLeft="auto"
+                                marginRight="10px"
+                                onClick={() => {
+                                  handleSignatureStamp("stamp");
+                                }}
+                              >
+                                Add stamp
+                              </Button>
+                            )}
+                          </>
                         ) : (
-                          <Button
-                            className="file-btn signature"
-                            marginLeft="auto"
-                            marginRight="10px"
-                            onClick={() => {
-                              handleSignatureStamp("signature");
-                            }}
-                          >
-                            Add signature
-                          </Button>
+                          <>
+                            {!signatures.find(
+                              (signature) =>
+                                signature.user.staff_id === store.user.staff_id
+                            ) && (
+                              <Button
+                                className="file-btn signature"
+                                marginLeft="auto"
+                                marginRight="10px"
+                                onClick={() => {
+                                  handleSignatureStamp("signature");
+                                }}
+                              >
+                                Add signature
+                              </Button>
+                            )}
+                          </>
                         )}
                         <Button
                           type="submit"
