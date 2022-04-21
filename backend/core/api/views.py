@@ -645,139 +645,140 @@ class CreateDocument(views.APIView):
 
     def post(self, request, format=None):
         data = request.data
-        data_lst = list(data)  # for attachments
+        print(data)
+        # data_lst = list(data)  # for attachments
 
-        data_document_type = data.get('documentType')
-        document = data.get('document')
-        reference = data.get('reference')
-        subject = data.get('subject')
-        filename = data.get('filename')
-        encrypt = json.loads(data.get('encrypt'))
-        carbon_copy = data.get('carbonCopy')
+        # data_document_type = data.get('documentType')
+        # document = data.get('document')
+        # reference = data.get('reference')
+        # subject = data.get('subject')
+        # filename = data.get('filename')
+        # encrypt = json.loads(data.get('encrypt'))
+        # carbon_copy = data.get('carbonCopy')
 
-        receiver = get_object_or_404(
-            models.User, staff_id=data.get("receiver"))
-        sender = get_object_or_404(
-            models.User, staff_id=self.request.user.staff_id)
-        document_type = get_object_or_404(
-            models.DocumentType, id=data_document_type)
+        # receiver = get_object_or_404(
+        #     models.User, staff_id=data.get("receiver"))
+        # sender = get_object_or_404(
+        #     models.User, staff_id=self.request.user.staff_id)
+        # document_type = get_object_or_404(
+        #     models.DocumentType, id=data_document_type)
 
-        if document_type.name.lower() == 'custom':
-            department = data.get('department')
-            try:
-                # creating documents and attachments
-                document = models.Document.objects.create(
-                    content=document, subject=subject, created_by=sender,
-                    ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
+        # if document_type.name.lower() == 'custom':
+        #     department = data.get('department')
+        #     try:
+        #         # creating documents and attachments
+        #         document = models.Document.objects.create(
+        #             content=document, subject=subject, created_by=sender,
+        #             ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
 
-                if carbon_copy:
-                    carbon_copy = json.loads(carbon_copy)
-                    user_receiver = models.DocumentCopyReceiver()
-                    user_receiver.save()
+        #         if carbon_copy:
+        #             carbon_copy = json.loads(carbon_copy)
+        #             user_receiver = models.DocumentCopyReceiver()
+        #             user_receiver.save()
 
-                    for copy in carbon_copy:
-                        copy = json.loads(copy)
-                        if copy['type'].lower() == "user":
-                            user = User.objects.get(staff_id=copy['id'])
-                            user_receiver.user.add(user)
-                        if copy['type'].lower() == "group":
-                            group = user_models.UserGroup.objects.get(
-                                id=int(copy['id']))
-                            user_receiver.group.add(group)
-                    user_receiver.save()
+        #             for copy in carbon_copy:
+        #                 copy = json.loads(copy)
+        #                 if copy['type'].lower() == "user":
+        #                     user = User.objects.get(staff_id=copy['id'])
+        #                     user_receiver.user.add(user)
+        #                 if copy['type'].lower() == "group":
+        #                     group = user_models.UserGroup.objects.get(
+        #                         id=int(copy['id']))
+        #                     user_receiver.group.add(group)
+        #             user_receiver.save()
 
-                    document_copy = models.DocumentCopy(
-                        sender=sender, document=document, document_copy_receiver=user_receiver)
-                    document_copy.save()
+        #             document_copy = models.DocumentCopy(
+        #                 sender=sender, document=document, document_copy_receiver=user_receiver)
+        #             document_copy.save()
 
-                if document:
-                    count = 0
-                    for item in data_lst:
-                        if item == f'attachment_{count}':
-                            doc = data[item]
-                            if f'attachment_subject_{count}' in data_lst:
-                                sub = data[f'attachment_subject_{count}']
+        #         if document:
+        #             count = 0
+        #             for item in data_lst:
+        #                 if item == f'attachment_{count}':
+        #                     doc = data[item]
+        #                     if f'attachment_subject_{count}' in data_lst:
+        #                         sub = data[f'attachment_subject_{count}']
 
-                            related_document = models.RelatedDocument.objects.create(
-                                subject=sub, content=doc, document=document)
-                            count += 1
+        #                     related_document = models.RelatedDocument.objects.create(
+        #                         subject=sub, content=doc, document=document)
+        #                     count += 1
 
-                trail = models.Trail.objects.create(
-                    receiver=receiver, sender=sender, document=document)
-                trail.forwarded = True
-                trail.send_id = sender.staff_id
-                trail.save()
-                utils.send_email(receiver=receiver,
-                                 sender=sender, document=document, create_code=encrypt)
-            except IntegrityError:
-                raise exceptions.BadRequest("Provide a unique reference!")
-            except Exception as err:
-                print(err)
-                raise exceptions.ServerError(err.args[0])
-        else:
-            try:
-                document_type = models.DocumentType.objects.get(
-                    id=data_document_type)
-                document = models.Document.objects.create(
-                    content=document, subject=subject, created_by=sender,
-                    ref=reference, document_type=document_type, filename=filename)
-                user_receiver = None
+        #         trail = models.Trail.objects.create(
+        #             receiver=receiver, sender=sender, document=document)
+        #         trail.forwarded = True
+        #         trail.send_id = sender.staff_id
+        #         trail.save()
+        #         utils.send_email(receiver=receiver,
+        #                          sender=sender, document=document, create_code=encrypt)
+        #     except IntegrityError:
+        #         raise exceptions.BadRequest("Provide a unique reference!")
+        #     except Exception as err:
+        #         print(err)
+        #         raise exceptions.ServerError(err.args[0])
+        # else:
+        #     try:
+        #         document_type = models.DocumentType.objects.get(
+        #             id=data_document_type)
+        #         document = models.Document.objects.create(
+        #             content=document, subject=subject, created_by=sender,
+        #             ref=reference, document_type=document_type, filename=filename)
+        #         user_receiver = None
 
-                print("carbon copy", carbon_copy)
+        #         print("carbon copy", carbon_copy)
 
-                if carbon_copy:
-                    carbon_copy = json.loads(carbon_copy)
-                    user_receiver = models.DocumentCopyReceiver()
-                    user_receiver.save()
+        #         if carbon_copy:
+        #             carbon_copy = json.loads(carbon_copy)
+        #             user_receiver = models.DocumentCopyReceiver()
+        #             user_receiver.save()
 
-                    for copy in carbon_copy:
-                        copy = json.loads(copy)
-                        if copy['type'].lower() == "user":
-                            user = User.objects.get(staff_id=copy['id'])
-                            user_receiver.user.add(user)
-                        if copy['type'].lower() == "group":
-                            group = user_models.UserGroup.objects.get(
-                                id=int(copy['id']))
-                            user_receiver.group.add(group)
-                    user_receiver.save()
+        #             for copy in carbon_copy:
+        #                 copy = json.loads(copy)
+        #                 if copy['type'].lower() == "user":
+        #                     user = User.objects.get(staff_id=copy['id'])
+        #                     user_receiver.user.add(user)
+        #                 if copy['type'].lower() == "group":
+        #                     group = user_models.UserGroup.objects.get(
+        #                         id=int(copy['id']))
+        #                     user_receiver.group.add(group)
+        #             user_receiver.save()
 
-                    document_copy = models.DocumentCopy(
-                        sender=sender, document=document, document_copy_receiver=user_receiver)
-                    document_copy.save()
+        #             document_copy = models.DocumentCopy(
+        #                 sender=sender, document=document, document_copy_receiver=user_receiver)
+        #             document_copy.save()
 
-                if document:
-                    count = 0
-                    for item in data_lst:
-                        if item == f'attachment_{count}':
-                            doc = data[item]
-                            if f'attachment_subject_{count}' in data_lst:
-                                sub = data[f'attachment_subject_{count}']
+        #         if document:
+        #             count = 0
+        #             for item in data_lst:
+        #                 if item == f'attachment_{count}':
+        #                     doc = data[item]
+        #                     if f'attachment_subject_{count}' in data_lst:
+        #                         sub = data[f'attachment_subject_{count}']
 
-                            related_document = models.RelatedDocument.objects.create(
-                                subject=sub, content=doc, document=document)
-                            count += 1
-                document_actions = models.DocumentAction.objects.filter(
-                    document_type=document_type)
-                document_action_receiver = [
-                    path for path in document_actions if path.user == receiver]
-                document_action_lst = [action for action in document_actions]
+        #                     related_document = models.RelatedDocument.objects.create(
+        #                         subject=sub, content=doc, document=document)
+        #                     count += 1
+        #         document_actions = models.DocumentAction.objects.filter(
+        #             document_type=document_type)
+        #         document_action_receiver = [
+        #             path for path in document_actions if path.user == receiver]
+        #         document_action_lst = [action for action in document_actions]
 
-                if len(document_action_receiver) > 0:
-                    document_action_receiver_index = document_action_lst.index(
-                        document_action_receiver[0])
-                    current_trail_position = document_action_receiver_index
+        #         if len(document_action_receiver) > 0:
+        #             document_action_receiver_index = document_action_lst.index(
+        #                 document_action_receiver[0])
+        #             current_trail_position = document_action_receiver_index
 
-                    trail = models.Trail.objects.create(
-                        receiver=receiver, sender=sender, document=document, order=current_trail_position)
-                    trail.forwarded = True
-                    trail.send_id = sender.staff_id
-                    trail.save()
-                    utils.send_email(receiver=receiver,
-                                     sender=sender, document=document, create_code=encrypt)
-            except Exception as err:
-                print(err)
-                # user_receiver.delete()
-                raise exceptions.ServerError(err.args[0])
+        #             trail = models.Trail.objects.create(
+        #                 receiver=receiver, sender=sender, document=document, order=current_trail_position)
+        #             trail.forwarded = True
+        #             trail.send_id = sender.staff_id
+        #             trail.save()
+        #             utils.send_email(receiver=receiver,
+        #                              sender=sender, document=document, create_code=encrypt)
+        #     except Exception as err:
+        #         print(err)
+        #         # user_receiver.delete()
+        #         raise exceptions.ServerError(err.args[0])
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)
 
