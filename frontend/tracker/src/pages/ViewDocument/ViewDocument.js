@@ -457,7 +457,6 @@ function ViewDocument() {
                         marginTop="5px"
                         display="flex"
                         justifyContent="end"
-                        border="1px solid red"
                       >
                         {store.user.is_department ? (
                           <>
