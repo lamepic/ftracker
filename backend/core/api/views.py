@@ -664,7 +664,6 @@ class CreateDocument(views.APIView):
 
         if document_type.name.lower() == 'custom':
             department = data.get('department')
-
             try:
                 # creating documents and attachments
                 document = models.Document.objects.create(
@@ -713,6 +712,7 @@ class CreateDocument(views.APIView):
             except IntegrityError:
                 raise exceptions.BadRequest("Provide a unique reference!")
             except Exception as err:
+                print(err)
                 raise exceptions.ServerError(err.args[0])
         else:
             try:
@@ -721,6 +721,9 @@ class CreateDocument(views.APIView):
                 document = models.Document.objects.create(
                     content=document, subject=subject, created_by=sender,
                     ref=reference, document_type=document_type, filename=filename)
+                user_receiver = None
+
+                print("carbon copy", carbon_copy)
 
                 if carbon_copy:
                     carbon_copy = json.loads(carbon_copy)
@@ -772,7 +775,8 @@ class CreateDocument(views.APIView):
                     utils.send_email(receiver=receiver,
                                      sender=sender, document=document, create_code=encrypt)
             except Exception as err:
-                user_receiver.delete()
+                print(err)
+                # user_receiver.delete()
                 raise exceptions.ServerError(err.args[0])
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)

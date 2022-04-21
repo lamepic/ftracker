@@ -263,6 +263,7 @@ function CreateDocument() {
             }
           } catch (error) {
             setSubmitting(false);
+            console.log(error);
             return notification.error({
               message: "Error",
               description: error.response.data.detail,

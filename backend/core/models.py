@@ -75,7 +75,7 @@ class Document(models.Model):
 
         if self.content != "null":
             filename = self.content.name
-            check = (".pdf", ".docx", ".xls", ".xlsx",
+            check = (".pdf", ".docx", ".doc", ".xls", ".xlsx",
                      ".ppt", ".pptx", ".txt", ".jpeg", ".jpg")
             if not filename.endswith(check):
                 raise ValidationError("Unsupported File format")
@@ -109,7 +109,7 @@ class RelatedDocument(models.Model):
 
         if self.content:
             filename = self.content.name
-            check = (".pdf", ".docx", ".xls", ".xlsx",
+            check = (".pdf", ".docx", ".doc", ".xls", ".xlsx",
                      ".ppt", ".pptx", ".txt", ".jpeg", ".jpg")
             if not filename.endswith(check):
                 raise ValidationError("Unsupported File format")
