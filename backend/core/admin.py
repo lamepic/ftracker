@@ -115,3 +115,22 @@ class CustomMPTTModelAdmin(DraggableMPTTAdmin):
 
 
 admin.site.register(models.Folder, CustomMPTTModelAdmin)
+
+
+@admin.register(models.CarbonCopyDocument)
+class CarbonCopyDocumentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'subject', 'ref',
+                    'filename', 'created_by', 'document_type', "created_at"]
+
+
+@admin.register(models.CarbonCopyMinute)
+class CarbonCopyMinuteAdmin(admin.ModelAdmin):
+    list_display = ['content', 'created_by', 'date']
+
+
+@admin.register(models.CarbonCopyRelatedDocument)
+class CarbonCopyRelatedDocumentAdmin(admin.ModelAdmin):
+    list_display = ['subject', 'content', 'document']
+
+    def document(self, obj):
+        return obj.document.name

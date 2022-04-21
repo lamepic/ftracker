@@ -308,6 +308,7 @@ class CarbonCopyDocument(models.Model):
         DocumentType, on_delete=models.CASCADE, null=True, blank=True)
     folder = models.ForeignKey(
         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class CarbonCopyMinute(models.Model):
@@ -327,7 +328,12 @@ class CarbonCopyMinute(models.Model):
 class CarbonCopyRelatedDocument(models.Model):
     subject = models.CharField(max_length=100)
     content = models.CharField(max_length=200)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    carbon_copy_document = models.ForeignKey(
+        CarbonCopyDocument, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        self.carbon_copy_document.related_document = True
+        super(RelatedDocument, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.subject
