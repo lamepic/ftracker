@@ -253,6 +253,7 @@ function CreateDocument() {
         if (willSubmit) {
           setSubmitting(true);
           try {
+            console.log(data);
             const res = await createDocument(store.token, data);
             if (res.status === 201) {
               setSubmitting(false);
@@ -263,6 +264,7 @@ function CreateDocument() {
             }
           } catch (error) {
             setSubmitting(false);
+            console.log(error);
             return notification.error({
               message: "Error",
               description: error.response.data.detail,

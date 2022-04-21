@@ -675,6 +675,14 @@ class CreateDocument(views.APIView):
                     carbon_copy = json.loads(carbon_copy)
                     user_receiver = models.DocumentCopyReceiver()
                     user_receiver.save()
+                    carbon_copy_document = models.CarbonCopyDocument.objects.create(
+                        content=document.content.url,
+                        subject=document.subject,
+                        filename=document.filename,
+                        ref=document.ref,
+                        created_by=document.created_by,
+                        document_type=document.document_type,
+                    )
 
                     for copy in carbon_copy:
                         copy = json.loads(copy)
@@ -688,7 +696,7 @@ class CreateDocument(views.APIView):
                     user_receiver.save()
 
                     document_copy = models.DocumentCopy(
-                        sender=sender, document=document, document_copy_receiver=user_receiver)
+                        sender=sender, document=carbon_copy_document, document_copy_receiver=user_receiver)
                     document_copy.save()
 
                 if document:
@@ -726,6 +734,14 @@ class CreateDocument(views.APIView):
                     carbon_copy = json.loads(carbon_copy)
                     user_receiver = models.DocumentCopyReceiver()
                     user_receiver.save()
+                    carbon_copy_document = models.CarbonCopyDocument.objects.create(
+                        content=document.content.url,
+                        subject=document.subject,
+                        filename=document.filename,
+                        ref=document.ref,
+                        created_by=document.created_by,
+                        document_type=document.document_type,
+                    )
 
                     for copy in carbon_copy:
                         copy = json.loads(copy)
@@ -739,7 +755,7 @@ class CreateDocument(views.APIView):
                     user_receiver.save()
 
                     document_copy = models.DocumentCopy(
-                        sender=sender, document=document, document_copy_receiver=user_receiver)
+                        sender=sender, document=carbon_copy_document, document_copy_receiver=user_receiver)
                     document_copy.save()
 
                 if document:

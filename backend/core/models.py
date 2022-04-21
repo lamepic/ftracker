@@ -288,7 +288,7 @@ class DocumentCopy(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='carboncopy_sender')
     document = models.ForeignKey(
-        Document, on_delete=models.CASCADE)
+        "CarbonCopyDocument", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     document_copy_receiver = models.ForeignKey(
         DocumentCopyReceiver, on_delete=models.CASCADE)
