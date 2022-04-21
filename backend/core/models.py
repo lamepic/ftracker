@@ -296,17 +296,41 @@ class DocumentCopy(models.Model):
     def __str__(self):
         return f'{self.document.subject}'
 
-# class CarbonCopyDocument(models.Model):
-#     content = models.CharField(max_length=200, blank=True, null=True)
-#     subject = models.CharField(max_length=100)
-#     filename = models.CharField(max_length=100)
-#     ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
-#     created_by = models.ForeignKey(
-#         User, on_delete=models.CASCADE)
-#     document_type = models.ForeignKey(
-#         DocumentType, on_delete=models.CASCADE, null=True, blank=True)
-#     folder = models.ForeignKey(
-#         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+
+class CarbonCopyDocument(models.Model):
+    content = models.CharField(max_length=200, blank=True, null=True)
+    subject = models.CharField(max_length=100)
+    filename = models.CharField(max_length=100)
+    ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE)
+    document_type = models.ForeignKey(
+        DocumentType, on_delete=models.CASCADE, null=True, blank=True)
+    folder = models.ForeignKey(
+        "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+
+
+class CarbonCopyMinute(models.Model):
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    carbon_copy_document = models.ForeignKey(
+        CarbonCopyDocument, on_delete=models.CASCADE)
+    content = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-date',)
+
+    def __str__(self):
+        return self.content
+
+
+class CarbonCopyRelatedDocument(models.Model):
+    subject = models.CharField(max_length=100)
+    content = models.CharField(max_length=200)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subject
 
 
 class Signature(models.Model):
