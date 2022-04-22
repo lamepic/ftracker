@@ -254,6 +254,38 @@ class FolderSerializer(serializers.ModelSerializer):
         return serialized_document.data
 
 
-# class DocumentCopySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.DocumentCopy
+class CarbonCopyDocument(serializers.ModelSerializer):
+    related_document = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.CarbonCopyDocument
+        fields = ['id', 'content',
+                  "subject",
+                  "filename",
+                  "ref",
+                  "created_by",
+                  "document_type", "related_document"]
+
+    def get_related_document(self, obj):
+        related_document = obj.carboncopyrelateddocument_set
+        serialized_related_document = CarbonCopyRelatedDocument(
+            related_document, many=True)
+        return serialized_related_document.data
+
+
+class CarbonCopyRelatedDocument(serializers.ModelSerializer):
+    class Meta:
+        model = models.CarbonCopyRelatedDocument
+        fields = ["subject",
+                  "content",
+                  "id"]
+
+
+class DocumentCopySerializer(serializers.ModelSerializer):
+    document = CarbonCopyDocument()
+    sender = users_serializers.UserSerializer()
+
+    class Meta:
+        model = models.DocumentCopy
+        fields = ['id', 'sender', 'document',
+                  'created_at']

@@ -66,15 +66,15 @@ class IncomingAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
-            # document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
-            #     document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
+            document_copy = models.DocumentCopy.objects.filter(
+                receiver__staff_id=user.staff_id, forwarded=True, status="P")
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
 
         incoming_serialized_data = serializers.IncomingSerializer(
             incoming, many=True)
-        document_copy_serialized_data = serializers.IncomingSerializer(
-            # document_copy,
+        document_copy_serialized_data = serializers.DocumentCopySerializer(
+            document_copy,
             many=True)
 
         data = {"incoming": incoming_serialized_data.data,
@@ -692,7 +692,6 @@ class CreateDocument(views.APIView):
                 for copy in carbon_copy:
                     copy = json.loads(copy)
                     if copy['type'].lower() == "user":
-                        # TODO: don't add user to copy group if user is in group
                         user = User.objects.get(staff_id=copy['id'])
                         user_receiver.user.add(user)
                     if copy['type'].lower() == "group":
@@ -715,10 +714,7 @@ class CreateDocument(views.APIView):
                         models.User, staff_id=staff_id)
 
                     document_copy = models.DocumentCopy.objects.create(
-                        sender=sender, document=carbon_copy_document, receiver=copy_receiver)
-                    # document_copy = models.DocumentCopy(
-                    #     sender=sender, document=carbon_copy_document, receiver=copy_receiver)
-                    # document_copy.save()
+                        sender=sender, document=carbon_copy_document, receiver=copy_receiver, forwarded=True, send_id=sender.staff_id)
 
             if document:
                 count = 0
@@ -730,6 +726,12 @@ class CreateDocument(views.APIView):
 
                         related_document = models.RelatedDocument.objects.create(
                             subject=sub, content=doc, document=document)
+                        # if carbon_copy:
+                        #     cabon_copy_related_document = models.CarbonCopyRelatedDocument(
+                        #         content=related_document.content.url,
+                        #         subject=related_document.subject,
+                        #         carbon_copy_document=
+                        #         )
                         count += 1
 
             if document_type.name.lower() == 'custom':

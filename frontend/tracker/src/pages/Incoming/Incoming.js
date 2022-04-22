@@ -6,6 +6,8 @@ import useFetchData from "../../hooks/useFetchData";
 function Incoming() {
   const { loading, data } = useFetchData(fetchIncoming);
 
+  console.log(data);
+
   return <Page type="incoming" data={data} loading={loading} />;
 }
 

@@ -47,13 +47,16 @@ function ViewDocument() {
 
   const _fetchDocument = async () => {
     try {
-      const res = await fetchDocument(store.token, id);
-      const data = res.data;
-      setDocument(data);
-      console.log(data);
-      setFilename(data.filename);
-      setSignatures(data.signature);
-      setStamps(data.stamp);
+      // TODO: create http for fetching document copy
+      if (type !== "copy") {
+        const res = await fetchDocument(store.token, id);
+        const data = res.data;
+        setDocument(data);
+        console.log(data);
+        setFilename(data.filename);
+        setSignatures(data.signature);
+        setStamps(data.stamp);
+      }
     } catch (e) {
       notification.error({
         message: "Error",

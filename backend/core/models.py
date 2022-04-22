@@ -286,6 +286,11 @@ class DocumentCopyReceiver(models.Model):
 
 
 class DocumentCopy(models.Model):
+    STATUS_OPTIONS = (
+        ('P', 'Pending'),
+        ('C', 'Completed')
+    )
+
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='carboncopy_sender')
     document = models.ForeignKey(
@@ -293,6 +298,10 @@ class DocumentCopy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     receiver = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='carboncopy_receiver')
+    status = models.CharField(
+        max_length=1, choices=STATUS_OPTIONS, default='P')
+    send_id = models.CharField(max_length=50)
+    forwarded = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.document.subject}'
