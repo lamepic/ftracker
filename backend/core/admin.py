@@ -91,7 +91,7 @@ class DocumentActionAdmin(admin.ModelAdmin):
 @admin.register(models.DocumentCopy)
 class DocumentCopy(admin.ModelAdmin):
     list_display = ['sender', 'document',
-                    'created_at', 'document_copy_receiver']
+                    'created_at', 'receiver']
 
 
 @admin.register(models.DocumentCopyReceiver)
