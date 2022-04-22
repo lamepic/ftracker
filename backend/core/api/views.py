@@ -66,15 +66,16 @@ class IncomingAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
-            document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
-                document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
+            # document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
+            #     document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
 
         incoming_serialized_data = serializers.IncomingSerializer(
             incoming, many=True)
         document_copy_serialized_data = serializers.IncomingSerializer(
-            document_copy, many=True)
+            # document_copy,
+            many=True)
 
         data = {"incoming": incoming_serialized_data.data,
                 "copy": document_copy_serialized_data.data}
@@ -89,8 +90,8 @@ class IncomingCountAPIView(views.APIView):
             incoming = models.Trail.objects.filter(
                 forwarded=True,
                 receiver=user, status='P')
-            document_copy = models.DocumentCopy.objects.filter(Q(document_copy_receiver__user__staff_id__contains=user.staff_id) | Q(
-                document_copy_receiver__group__members__staff_id__contains=user.staff_id)).distinct()
+            document_copy = models.DocumentCopy.objects.filter(
+                receiver__staff_id=user.staff_id).distinct()
             data = utils.Count(len(incoming) + len(document_copy))
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
@@ -642,143 +643,128 @@ class SearchAPIView(views.APIView):
 
 
 class CreateDocument(views.APIView):
-
     def post(self, request, format=None):
         data = request.data
         print(data)
-        # data_lst = list(data)  # for attachments
+        data_lst = list(data)  # for attachments
 
-        # data_document_type = data.get('documentType')
-        # document = data.get('document')
-        # reference = data.get('reference')
-        # subject = data.get('subject')
-        # filename = data.get('filename')
-        # encrypt = json.loads(data.get('encrypt'))
-        # carbon_copy = data.get('carbonCopy')
+        data_document_type = data.get('documentType')
+        document = data.get('document')
+        reference = data.get('reference')
+        subject = data.get('subject')
+        filename = data.get('filename')
+        encrypt = json.loads(data.get('encrypt'))
+        carbon_copy = data.get('carbonCopy')
 
-        # receiver = get_object_or_404(
-        #     models.User, staff_id=data.get("receiver"))
-        # sender = get_object_or_404(
-        #     models.User, staff_id=self.request.user.staff_id)
-        # document_type = get_object_or_404(
-        #     models.DocumentType, id=data_document_type)
+        receiver = get_object_or_404(
+            models.User, staff_id=data.get("receiver"))
+        sender = get_object_or_404(
+            models.User, staff_id=self.request.user.staff_id)
+        document_type = get_object_or_404(
+            models.DocumentType, id=data_document_type)
 
-        # if document_type.name.lower() == 'custom':
-        #     department = data.get('department')
-        #     try:
-        #         # creating documents and attachments
-        #         document = models.Document.objects.create(
-        #             content=document, subject=subject, created_by=sender,
-        #             ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
+        try:
+            if document:
+                document = models.Document.objects.create(
+                    content=document, subject=subject, created_by=sender,
+                    ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
+            else:
+                document = models.Document.objects.create(
+                    subject=subject, created_by=sender,
+                    ref=reference, document_type=document_type, encrypt=encrypt, filename=filename)
 
-        #         if carbon_copy:
-        #             carbon_copy = json.loads(carbon_copy)
-        #             user_receiver = models.DocumentCopyReceiver()
-        #             user_receiver.save()
+            if carbon_copy:
+                carbon_copy = json.loads(carbon_copy)
+                user_receiver = models.DocumentCopyReceiver()
+                user_receiver.save()
+                carbon_copy_document_content = None if document.content == None else document.content.url
+                print("reached here")
+                carbon_copy_document = models.CarbonCopyDocument.objects.create(
+                    content=carbon_copy_document_content,
+                    subject=document.subject,
+                    filename=document.filename,
+                    ref=document.ref,
+                    created_by=document.created_by,
+                    document_type=document.document_type,
+                )
+                print("reached here too")
 
-        #             for copy in carbon_copy:
-        #                 copy = json.loads(copy)
-        #                 if copy['type'].lower() == "user":
-        #                     user = User.objects.get(staff_id=copy['id'])
-        #                     user_receiver.user.add(user)
-        #                 if copy['type'].lower() == "group":
-        #                     group = user_models.UserGroup.objects.get(
-        #                         id=int(copy['id']))
-        #                     user_receiver.group.add(group)
-        #             user_receiver.save()
+                for copy in carbon_copy:
+                    copy = json.loads(copy)
+                    if copy['type'].lower() == "user":
+                        # TODO: don't add user to copy group if user is in group
+                        user = User.objects.get(staff_id=copy['id'])
+                        user_receiver.user.add(user)
+                    if copy['type'].lower() == "group":
+                        group = user_models.UserGroup.objects.get(
+                            id=int(copy['id']))
+                        user_receiver.group.add(group)
+                user_receiver.save()
 
-        #             document_copy = models.DocumentCopy(
-        #                 sender=sender, document=document, document_copy_receiver=user_receiver)
-        #             document_copy.save()
+                single_users = [
+                    user.staff_id for user in user_receiver.user.all()]
+                # group_users = [user.staff_id for user in group.members.all() for group in user_receiver.group.all()]
+                group_users = []
+                for group in user_receiver.group.all():
+                    for user in group.members.all():
+                        group_users.append(user.staff_id)
+                unique_users = list(set(single_users + group_users))
 
-        #         if document:
-        #             count = 0
-        #             for item in data_lst:
-        #                 if item == f'attachment_{count}':
-        #                     doc = data[item]
-        #                     if f'attachment_subject_{count}' in data_lst:
-        #                         sub = data[f'attachment_subject_{count}']
+                for staff_id in unique_users:
+                    copy_receiver = get_object_or_404(
+                        models.User, staff_id=staff_id)
 
-        #                     related_document = models.RelatedDocument.objects.create(
-        #                         subject=sub, content=doc, document=document)
-        #                     count += 1
+                    document_copy = models.DocumentCopy.objects.create(
+                        sender=sender, document=carbon_copy_document, receiver=copy_receiver)
+                    # document_copy = models.DocumentCopy(
+                    #     sender=sender, document=carbon_copy_document, receiver=copy_receiver)
+                    # document_copy.save()
 
-        #         trail = models.Trail.objects.create(
-        #             receiver=receiver, sender=sender, document=document)
-        #         trail.forwarded = True
-        #         trail.send_id = sender.staff_id
-        #         trail.save()
-        #         utils.send_email(receiver=receiver,
-        #                          sender=sender, document=document, create_code=encrypt)
-        #     except IntegrityError:
-        #         raise exceptions.BadRequest("Provide a unique reference!")
-        #     except Exception as err:
-        #         print(err)
-        #         raise exceptions.ServerError(err.args[0])
-        # else:
-        #     try:
-        #         document_type = models.DocumentType.objects.get(
-        #             id=data_document_type)
-        #         document = models.Document.objects.create(
-        #             content=document, subject=subject, created_by=sender,
-        #             ref=reference, document_type=document_type, filename=filename)
-        #         user_receiver = None
+            if document:
+                count = 0
+                for item in data_lst:
+                    if item == f'attachment_{count}':
+                        doc = data[item]
+                        if f'attachment_subject_{count}' in data_lst:
+                            sub = data[f'attachment_subject_{count}']
 
-        #         print("carbon copy", carbon_copy)
+                        related_document = models.RelatedDocument.objects.create(
+                            subject=sub, content=doc, document=document)
+                        count += 1
 
-        #         if carbon_copy:
-        #             carbon_copy = json.loads(carbon_copy)
-        #             user_receiver = models.DocumentCopyReceiver()
-        #             user_receiver.save()
+            if document_type.name.lower() == 'custom':
+                trail = models.Trail.objects.create(
+                    receiver=receiver, sender=sender, document=document)
+                trail.forwarded = True
+                trail.send_id = sender.staff_id
+                trail.save()
+                utils.send_email(receiver=receiver,
+                                 sender=sender, document=document, create_code=encrypt)
+            else:
+                document_actions = models.DocumentAction.objects.filter(
+                    document_type=document_type)
+                document_action_receiver = [
+                    path for path in document_actions if path.user == receiver]
+                document_action_lst = [action for action in document_actions]
 
-        #             for copy in carbon_copy:
-        #                 copy = json.loads(copy)
-        #                 if copy['type'].lower() == "user":
-        #                     user = User.objects.get(staff_id=copy['id'])
-        #                     user_receiver.user.add(user)
-        #                 if copy['type'].lower() == "group":
-        #                     group = user_models.UserGroup.objects.get(
-        #                         id=int(copy['id']))
-        #                     user_receiver.group.add(group)
-        #             user_receiver.save()
+                if len(document_action_receiver) > 0:
+                    document_action_receiver_index = document_action_lst.index(
+                        document_action_receiver[0])
+                    current_trail_position = document_action_receiver_index
 
-        #             document_copy = models.DocumentCopy(
-        #                 sender=sender, document=document, document_copy_receiver=user_receiver)
-        #             document_copy.save()
+                    trail = models.Trail.objects.create(
+                        receiver=receiver, sender=sender, document=document, order=current_trail_position)
+                    trail.forwarded = True
+                    trail.send_id = sender.staff_id
+                    trail.save()
+                    utils.send_email(receiver=receiver,
+                                     sender=sender, document=document, create_code=encrypt)
 
-        #         if document:
-        #             count = 0
-        #             for item in data_lst:
-        #                 if item == f'attachment_{count}':
-        #                     doc = data[item]
-        #                     if f'attachment_subject_{count}' in data_lst:
-        #                         sub = data[f'attachment_subject_{count}']
-
-        #                     related_document = models.RelatedDocument.objects.create(
-        #                         subject=sub, content=doc, document=document)
-        #                     count += 1
-        #         document_actions = models.DocumentAction.objects.filter(
-        #             document_type=document_type)
-        #         document_action_receiver = [
-        #             path for path in document_actions if path.user == receiver]
-        #         document_action_lst = [action for action in document_actions]
-
-        #         if len(document_action_receiver) > 0:
-        #             document_action_receiver_index = document_action_lst.index(
-        #                 document_action_receiver[0])
-        #             current_trail_position = document_action_receiver_index
-
-        #             trail = models.Trail.objects.create(
-        #                 receiver=receiver, sender=sender, document=document, order=current_trail_position)
-        #             trail.forwarded = True
-        #             trail.send_id = sender.staff_id
-        #             trail.save()
-        #             utils.send_email(receiver=receiver,
-        #                              sender=sender, document=document, create_code=encrypt)
-        #     except Exception as err:
-        #         print(err)
-        #         # user_receiver.delete()
-        #         raise exceptions.ServerError(err.args[0])
+        except IntegrityError as err:
+            print(err)
+            raise exceptions.BadRequest(err.args[0])
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
 
         return Response({'message': 'Document sent'}, status=status.HTTP_201_CREATED)
 

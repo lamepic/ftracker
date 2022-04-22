@@ -4,8 +4,13 @@ import { Box, Text } from "@chakra-ui/react";
 import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
 function Preview({ setOpenPreview, doc }) {
-  const content = doc.content.split("/");
-  const path = content[content.length - 1];
+  let path;
+  if (doc.content !== null) {
+    const content = doc.content.split("/");
+    path = content[content.length - 1];
+  } else {
+    path = null;
+  }
 
   const docs = [
     { uri: `${process.env.REACT_APP_DOCUMENT_PATH}${doc?.content}` },
@@ -32,7 +37,7 @@ function Preview({ setOpenPreview, doc }) {
         zIndex="100"
         onClick={() => setOpenPreview(false)}
       >
-        {path === "null" ? (
+        {path === null || path === "null" ? (
           <Box
             width="70%"
             height="100%"

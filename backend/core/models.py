@@ -48,7 +48,7 @@ class DocumentType(models.Model):
 
 
 class Document(models.Model):
-    content = models.FileField(upload_to='documents/', blank=True, null=False)
+    content = models.FileField(upload_to='documents/', blank=True, null=True)
     subject = models.CharField(max_length=100)
     filename = models.CharField(max_length=100)
     ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
@@ -73,7 +73,8 @@ class Document(models.Model):
         if len(self.ref.strip()) == 0:
             raise ValidationError("Reference cannot be blank")
 
-        if self.content != "null":
+        print(self.content)
+        if self.content:
             filename = self.content.name
             check = (".pdf", ".docx", ".doc", ".xls", ".xlsx",
                      ".ppt", ".pptx", ".txt", ".jpeg", ".jpg")
@@ -267,11 +268,11 @@ class DocumentCopyReceiver(models.Model):
     user = models.ManyToManyField(users_model.User,
                                   related_name='user_receiver', blank=True)
 
-    def __str__(self):
-        if len(self.user.all()) > 0:
-            return "\n".join([f'{u.first_name} {u.last_name}' for u in self.user.all()[:3]])
-        elif len(self.group.all()) > 0:
-            return "\n".join([g.name for g in self.group.all()[:3]])
+    # def __str__(self):
+    #     if len(self.user.all()) > 0:
+    #         return "\n".join([f'{u.first_name} {u.last_name}' for u in self.user.all()[:3]])
+    #     elif len(self.group.all()) > 0:
+    #         return "\n".join([g.name for g in self.group.all()[:3]])
 
     def user_receivers(self):
         if len(self.user.all()) > 0:
@@ -288,25 +289,58 @@ class DocumentCopy(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='carboncopy_sender')
     document = models.ForeignKey(
-        Document, on_delete=models.CASCADE)
+        "CarbonCopyDocument", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    document_copy_receiver = models.ForeignKey(
-        DocumentCopyReceiver, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='carboncopy_receiver')
 
     def __str__(self):
         return f'{self.document.subject}'
 
-# class CarbonCopyDocument(models.Model):
-#     content = models.CharField(max_length=200, blank=True, null=True)
-#     subject = models.CharField(max_length=100)
-#     filename = models.CharField(max_length=100)
-#     ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
-#     created_by = models.ForeignKey(
-#         User, on_delete=models.CASCADE)
-#     document_type = models.ForeignKey(
-#         DocumentType, on_delete=models.CASCADE, null=True, blank=True)
-#     folder = models.ForeignKey(
-#         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+
+class CarbonCopyDocument(models.Model):
+    content = models.CharField(max_length=200, blank=True, null=True)
+    subject = models.CharField(max_length=100)
+    filename = models.CharField(max_length=100)
+    ref = models.CharField(max_length=60, blank=True, null=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE)
+    document_type = models.ForeignKey(
+        DocumentType, on_delete=models.CASCADE, null=True, blank=True)
+    folder = models.ForeignKey(
+        "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subject
+
+
+class CarbonCopyMinute(models.Model):
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    carbon_copy_document = models.ForeignKey(
+        CarbonCopyDocument, on_delete=models.CASCADE)
+    content = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-date',)
+
+    def __str__(self):
+        return self.content
+
+
+class CarbonCopyRelatedDocument(models.Model):
+    subject = models.CharField(max_length=100)
+    content = models.CharField(max_length=200)
+    carbon_copy_document = models.ForeignKey(
+        CarbonCopyDocument, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        self.carbon_copy_document.related_document = True
+        super(RelatedDocument, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.subject
 
 
 class Signature(models.Model):
