@@ -645,7 +645,6 @@ class SearchAPIView(views.APIView):
 class CreateDocument(views.APIView):
     def post(self, request, format=None):
         data = request.data
-        print(data)
         data_lst = list(data)  # for attachments
 
         data_document_type = data.get('documentType')
@@ -678,7 +677,6 @@ class CreateDocument(views.APIView):
                 user_receiver = models.DocumentCopyReceiver()
                 user_receiver.save()
                 carbon_copy_document_content = None if document.content == None else document.content.url
-                print("reached here")
                 carbon_copy_document = models.CarbonCopyDocument.objects.create(
                     content=carbon_copy_document_content,
                     subject=document.subject,
@@ -687,7 +685,6 @@ class CreateDocument(views.APIView):
                     created_by=document.created_by,
                     document_type=document.document_type,
                 )
-                print("reached here too")
 
                 for copy in carbon_copy:
                     copy = json.loads(copy)
@@ -763,7 +760,6 @@ class CreateDocument(views.APIView):
                                      sender=sender, document=document, create_code=encrypt)
 
         except IntegrityError as err:
-            print(err)
             raise exceptions.BadRequest(err.args[0])
         except Exception as err:
             raise exceptions.ServerError(err.args[0])

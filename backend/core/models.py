@@ -73,7 +73,6 @@ class Document(models.Model):
         if len(self.ref.strip()) == 0:
             raise ValidationError("Reference cannot be blank")
 
-        print(self.content)
         if self.content:
             filename = self.content.name
             check = (".pdf", ".docx", ".doc", ".xls", ".xlsx",
