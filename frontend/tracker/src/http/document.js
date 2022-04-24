@@ -14,13 +14,6 @@ export async function createDocument(token, data) {
   let document = data.document;
   let filename = null;
 
-  // if (document !== null) {
-  //   document = document[0].originFileObj;
-  //   filename = document.name;
-  // }
-
-  console.log(data.carbonCopy);
-
   const formData = new FormData();
   formData.append("receiver", receiver);
   formData.append("department", department);
@@ -30,7 +23,6 @@ export async function createDocument(token, data) {
   formData.append("encrypt", data.encrypt);
   if (data.carbonCopy !== undefined) {
     if (data.carbonCopy.length !== 0) {
-      console.log("yes i printed");
       const carbonCopy = JSON.stringify(data.carbonCopy);
       formData.append("carbonCopy", carbonCopy);
     }
