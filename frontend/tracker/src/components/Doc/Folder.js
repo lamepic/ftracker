@@ -39,6 +39,7 @@ function Folder({ doc, type }) {
   }
 
   if (type === "copy") {
+    let type = "incoming";
     const popOverContent = (
       <div>
         <Text fontWeight="500" color="var(--dark-brown)">
@@ -67,7 +68,7 @@ function Folder({ doc, type }) {
 
     return (
       <Popover content={popOverContent} title="Details" placement="rightTop">
-        <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
+        <Link to={`/dashboard/copy/${type}/document/${doc.document.id}/`}>
           <div className="folder">
             <Image src={MultipleFileIcon} alt="folder" w="80%" padding="10px" />
             <Text className="folder__title" noOfLines={2} maxW="120px">

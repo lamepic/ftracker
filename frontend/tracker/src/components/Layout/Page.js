@@ -15,7 +15,7 @@ function Page({ loading, data, type }) {
 
   if (type.toLowerCase() === "incoming") {
     const copy = data?.copy.map((item) => {
-      item.type = "copy";
+      item.type = "copyIncoming";
       return item;
     });
     const incoming = data?.incoming.map((item) => {
@@ -24,8 +24,6 @@ function Page({ loading, data, type }) {
     });
 
     const incoming_data = [...incoming, ...copy];
-
-    console.log(incoming_data);
 
     return (
       <>

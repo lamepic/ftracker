@@ -154,8 +154,8 @@ class DocumentAPIView(views.APIView):
 class DocumentCopyAPIView(views.APIView):
     def get(self, request, id, format=None):
         try:
-            document = get_object_or_404(models.DocumentCopy, id=id)
-            serialized_data = serializers.DocumentCopySerializer(document)
+            document = get_object_or_404(models.CarbonCopyDocument, id=id)
+            serialized_data = serializers.CarbonCopyDocument(document)
         except Exception as err:
             raise exceptions.DocumentNotFound(err.args[0])
 

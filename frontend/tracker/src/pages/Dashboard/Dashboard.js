@@ -19,6 +19,7 @@ import ActivatedDocView from "../ActivateDocument/ActivatedDocView";
 import useFetchCount from "../../hooks/useFetchCount";
 import useFetchUser from "../../hooks/useFetchUser";
 import { Route } from "react-router-dom";
+import ViewDocumentCopy from "../ViewDocument/ViewDocumentCopy";
 
 function Dashboard() {
   useFetchCount(true, true, true, true);
@@ -57,6 +58,10 @@ function Dashboard() {
               <Route
                 path={`/dashboard/:type/document/:id/`}
                 component={ViewDocument}
+              />
+              <Route
+                path={`/dashboard/copy/:type/document/:id/`}
+                component={ViewDocumentCopy}
               />
               <ProtectedPage
                 exact

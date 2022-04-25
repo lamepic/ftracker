@@ -6,6 +6,7 @@ import {
   addSignatureStamp,
   createMinute,
   fetchDocument,
+  fetchDocumentCopy,
   fetchNextUserToForwardDoc,
   forwardDocument,
   markComplete,
@@ -47,16 +48,13 @@ function ViewDocument() {
 
   const _fetchDocument = async () => {
     try {
-      // TODO: create http for fetching document copy
-      if (type !== "copy") {
-        const res = await fetchDocument(store.token, id);
-        const data = res.data;
-        setDocument(data);
-        console.log(data);
-        setFilename(data.filename);
-        setSignatures(data.signature);
-        setStamps(data.stamp);
-      }
+      const res = await fetchDocument(store.token, id);
+      const data = res.data;
+      console.log(data);
+      setDocument(data);
+      setFilename(data.filename);
+      setSignatures(data.signature);
+      setStamps(data.stamp);
     } catch (e) {
       notification.error({
         message: "Error",
