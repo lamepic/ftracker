@@ -425,6 +425,36 @@ class ForwardDocumentAPIView(views.APIView):
         return Response({'message': 'Document forwarded'}, status=status.HTTP_201_CREATED)
 
 
+class ForwardCopyDocumentAPIView(views.APIView):
+    def post(self, request, format=None):
+        data = request.data
+        try:
+            receiver = models.User.objects.get(staff_id=data.get('receiver'))
+            sender = models.User.objects.get(staff_id=request.user.staff_id)
+            document = models.CarbonCopyDocument.objects.get(
+                id=data.get('document'))
+        except Exception as e:
+            raise exceptions.FieldError(e)
+
+        try:
+            prev_trail = models.DocumentCopy.objects.filter(
+                document=document)[0]
+            prev_trail.forwarded = False
+            prev_trail.save()
+
+            trail = models.DocumentCopy.objects.create(
+                receiver=receiver, sender=sender, document=document)
+            trail.send_id = sender.staff_id
+            trail.forwarded = True
+            trail.save()
+            utils.send_email(receiver=receiver,
+                             sender=sender, document=document, create_code=False)
+        except Exception as err:
+            raise exceptions.ServerError(err.args[0])
+
+        return Response({'message': 'Document forwarded'}, status=status.HTTP_201_CREATED)
+
+
 class RequestDocumentAPIView(views.APIView):
 
     def post(self, request, format=None):

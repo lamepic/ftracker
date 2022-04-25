@@ -53,7 +53,9 @@ function ViewDocumentCopy() {
     setOpenPreview(true);
   };
 
-  const handleForwardDocument = () => {};
+  const handleForwardDocument = () => {
+    setOpenModal(true);
+  };
 
   const handleMarkComplete = () => {};
 
@@ -301,6 +303,7 @@ function ViewDocumentCopy() {
           document={document}
           openModal={openModal}
           setOpenModal={setOpenModal}
+          type="copy"
         />
       )}
     </>

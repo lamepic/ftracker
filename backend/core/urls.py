@@ -51,6 +51,8 @@ urlpatterns = [
          name='forward-document'),
     path('forward-document/<document_id>/', views.ForwardDocumentAPIView.as_view(),
          name='forward-document'),
+    path('forward-document-copy/', views.ForwardCopyDocumentAPIView.as_view(),
+         name='forward-document-copy'),
 
     path('request-document/', views.RequestDocumentAPIView.as_view(),
          name='request_document'),

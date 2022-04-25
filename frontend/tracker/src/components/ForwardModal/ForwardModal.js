@@ -4,7 +4,7 @@ import { Redirect, useHistory } from "react-router-dom";
 
 import { useStateValue } from "../../store/StateProvider";
 import { departments, loadUsers } from "../../http/user";
-import { forwardDocument } from "../../http/document";
+import { forwardDocument, forwardDocumentCopy } from "../../http/document";
 import swal from "sweetalert";
 import Modal from "antd/lib/modal/Modal";
 import { CircularProgress } from "@chakra-ui/react";
@@ -31,7 +31,7 @@ const validateMessages = {
   required: "This field is required!",
 };
 
-function ForwardModal({ document, openModal, setOpenModal }) {
+function ForwardModal({ document, openModal, setOpenModal, type }) {
   const [store, dispatch] = useStateValue();
   const history = useHistory();
   const [_departments, setDepartments] = useState([]);
@@ -101,12 +101,32 @@ function ForwardModal({ document, openModal, setOpenModal }) {
       dangerMode: true,
     }).then(async (willSubmit) => {
       if (willSubmit) {
-        const res = await forwardDocument(store.token, data);
-        if (res.status === 201) {
-          setOpenModal(false);
-          history.replace("/dashboard/outgoing");
-          swal("Document has been sent succesfully", {
-            icon: "success",
+        try {
+          if (type !== "copy") {
+            const res = await forwardDocument(store.token, data);
+            if (res.status === 201) {
+              setOpenModal(false);
+              history.replace("/dashboard/outgoing");
+              swal("Document has been sent succesfully", {
+                icon: "success",
+              });
+            }
+          } else {
+            const res = await forwardDocumentCopy(store.token, data);
+            // const data = res;
+            console.log(res);
+            if (res.status === 201) {
+              // setOpenModal(false);
+              // history.replace("/dashboard/outgoing");
+              swal("Document has been sent succesfully", {
+                icon: "success",
+              });
+            }
+          }
+        } catch (error) {
+          notification.error({
+            message: "Error",
+            description: error.response.data.detail,
           });
         }
       }

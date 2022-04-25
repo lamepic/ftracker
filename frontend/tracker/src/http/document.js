@@ -301,6 +301,25 @@ export async function forwardDocument(token, data) {
   return res;
 }
 
+export async function forwardDocumentCopy(token, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const receiver = data.receiver;
+  const doucument = data.document.id;
+
+  const formData = new FormData();
+  formData.append("receiver", receiver);
+  formData.append("document", doucument);
+
+  const res = await axios.post("forward-document-copy/", formData, config);
+  return res;
+}
+
 export async function fetchNextUserToForwardDoc(token, id) {
   const config = {
     headers: {
