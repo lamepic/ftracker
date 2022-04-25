@@ -309,3 +309,13 @@ class DocumentCopySerializer(serializers.ModelSerializer):
         model = models.DocumentCopy
         fields = ['id', 'sender', 'document',
                   'created_at']
+
+
+class ArchiveCopySerializer(serializers.ModelSerializer):
+    created_by = users_serializers.UserSerializer()
+    closed_by = users_serializers.UserSerializer()
+    document = CarbonCopyDocument(required=False)
+
+    class Meta:
+        model = models.Archive
+        fields = ['created_by', 'closed_by', 'document']

@@ -35,6 +35,7 @@ import swal from "sweetalert";
 function Archive() {
   const [store, dispatch] = useStateValue();
   const [archive, setArchive] = useState([]);
+  const [archiveCopy, setArchiveCopy] = useState([]);
   const [loading, setLoading] = useState(true);
   const [folderLoading, setFolderLoading] = useState(true);
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
@@ -53,7 +54,8 @@ function Archive() {
     try {
       const res = await fetchUserArchive(store.token, store.user.staff_id);
       const data = res.data;
-      setArchive(data);
+      setArchive(data.archive);
+      setArchiveCopy(data.copy);
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -129,6 +131,34 @@ function Archive() {
         .utc()
         .format("DD/MM/YYYY hh:mm A"),
       type: "File",
+      key: item.document.id,
+      filename: item.document.filename,
+    };
+  });
+
+  const archiveCopyData = archiveCopy.map((item) => {
+    let name = null;
+    if (item.document.related_document.length > 0 && item.closed_by !== null) {
+      name = <Folder doc={item} key={item.document.id} type="archive" />;
+    } else if (item.closed_by !== null) {
+      name = <File doc={item} key={item.document.id} type="archive" />;
+    } else {
+      name = (
+        <DirectoryFileIcon
+          key={item.document.id}
+          setPreviewDoc={setPreviewDoc}
+          setOpenPreview={setOpenPreview}
+          document={item.document}
+        />
+      );
+    }
+    return {
+      name: name,
+      subject: item.document.subject,
+      created_at: moment(item.document.created_at)
+        .utc()
+        .format("DD/MM/YYYY hh:mm A"),
+      type: "Copy",
       key: item.document.id,
       filename: item.document.filename,
     };
@@ -245,14 +275,14 @@ function Archive() {
               </>
             )}
           </Toolbar>
-          {archive.length + folders.length > 0 ? (
+          {archive.length + folders.length + archiveCopy.length > 0 ? (
             <Box
               maxH={{ sm: "100vh", lg: "70vh" }}
               overflowY="auto"
               marginTop="20px"
             >
               <TableData
-                data={[...archiveData, ...folderData]}
+                data={[...archiveData, ...folderData, ...archiveCopyData]}
                 setSelectedRow={setSelectedRow}
               />
             </Box>

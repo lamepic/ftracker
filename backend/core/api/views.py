@@ -207,7 +207,15 @@ class ArchiveAPIView(views.APIView):
                     'created_by') if archive.created_by.department == employee.department and archive.folder == None]
                 serialized_data = serializers.ArchiveSerializer(
                     data, many=True)
-                return Response(serialized_data.data, status=status.HTTP_200_OK)
+                carbon_copy_archive_data = [archive for archive in models.CarbonCopyArchive.objects.all().order_by(
+                    'created_by') if archive.created_by.department == employee.department and archive.folder == None]
+                serialized_carbon_copy_archive_data = serializers.ArchiveCopySerializer(
+                    carbon_copy_archive_data, many=True)
+
+                data = {"archive": serialized_data.data,
+                        "copy": serialized_carbon_copy_archive_data.data}
+
+                return Response(data, status=status.HTTP_200_OK)
             except:
                 raise exceptions.DocumentNotFound
 
