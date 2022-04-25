@@ -254,8 +254,22 @@ class FolderSerializer(serializers.ModelSerializer):
         return serialized_document.data
 
 
+class CarbonCopyMinuteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CarbonCopyMinute
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = f'{instance.created_by.first_name} {instance.created_by.last_name}'
+        return representation
+
+
 class CarbonCopyDocument(serializers.ModelSerializer):
     related_document = serializers.SerializerMethodField()
+    created_by = users_serializers.UserSerializer()
+    document_type = DocumentTypeSerializer()
+    minute = serializers.SerializerMethodField()
 
     class Meta:
         model = models.CarbonCopyDocument
@@ -264,13 +278,19 @@ class CarbonCopyDocument(serializers.ModelSerializer):
                   "filename",
                   "ref",
                   "created_by",
-                  "document_type", "related_document"]
+                  "document_type", "related_document", "minute"]
 
     def get_related_document(self, obj):
         related_document = obj.carboncopyrelateddocument_set
         serialized_related_document = CarbonCopyRelatedDocument(
             related_document, many=True)
         return serialized_related_document.data
+
+    def get_minute(self, obj):
+        minute = models.CarbonCopyMinute.objects.filter(
+            carbon_copy_document=obj)
+        serialized_data = CarbonCopyMinuteSerializer(minute, many=True)
+        return serialized_data.data
 
 
 class CarbonCopyRelatedDocument(serializers.ModelSerializer):
