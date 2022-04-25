@@ -107,9 +107,22 @@ class OutgoingAPIView(views.APIView):
             outgoing = models.Trail.objects.filter(
                 send_id=user.staff_id,
                 sender=user, status='P').order_by('-document__id').distinct('document__id')
+            document_copy = models.DocumentCopy.objects.filter(
+                send_id=user.staff_id,
+                sender=user, forwarded=True, status="P")
+
+            serialized_data = serializers.OutgoingSerializer(
+                outgoing, many=True)
+
+            document_copy_serialized_data = serializers.DocumentCopySerializer(
+                document_copy, many=True)
+
+            # data = {"outgoing": serialized_data.data,
+            #         "copy": document_copy_serialized_data.data}
+
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
-        serialized_data = serializers.OutgoingSerializer(outgoing, many=True)
+
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
@@ -120,6 +133,9 @@ class OutgoingCountAPIView(views.APIView):
             outgoing = models.Trail.objects.filter(
                 send_id=user.staff_id,
                 sender=user, status='P').order_by('-document__id').distinct('document__id')
+            # document_copy = models.DocumentCopy.objects.filter(
+            #     send_id=user.staff_id,
+            #     sender=user, status='P').distinct()
             data = utils.Count(len(outgoing))
         except Exception as err:
             raise exceptions.ServerError(err.args[0])

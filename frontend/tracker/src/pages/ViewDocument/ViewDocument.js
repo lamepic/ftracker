@@ -50,7 +50,6 @@ function ViewDocument() {
     try {
       const res = await fetchDocument(store.token, id);
       const data = res.data;
-      console.log(data);
       setDocument(data);
       setFilename(data.filename);
       setSignatures(data.signature);
