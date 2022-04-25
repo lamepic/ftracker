@@ -22,6 +22,8 @@ urlpatterns = [
          name='outgoing'),
 
     path('document/<int:id>/', views.DocumentAPIView.as_view(), name='document'),
+    path('document-copy/<int:id>/',
+         views.DocumentCopyAPIView.as_view(), name='document_copy'),
     path('minutes/<int:document_id>/',
          views.MinuteAPIView.as_view(), name='minute'),
 
