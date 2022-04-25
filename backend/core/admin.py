@@ -71,6 +71,18 @@ class ArchiveAdmin(admin.ModelAdmin):
         return obj.document.name
 
 
+@admin.register(models.CarbonCopyArchive)
+class CarbonCopyArchiveAdmin(admin.ModelAdmin):
+    list_display = ['created_by', 'closed_by',
+                    'document', 'close_date', 'requested']
+    search_fields = (
+        "document__subject",
+    )
+
+    def document(self, obj):
+        return obj.document.name
+
+
 @admin.register(models.ActivateDocument)
 class ActivateDocumentAdmin(admin.ModelAdmin):
     list_display = ['document', 'document_receiver',
@@ -119,8 +131,9 @@ admin.site.register(models.Folder, CustomMPTTModelAdmin)
 
 @admin.register(models.CarbonCopyDocument)
 class CarbonCopyDocumentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'subject', 'ref',
-                    'filename', 'created_by', 'document_type', "created_at"]
+    pass
+    # list_display = ['id', 'subject', 'ref',
+    #                 'filename', 'created_by', 'document_type', "created_at"]
 
 
 @admin.register(models.CarbonCopyMinute)

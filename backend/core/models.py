@@ -47,22 +47,39 @@ class DocumentType(models.Model):
         return f'{self.name}'
 
 
-class Document(models.Model):
-    content = models.FileField(upload_to='documents/', blank=True, null=True)
+class DocumentBase(models.Model):
     subject = models.CharField(max_length=100)
     filename = models.CharField(max_length=100)
     ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='document_creator')
+
     document_type = models.ForeignKey(
         DocumentType, on_delete=models.CASCADE, null=True, blank=True)
-    encrypt = models.BooleanField(default=False)
     folder = models.ForeignKey(
         "Folder", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    password = models.CharField(max_length=100, null=True, blank=True)
     signature = models.ManyToManyField("Signature", blank=True)
     stamp = models.ManyToManyField("Stamp", blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Document(DocumentBase):
+    content = models.FileField(upload_to='documents/', blank=True, null=True)
+    encrypt = models.BooleanField(default=False)
+    password = models.CharField(max_length=100, null=True, blank=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='document_creator')
+    # subject = models.CharField(max_length=100)
+    # filename = models.CharField(max_length=100)
+    # ref = models.CharField(max_length=60, blank=True, null=True, unique=True)
+    # created_by = models.ForeignKey(
+    #     User, on_delete=models.CASCADE, related_name='document_creator')
+    # document_type = models.ForeignKey(
+    #     DocumentType, on_delete=models.CASCADE, null=True, blank=True)
+    # folder = models.ForeignKey(
+    #     "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.subject
@@ -190,6 +207,23 @@ class Archive(models.Model):
         return self.document.subject
 
 
+class CarbonCopyArchive(models.Model):
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='carbon_copy_created_by_employee')
+    closed_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='carbon_copy_closed_by_employee', null=True, blank=True)
+    document = models.ForeignKey(
+        "CarbonCopyDocument", on_delete=models.CASCADE, related_name='carbon_copy_archive_document')
+    close_date = models.DateTimeField(auto_now_add=True)
+    requested = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    folder = models.ForeignKey(
+        "Folder", on_delete=models.SET_NULL, null=True, blank=True, related_name="carbon_copy_archive_folder")
+
+    def __str__(self):
+        return self.document.subject
+
+
 class RequestDocument(models.Model):
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
     requested_by = models.ForeignKey(
@@ -306,18 +340,20 @@ class DocumentCopy(models.Model):
         return f'{self.document.subject}'
 
 
-class CarbonCopyDocument(models.Model):
+class CarbonCopyDocument(DocumentBase):
     content = models.CharField(max_length=200, blank=True, null=True)
-    subject = models.CharField(max_length=100)
-    filename = models.CharField(max_length=100)
-    ref = models.CharField(max_length=60, blank=True, null=True)
     created_by = models.ForeignKey(
-        User, on_delete=models.CASCADE)
-    document_type = models.ForeignKey(
-        DocumentType, on_delete=models.CASCADE, null=True, blank=True)
-    folder = models.ForeignKey(
-        "Folder", on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+        User, on_delete=models.CASCADE, related_name='document_copy_creator')
+    # subject = models.CharField(max_length=100)
+    # filename = models.CharField(max_length=100)
+    # ref = models.CharField(max_length=60, blank=True, null=True)
+    # created_by = models.ForeignKey(
+    #     User, on_delete=models.CASCADE)
+    # document_type = models.ForeignKey(
+    #     DocumentType, on_delete=models.CASCADE, null=True, blank=True)
+    # folder = models.ForeignKey(
+    #     "Folder", on_delete=models.SET_NULL, null=True, blank=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.subject

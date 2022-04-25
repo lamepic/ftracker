@@ -2,11 +2,16 @@ import { Box, Button, Grid, Image, Text } from "@chakra-ui/react";
 import { notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import swal from "sweetalert";
 import ForwardModal from "../../components/ForwardModal/ForwardModal";
 import Loading from "../../components/Loading/Loading";
 import Preview from "../../components/Preview/Preview";
 import useIcon from "../../hooks/useIcon";
-import { createCarbonCopyMinute, fetchDocumentCopy } from "../../http/document";
+import {
+  carbonCopyMarkComplete,
+  createCarbonCopyMinute,
+  fetchDocumentCopy,
+} from "../../http/document";
 import { useStateValue } from "../../store/StateProvider";
 
 function ViewDocumentCopy() {
@@ -56,7 +61,32 @@ function ViewDocumentCopy() {
     setOpenModal(true);
   };
 
-  const handleMarkComplete = () => {};
+  const handleMarkComplete = () => {
+    try {
+      swal({
+        title: "Are you sure you want to Archive this document?",
+        text: "This action is irreversible",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then(async (willSubmit) => {
+        if (willSubmit) {
+          const res = await carbonCopyMarkComplete(store.token, id);
+          if (res.status === 200) {
+            swal("Document has been marked as complete", {
+              icon: "success",
+            });
+            history.push("/");
+          }
+        }
+      });
+    } catch (e) {
+      notification.error({
+        message: "Error",
+        description: e.response.data.detail,
+      });
+    }
+  };
 
   const handleMinute = async (e) => {
     try {

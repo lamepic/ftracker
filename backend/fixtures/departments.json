@@ -1,0 +1,23 @@
+[
+{
+    "model": "users.department",
+    "pk": 1,
+    "fields": {
+        "name": "Finance department"
+    }
+},
+{
+    "model": "users.department",
+    "pk": 2,
+    "fields": {
+        "name": "Information system unit"
+    }
+},
+{
+    "model": "users.department",
+    "pk": 3,
+    "fields": {
+        "name": "Record center"
+    }
+}
+]

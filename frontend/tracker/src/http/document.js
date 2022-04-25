@@ -250,6 +250,22 @@ export async function markComplete(token, id) {
   return res;
 }
 
+export async function carbonCopyMarkComplete(token, id) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post(
+    `carbon-copy-mark-complete/${id}/`,
+    null,
+    config
+  );
+  return res;
+}
+
 export async function previewCode(token, user_id, document_id, data = null) {
   const config = {
     headers: {

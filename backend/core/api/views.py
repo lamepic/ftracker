@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.conf import settings
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
+from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 
@@ -91,7 +92,7 @@ class IncomingCountAPIView(views.APIView):
                 forwarded=True,
                 receiver=user, status='P')
             document_copy = models.DocumentCopy.objects.filter(
-                receiver__staff_id=user.staff_id).distinct()
+                receiver__staff_id=user.staff_id, forwarded=True, status='P').distinct()
             data = utils.Count(len(incoming) + len(document_copy))
         except Exception as err:
             raise exceptions.ServerError(err.args[0])
@@ -234,6 +235,30 @@ class MarkCompleteAPIView(views.APIView):
             create_archive = models.Archive.objects.create(
                 created_by=document.created_by, closed_by=last_trail.receiver, document=document)
         except:
+            raise exceptions.DocumentNotFound
+
+        return Response({'message': 'marked as complete'}, status=status.HTTP_200_OK)
+
+
+class CarbonCopyMarkCompleteAPIView(views.APIView):
+    def post(self, request, id, format=None):
+        try:
+            document = models.CarbonCopyDocument.objects.get(id=id)
+            trails = models.DocumentCopy.objects.filter(
+                document__id=id, receiver=request.user)
+
+            for trail in trails:
+                trail.status = 'C'
+                trail.save()
+
+            completed_documents = models.DocumentCopy.objects.filter(
+                document__id=id, status='C').order_by('created_at')
+            last_trail = completed_documents.last()
+
+            create_archive = models.CarbonCopyArchive.objects.create(
+                created_by=document.created_by, closed_by=last_trail.receiver, document=document)
+        except Exception as err:
+            print(err)
             raise exceptions.DocumentNotFound
 
         return Response({'message': 'marked as complete'}, status=status.HTTP_200_OK)

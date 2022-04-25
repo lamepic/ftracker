@@ -1,0 +1,23 @@
+[
+{
+    "model": "users.usergroup",
+    "pk": 1,
+    "fields": {
+        "name": "Managing Directors",
+        "members": [
+            10
+        ]
+    }
+},
+{
+    "model": "users.usergroup",
+    "pk": 2,
+    "fields": {
+        "name": "Officers",
+        "members": [
+            7,
+            8
+        ]
+    }
+}
+]

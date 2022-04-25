@@ -1,0 +1,155 @@
+[
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$nW4zyCIhwVPBO8mrigoTUU$W1qoww0I1Yxrwz7CMdsyCtQ3UZOuxAh1vVmGAvu/uWo=",
+        "last_login": "2022-04-21T07:34:04.425Z",
+        "email": "admin@gmail.com",
+        "first_name": "Super",
+        "last_name": "Admin",
+        "staff_id": null,
+        "department": null,
+        "is_department": false,
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:06:26.562Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$dLDOFWTPw8nP6mt4SfTCFq$RQ2iXjsU5mfrvmUTxPcTXfWtA6jYX7ujJjBePac8de4=",
+        "last_login": null,
+        "email": "finance@gmail.com",
+        "first_name": "Finance",
+        "last_name": "Department",
+        "staff_id": "5638291",
+        "department": 1,
+        "is_department": true,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:08:14.589Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$epvreoan9vj4jIlcQyHJHH$OSEjX3PKFizoVrDd5/RDn7R0gWXmwCYDPPHHWk3ONlI=",
+        "last_login": null,
+        "email": "isu@gmail.com",
+        "first_name": "Information",
+        "last_name": "System Unit",
+        "staff_id": "1122334",
+        "department": 2,
+        "is_department": true,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:08:51.482Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$Yj3ZwGoSr4ClgGG5yoZ8d0$q0h+ryp+WxusJuSH82jhtYYBKVSv9FXGDLoV2iRfYC8=",
+        "last_login": null,
+        "email": "peterparker@gmail.com",
+        "first_name": "Peter",
+        "last_name": "Parker",
+        "staff_id": "9876732",
+        "department": 2,
+        "is_department": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:09:38.958Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$EiW4lkOUL1YzqMeAfr0g6F$5wrFTsa6sl9/OtqtGx7xChg7wEBssWLGt1D5mexxhTk=",
+        "last_login": null,
+        "email": "mary@gmail.com",
+        "first_name": "Mary",
+        "last_name": "Jane",
+        "staff_id": "1290863",
+        "department": 1,
+        "is_department": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:10:06.356Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$O51HT5ZyQrBZfF5uPL6Gsf$5s8eDqZ21I7iw0OX7A+DQ4Vhj2Eg20XSheo0Iw0Klp4=",
+        "last_login": null,
+        "email": "strange@gmail.com",
+        "first_name": "Stephen",
+        "last_name": "Strange",
+        "staff_id": "6537289",
+        "department": 2,
+        "is_department": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:11:22.424Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$9EQYr4pYdRYS8ka0fs2Gos$8yCxIHA6OoyCEhh4DQZZeKmnOtmv9FJIHBaAFnMQNq8=",
+        "last_login": null,
+        "email": "kryptonite@gmail.com",
+        "first_name": "Clark",
+        "last_name": "Kent",
+        "staff_id": "7654278",
+        "department": 2,
+        "is_department": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-24T08:12:26.961Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 10,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$jnkxDdr369SwqrFKRc7Scq$3m2ED5FJNTMgIy/Sl78wsWHLVL2z2daiTlkbHx622R8=",
+        "last_login": null,
+        "email": "director@gmail.com",
+        "first_name": "Senior",
+        "last_name": "Director",
+        "staff_id": "0011223",
+        "department": 2,
+        "is_department": false,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-03-28T14:37:04.179Z"
+    }
+},
+{
+    "model": "users.user",
+    "pk": 11,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$qkxwJMURoEhWa6Vlh1hl4b$9PYhogi16L35Hcel94R2OK2eJeiihqMZE6nIM2+BvWE=",
+        "last_login": null,
+        "email": "recordcenter@gmail.com",
+        "first_name": "Record",
+        "last_name": "Center",
+        "staff_id": "9987483",
+        "department": 3,
+        "is_department": true,
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-04-20T11:32:03.082Z"
+    }
+}
+]

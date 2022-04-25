@@ -38,6 +38,9 @@ urlpatterns = [
 
     path('mark-complete/<int:id>/',
          views.MarkCompleteAPIView.as_view(), name='mark_complete'),
+    path('carbon-copy-mark-complete/<int:id>/',
+         views.CarbonCopyMarkCompleteAPIView.as_view(), name='carbon_copy_mark_complete'),
+
     path('tracking/<document_id>/',
          views.TrackingAPIView.as_view(), name='tracking'),
     path('preview-code/<user_id>/<document_id>/',
