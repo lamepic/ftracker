@@ -26,6 +26,8 @@ urlpatterns = [
          views.DocumentCopyAPIView.as_view(), name='document_copy'),
     path('minutes/<int:document_id>/',
          views.MinuteAPIView.as_view(), name='minute'),
+    path('carbon-copy-minutes/<int:document_id>/',
+         views.CarbonCopyMinuteAPIView.as_view(), name='carbon-copy-minute'),
 
     path('archive/', views.ArchiveAPIView.as_view(),
          name='archive'),

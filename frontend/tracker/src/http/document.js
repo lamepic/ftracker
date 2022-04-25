@@ -198,6 +198,22 @@ export async function createMinute(token, documentId, data) {
   return res;
 }
 
+export async function createCarbonCopyMinute(token, documentId, data) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.post(
+    `carbon-copy-minutes/${documentId}/`,
+    data,
+    config
+  );
+  return res;
+}
+
 export async function fetchDocument(token, id) {
   const config = {
     headers: {

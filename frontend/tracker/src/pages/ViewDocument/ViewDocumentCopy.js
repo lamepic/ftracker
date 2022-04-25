@@ -6,7 +6,7 @@ import ForwardModal from "../../components/ForwardModal/ForwardModal";
 import Loading from "../../components/Loading/Loading";
 import Preview from "../../components/Preview/Preview";
 import useIcon from "../../hooks/useIcon";
-import { fetchDocumentCopy } from "../../http/document";
+import { createCarbonCopyMinute, fetchDocumentCopy } from "../../http/document";
 import { useStateValue } from "../../store/StateProvider";
 
 function ViewDocumentCopy() {
@@ -30,7 +30,6 @@ function ViewDocumentCopy() {
 
   const _fetchDocument = async () => {
     try {
-      // TODO: create http for fetching document copy
       const res = await fetchDocumentCopy(store.token, id);
       const data = res.data;
       console.log(data);
@@ -59,7 +58,25 @@ function ViewDocumentCopy() {
 
   const handleMarkComplete = () => {};
 
-  const handleMinute = () => {};
+  const handleMinute = async (e) => {
+    try {
+      e.preventDefault();
+      setSubmittingMinute(true);
+      const res = await createCarbonCopyMinute(store.token, id, minute);
+      const data = res.data;
+      if (res.status === 201) {
+        setDocument({ ...document, minute: [data, ...document.minute] });
+        setMinute("");
+      }
+    } catch (e) {
+      return notification.error({
+        message: "Error",
+        description: e.repsonse.data.detail,
+      });
+    } finally {
+      setSubmittingMinute(false);
+    }
+  };
 
   return (
     <>

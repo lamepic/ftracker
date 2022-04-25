@@ -177,6 +177,23 @@ class MinuteAPIView(views.APIView):
         return Response(serialized_data.data, status=status.HTTP_201_CREATED)
 
 
+class CarbonCopyMinuteAPIView(views.APIView):
+    def post(self, request, document_id, format=None):
+        content = request.data
+
+        try:
+            document = get_object_or_404(
+                models.CarbonCopyDocument, id=document_id)
+            creator = get_object_or_404(models.User, id=request.user.id)
+            minute = models.CarbonCopyMinute.objects.create(
+                content=content, created_by=creator, carbon_copy_document=document)
+            serialized_data = serializers.CarbonCopyMinuteSerializer(minute)
+        except Exception as err:
+            raise exceptions.MinuteError
+
+        return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+
+
 class ArchiveAPIView(views.APIView):
     def get(self, request, user_id=None, format=None):
         # get archive of logged in user[department]
