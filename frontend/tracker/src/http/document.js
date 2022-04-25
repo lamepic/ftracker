@@ -210,6 +210,18 @@ export async function fetchDocument(token, id) {
   return res;
 }
 
+export async function fetchDocumentCopy(token, id) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const res = await axios.get(`document-copy/${id}`, config);
+  return res;
+}
+
 export async function markComplete(token, id) {
   const config = {
     headers: {
