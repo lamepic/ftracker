@@ -151,6 +151,17 @@ class DocumentAPIView(views.APIView):
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
+class DocumentCopyAPIView(views.APIView):
+    def get(self, request, id, format=None):
+        try:
+            document = get_object_or_404(models.DocumentCopy, id=id)
+            serialized_data = serializers.DocumentCopySerializer(document)
+        except Exception as err:
+            raise exceptions.DocumentNotFound(err.args[0])
+
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+
 class MinuteAPIView(views.APIView):
     def post(self, request, document_id, format=None):
         content = request.data
