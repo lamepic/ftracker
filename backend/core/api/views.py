@@ -224,7 +224,7 @@ class ArchiveAPIView(views.APIView):
                 serialized_data = serializers.ArchiveSerializer(
                     data, many=True)
                 carbon_copy_archive_data = [archive for archive in models.CarbonCopyArchive.objects.all().order_by(
-                    'created_by') if archive.created_by.department == employee.department and archive.folder == None]
+                    'created_by') if archive.closed_by.department == employee.department and archive.folder == None]
                 serialized_carbon_copy_archive_data = serializers.ArchiveCopySerializer(
                     carbon_copy_archive_data, many=True)
 
@@ -280,7 +280,7 @@ class CarbonCopyMarkCompleteAPIView(views.APIView):
             last_trail = completed_documents.last()
 
             create_archive = models.CarbonCopyArchive.objects.create(
-                created_by=document.created_by, closed_by=last_trail.receiver, document=document)
+                created_by=document.created_by, closed_by=request.user, document=document)
         except Exception as err:
             print(err)
             raise exceptions.DocumentNotFound
