@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.conf import settings
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
-from django.dispatch import receiver
+
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 
@@ -439,7 +439,7 @@ class ForwardDocumentAPIView(views.APIView):
                         "last_receiver": True}
                 return Response(data, status=status.HTTP_200_OK)
         except Exception as err:
-            raise exceptions.ForwardDocumentError
+            raise exceptions.ForwardDocumentError(err.args[0])
 
     def post(self, request, format=None):
         data = request.data
