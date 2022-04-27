@@ -42,8 +42,7 @@ function ViewDocument() {
   useEffect(() => {
     fetchPreviewCode();
     _fetchDocument();
-    if (type.toLowerCase() !== "copy" && document !== null)
-      _fetchNextUserToForwardDoc();
+    if (type.toLowerCase() !== "copy") _fetchNextUserToForwardDoc();
   }, []);
 
   const _fetchDocument = async () => {
@@ -141,7 +140,7 @@ function ViewDocument() {
     try {
       if (
         document.document_type === null ||
-        document.document_type.name === "Custom"
+        document.document_type.name.toLowerCase() === "custom"
       ) {
         setOpenModal(true);
       } else {
@@ -169,6 +168,7 @@ function ViewDocument() {
         });
       }
     } catch (e) {
+      console.log(e);
       return notification.error({
         message: "Error",
         description: e.repsonse.data.detail,
