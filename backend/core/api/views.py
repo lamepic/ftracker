@@ -364,7 +364,7 @@ class DocumentTypeAPIView(views.APIView):
 
 
 class DocumentActionAPIView(views.APIView):
-
+    # TODO: check this view and correct the list index out of range error
     def get(self, request, document_type_id=None, format=None):
         if document_type_id:
             try:
@@ -411,7 +411,9 @@ class DocumentActionAPIView(views.APIView):
                         "id": document_type_id, "name": "Custom"}}
                     return Response(data, status=status.HTTP_200_OK)
             except Exception as err:
-                raise exceptions.BadRequest(err)
+                print(err)
+                raise exceptions.BadRequest(
+                    "Document type is not applicable to this user")
 
 
 class ForwardDocumentAPIView(views.APIView):
