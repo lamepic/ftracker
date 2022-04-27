@@ -114,7 +114,7 @@ function Flow() {
                                     value={employee.staff_id}
                                     key={employee.staff_id}
                                   >
-                                    {employee.first_name} {employee.last_name}
+                                    {`${employee.first_name} ${employee.last_name}`}
                                   </Option>
                                 );
                               })}
