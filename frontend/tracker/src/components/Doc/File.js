@@ -35,6 +35,40 @@ function File({ doc, type }) {
     );
   }
 
+  if (type === "personalArchive") {
+    const popOverContent = (
+      <div>
+        <Text fontWeight="500" color="var(--dark-brown)">
+          {`Sent from: ${doc?.created_by?.first_name} ${doc?.created_by?.last_name}`}
+        </Text>
+
+        <Text fontWeight="500" color="var(--dark-brown)">
+          Department: {doc?.created_by?.department.name}
+        </Text>
+
+        {/* <Text fontWeight="500" color="var(--dark-brown)">{`Date: ${new Date(
+          doc.created_at
+        ).toDateString()}`}</Text>
+        <Text fontWeight="500" color="var(--dark-brown)">{`Time: ${new Date(
+          doc.created_at
+        ).toLocaleTimeString()}`}</Text> */}
+      </div>
+    );
+
+    return (
+      <Popover content={popOverContent} title="Details" placement="rightTop">
+        <Link to={`/dashboard/${type}/document/${doc.document.id}/`}>
+          <div className="folder">
+            <Image src={icon} alt="folder" w="80%" padding="10px" />
+            <Text className="folder__title" noOfLines={2} maxW="120px">
+              {capitalize(doc.document.filename)}
+            </Text>
+          </div>
+        </Link>
+      </Popover>
+    );
+  }
+
   if (type === "copyIncoming") {
     let type = "incoming";
     const popOverContent = (

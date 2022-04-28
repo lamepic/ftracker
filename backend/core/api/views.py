@@ -218,7 +218,7 @@ class ArchiveAPIView(views.APIView):
             try:
                 employee = models.User.objects.get(
                     staff_id=user_id)
-                
+
                 if employee.is_department:
                     data = [archive for archive in models.Archive.objects.all().order_by(
                         'created_by') if archive.created_by.department == employee.department and archive.folder == None]
@@ -231,8 +231,9 @@ class ArchiveAPIView(views.APIView):
                     serialized_carbon_copy_archive_data = serializers.ArchiveCopySerializer(
                         carbon_copy_archive_data, many=True)
                     return Response(serialized_carbon_copy_archive_data.data, status=status.HTTP_200_OK)
-            except:
-                raise exceptions.DocumentNotFound
+            except Exception as err:
+                print(err)
+                raise exceptions.DocumentNotFound(err.args[0])
 
         # get all archives in the database
         archives = models.Archive.objects.all()
