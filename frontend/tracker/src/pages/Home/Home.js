@@ -108,6 +108,13 @@ function Home() {
               </Link>
             </Box>
           )}
+          {!userInfo.is_department && (
+            <Box>
+              <Link to="/dashboard/user-archive">
+                <HomeOption icon={archive} text="Archive" />
+              </Link>
+            </Box>
+          )}
         </Box>
       </Box>
       <hr className="divider" />

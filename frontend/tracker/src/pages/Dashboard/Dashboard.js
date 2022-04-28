@@ -20,6 +20,7 @@ import useFetchCount from "../../hooks/useFetchCount";
 import useFetchUser from "../../hooks/useFetchUser";
 import { Route } from "react-router-dom";
 import ViewDocumentCopy from "../ViewDocument/ViewDocumentCopy";
+import UserArchive from "../UserArchive/UserArchive";
 
 function Dashboard() {
   useFetchCount(true, true, true, true);
@@ -68,6 +69,8 @@ function Dashboard() {
                 path="/dashboard/archive/"
                 component={Archive}
               />
+
+              <Route path="/dashboard/user-archive/" component={UserArchive} />
 
               <Route path="/dashboard/tracker" component={Tracking} />
 
