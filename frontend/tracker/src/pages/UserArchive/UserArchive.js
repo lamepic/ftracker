@@ -1,7 +1,7 @@
 import React from "react";
 
 function UserArchive() {
-  return <div>UserArchive</div>;
+  return <div></div>;
 }
 
 export default UserArchive;
