@@ -42,9 +42,11 @@ ALLOWED_HOSTS = get('ALLOWED_HOSTS', '*')
 INSTALLED_APPS = [
 
     # Django core
+    'django.contrib.contenttypes',
+    # 'grappelli.dashboard',
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -156,6 +158,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Media files
 MEDIA_URL = '/media/'
 
@@ -231,3 +235,5 @@ EMAIL_HOST_USER = get('SMTP_USERNAME', None)
 # Required, add to Heroku config or .env file
 EMAIL_HOST_PASSWORD = get('SMTP_PASSWORD', None)
 EMAIL_USE_TLS = True
+
+GRAPPELLI_ADMIN_TITLE = "Cocoa Board DMS"

@@ -7,6 +7,7 @@ from users.api import views
 
 urlpatterns = [
     path('', include('drfpasswordless.urls')),
+    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
 
     # User App urls
