@@ -9,3 +9,9 @@
 # list copied users in trail popup
 
 # archive copy of document to user department - in progres
+
+# Add price to route the type document depending on the price on the document
+
+# Add amount input to document creation. Search document by amount
+
+# Automatic archiving
