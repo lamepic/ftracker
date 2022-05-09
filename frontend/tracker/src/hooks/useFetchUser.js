@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { loadUser } from "../http/user";
 import { useStateValue } from "../store/StateProvider";
 import * as actionTypes from "../store/actionTypes";
+import { auth_axios } from "../utility/axios";
 
 function useFetchUser() {
   const [store, dispatch] = useStateValue();
@@ -12,11 +13,20 @@ function useFetchUser() {
 
   const fetchUser = async () => {
     try {
-      const res = await loadUser(store.token);
-      dispatch({
-        type: actionTypes.USER_LOADED,
-        payload: res.data,
-      });
+      const config = {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+      };
+
+      const userRes = await auth_axios.get("/users/me/", config);
+
+      if (userRes.status === 200) {
+        dispatch({
+          type: actionTypes.SET_USER,
+          payload: userRes.data,
+        });
+      }
     } catch {
       dispatch({
         type: actionTypes.AUTH_ERROR,
