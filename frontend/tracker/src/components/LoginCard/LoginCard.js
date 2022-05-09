@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import { Box, CircularProgress, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Heading, Image, Text } from "@chakra-ui/react";
 import logo from "../../assets/images/logo.png";
-import VerificationForm from "./VerificationForm";
 import LoginForm from "./LoginForm";
 import { useStateValue } from "../../store/StateProvider";
 import { Redirect } from "react-router-dom";
 
 function LoginCard() {
-  const [sentVerificationToken, setSentVerificationToken] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [verifiedEmail, setVerifiedEmail] = useState("");
   const [store, dispatch] = useStateValue();
+  const [loading, setLoading] = useState(false);
 
-  if (store.isAuthenticated) {
+  if (!loading && store.isAuthenticated) {
     return <Redirect to="/dashboard" />;
   }
 
@@ -64,30 +61,7 @@ function LoginCard() {
           <Text marginTop="20px" fontWeight="500" fontSize="0.9rem">
             Login to Proceed to your Dashboard
           </Text>
-          {/* <Text marginTop="7px" color="var(--light-brown)" fontWeight="600">
-            Don't have an account?
-          </Text> */}
-          <VerificationForm
-            setSentVerificationToken={setSentVerificationToken}
-            setVerifiedEmail={setVerifiedEmail}
-            setLoading={setLoading}
-          />
-
-          {loading && (
-            <CircularProgress isIndeterminate color="var(--light-brown)" />
-          )}
-
-          {sentVerificationToken && (
-            <Box paddingBottom="10px" marginTop="-15px">
-              <Text fontSize="0.9rem" color="var(--light-brown)">
-                A verification has been sent to
-              </Text>
-              <Text fontSize="0.9rem" color="var(--green)" fontWeight="600">
-                {verifiedEmail}
-              </Text>
-              <LoginForm verifiedEmail={verifiedEmail} />
-            </Box>
-          )}
+          <LoginForm loading={loading} setLoading={setLoading} />
         </Box>
       </Box>
     </div>

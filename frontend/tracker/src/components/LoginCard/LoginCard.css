@@ -20,18 +20,7 @@
 }
 
 .login__btn {
-  background-image: linear-gradient(to right, rgb(63, 238, 63), rgb(5, 46, 5));
-  width: 90%;
+  width: 90% !important;
   color: var(--white);
   padding: 5px;
-  border-radius: 5px;
-  /* margin-top: 5px; */
-}
-
-.login__btn:hover {
-  background-image: linear-gradient(
-    to right,
-    rgb(106, 250, 106),
-    rgb(50, 97, 50)
-  );
 }
