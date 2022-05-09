@@ -12,9 +12,10 @@ import {
   fetchRequest,
   notificationsCount,
 } from "../../http/document";
-import { Menu, Dropdown } from "antd";
+import { Menu, Dropdown, notification } from "antd";
 import CustomBadge from "../Badge/CustomBadge";
 import moment from "moment";
+import { auth_axios } from "../../utility/axios";
 
 const MenuDropDown = ({ userInfo, handleLogout }) => {
   const menu = (
@@ -236,10 +237,22 @@ function Navbar({ onOpen }) {
   const userInfo = store.user;
 
   const handleLogout = async () => {
-    const res = await logout(store.token);
-    if (res.status === 200) {
-      dispatch({
-        type: actionTypes.LOGOUT_SUCCESS,
+    try {
+      const config = {
+        headers: {
+          Authorization: `Token ${store.token}`,
+        },
+      };
+      const res = await auth_axios.post("/token/logout/", store.token, config);
+      if (res.status === 204) {
+        dispatch({
+          type: actionTypes.LOGOUT_SUCCESS,
+        });
+      }
+    } catch (error) {
+      return notification.error({
+        message: "Error",
+        description: error.request,
       });
     }
   };
