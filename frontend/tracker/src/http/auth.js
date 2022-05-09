@@ -13,9 +13,9 @@ export async function verificationToken(email) {
 }
 
 // login user
-export async function login(email, token) {
-  const body = JSON.stringify({ email, token });
-  const res = await auth_axios.post("/auth/token/", body);
+export async function login(staff_id, password) {
+  const body = JSON.stringify({ staff_id, password });
+  const res = await axios.post("/login/", body);
   return res;
 }
 
@@ -25,6 +25,6 @@ export async function logout(token) {
       Authorization: `Token ${token}`,
     },
   };
-  const res = await axios.post("auth/logout/", null, config);
+  const res = await auth_axios.post("/auth/token/logout/", null, config);
   return res;
 }
