@@ -23,9 +23,9 @@ import ViewDocumentCopy from "../ViewDocument/ViewDocumentCopy";
 import UserArchive from "../UserArchive/UserArchive";
 
 function Dashboard() {
-  useFetchCount(true, true, true, true);
-  const user = useFetchUser();
+  // useFetchCount(true, true, true, true);
   const [store, dispatch] = useStateValue();
+  const user = useFetchUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
