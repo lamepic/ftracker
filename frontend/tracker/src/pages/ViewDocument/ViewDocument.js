@@ -384,7 +384,8 @@ function ViewDocument() {
                               <p>{item?.content}</p>
                               <p className="employee">{item?.user}</p>
                               <p className="date">
-                                Date: {new Date(item?.date).toDateString()}
+                                Date:{" "}
+                                {new Date(item?.created_at).toDateString()}
                               </p>
                             </div>
                           );
