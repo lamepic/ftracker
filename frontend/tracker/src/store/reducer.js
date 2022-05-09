@@ -2,15 +2,15 @@ import * as actionTypes from "./actionTypes";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case actionTypes.LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
+    case actionTypes.SET_TOKEN:
+      localStorage.setItem("token", action.payload);
       return {
         ...state,
-        token: action.payload.token,
+        token: action.payload,
         isLoading: false,
         isAuthenticated: true,
       };
-    case actionTypes.USER_LOADED:
+    case actionTypes.SET_USER:
       return {
         ...state,
         isLoading: false,
